@@ -38,7 +38,7 @@ export interface AuthResponse {
 
 export class AuthService {
   async register(input: RegisterInput): Promise<AuthResponse> {
-    const { name, email, password, role = UserRole.CUSTOMER } = input;
+    const { name, email, password } = input;
 
     if (!name || !email || !password) {
       throw new ValidationError('Name, email, and password are required.');
@@ -57,11 +57,13 @@ export class AuthService {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
+    // Strict Privilege Boundary: Public registration is unconditionally forced to CUSTOMER role.
+    // Agent and Admin roles can only be granted by an authenticated Admin.
     const user = await userRepository.create({
       name: name.trim(),
       email: normalizedEmail,
       passwordHash,
-      role,
+      role: UserRole.CUSTOMER,
       isActive: true,
     });
 

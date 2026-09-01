@@ -9,13 +9,19 @@ import { ClassificationResult, SummaryResult, SuggestedReplyResult } from './ai.
 import { NotFoundError, AIServiceError } from '../errors/AppError.js';
 import { logger } from '../logger/logger.js';
 import { PrioritySource } from '../constants/ticket.constants.js';
+import { TicketRules } from '../services/ticketRules.js';
+import { AuthUser } from '../types/express.js';
 
 export class AIService {
-  async classifyTicket(ticketId: string, userId?: string): Promise<ClassificationResult> {
+  async classifyTicket(ticketId: string, user?: AuthUser | string): Promise<ClassificationResult> {
     const startTime = Date.now();
     const ticket = await ticketRepository.findById(ticketId);
     if (!ticket) {
       throw new NotFoundError('Ticket not found for AI classification.');
+    }
+
+    if (user && typeof user !== 'string') {
+      TicketRules.assertCanViewTicket(user, ticket);
     }
 
     const categories = await categoryRepository.list(true);

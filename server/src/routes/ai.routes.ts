@@ -7,8 +7,14 @@ import { UserRole } from '../constants/roles.js';
 
 const router = Router();
 
-// On-demand re-classification
-router.post('/tickets/:id/analyze', authenticate, aiLimiter, aiController.classifyTicket);
+// On-demand re-classification (Agents and Admins only)
+router.post(
+  '/tickets/:id/analyze',
+  authenticate,
+  requireRole(UserRole.AGENT, UserRole.ADMIN),
+  aiLimiter,
+  aiController.classifyTicket
+);
 
 // Structured Summarization (Agents and Admins only)
 router.post(

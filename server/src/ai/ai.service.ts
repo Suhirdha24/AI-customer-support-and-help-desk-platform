@@ -52,7 +52,7 @@ export class AIService {
         updatePayload.prioritySource = PrioritySource.AI;
       }
 
-      await ticketRepository.update(ticket.id, updatePayload);
+      await ticketRepository.update(ticket._id.toString(), updatePayload);
 
       // Log AI telemetry
       await aiRepository.logUsage({

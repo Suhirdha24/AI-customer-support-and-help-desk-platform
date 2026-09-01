@@ -3,18 +3,26 @@ import { ITicket } from '../models/Ticket.js';
 import { AuthUser } from '../types/express.js';
 import { AuthorizationError } from '../errors/AppError.js';
 
+const getEntityId = (entity: any): string | undefined => {
+  if (!entity) return undefined;
+  if (entity._id) return entity._id.toString();
+  return entity.toString();
+};
+
 export class TicketRules {
   public static canViewTicket(user: AuthUser, ticket: ITicket): boolean {
     if (user.role === UserRole.ADMIN) return true;
     if (user.role === UserRole.AGENT) {
-      // Agents can view unassigned tickets, tickets assigned to them, or tickets in their team
-      if (!ticket.assignedAgentId) return true;
-      if (ticket.assignedAgentId.toString() === user.id) return true;
-      if (ticket.teamId && user.teamIds?.includes(ticket.teamId.toString())) return true;
+      const assignedId = getEntityId(ticket.assignedAgentId);
+      if (!assignedId) return true;
+      if (assignedId === user.id) return true;
+      const teamId = getEntityId(ticket.teamId);
+      if (teamId && user.teamIds?.includes(teamId)) return true;
       return true; // Support agents are permitted helpdesk view access across queue
     }
     // Customers can ONLY view their own tickets
-    return ticket.customerId.toString() === user.id;
+    const customerId = getEntityId(ticket.customerId);
+    return customerId === user.id;
   }
 
   public static assertCanViewTicket(user: AuthUser, ticket: ITicket): void {
@@ -26,8 +34,9 @@ export class TicketRules {
   public static canModifyTicket(user: AuthUser, ticket: ITicket): boolean {
     if (user.role === UserRole.ADMIN) return true;
     if (user.role === UserRole.AGENT) return true;
-    // Customer can only modify if they own it and it's not closed
-    return ticket.customerId.toString() === user.id;
+    // Customer can only modify if they own it
+    const customerId = getEntityId(ticket.customerId);
+    return customerId === user.id;
   }
 
   public static assertCanModifyTicket(user: AuthUser, ticket: ITicket): void {
@@ -48,8 +57,8 @@ export class TicketRules {
 
   public static canClaimTicket(user: AuthUser, ticket: ITicket): boolean {
     if (user.role !== UserRole.AGENT && user.role !== UserRole.ADMIN) return false;
-    // Cannot claim if already assigned to someone else, unless admin
-    if (ticket.assignedAgentId && ticket.assignedAgentId.toString() !== user.id && user.role !== UserRole.ADMIN) {
+    const assignedId = getEntityId(ticket.assignedAgentId);
+    if (assignedId && assignedId !== user.id && user.role !== UserRole.ADMIN) {
       return false;
     }
     return true;
@@ -59,7 +68,8 @@ export class TicketRules {
     if (user.role !== UserRole.AGENT && user.role !== UserRole.ADMIN) {
       throw new AuthorizationError('Only agents and administrators can claim tickets.');
     }
-    if (ticket.assignedAgentId && ticket.assignedAgentId.toString() !== user.id && user.role !== UserRole.ADMIN) {
+    const assignedId = getEntityId(ticket.assignedAgentId);
+    if (assignedId && assignedId !== user.id && user.role !== UserRole.ADMIN) {
       throw new AuthorizationError('This ticket is already assigned to another agent.');
     }
   }

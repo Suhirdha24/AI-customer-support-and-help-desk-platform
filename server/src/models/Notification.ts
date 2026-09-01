@@ -1,7 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { NotificationType, NotificationTypeType } from '../constants/events.js';
 
-export interface INotification extends Document {
+export interface INotification {
   _id: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   type: NotificationTypeType;
@@ -49,7 +49,7 @@ const notificationSchema = new Schema<INotification>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

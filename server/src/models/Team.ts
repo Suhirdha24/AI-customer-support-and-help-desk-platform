@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface ITeam extends Document {
+export interface ITeam {
   _id: mongoose.Types.ObjectId;
   name: string;
   description?: string;
@@ -43,7 +43,7 @@ const teamSchema = new Schema<ITeam>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

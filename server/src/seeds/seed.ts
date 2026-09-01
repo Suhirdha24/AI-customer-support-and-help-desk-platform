@@ -353,13 +353,27 @@ For duplicate charges, the support agent verifies the Stripe/payment transaction
   } catch (error) {
     logger.error('Error seeding database:', error);
     throw error;
-  } finally {
-    await disconnectDB();
   }
 };
 
-seedDatabase().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+const isMainModule = () => {
+  try {
+    if (!process.argv[1]) return false;
+    const arg = process.argv[1].toLowerCase();
+    return arg.includes('seed.ts') || arg.includes('seed.js');
+  } catch {
+    return false;
+  }
+};
+
+if (isMainModule()) {
+  seedDatabase()
+    .then(() => disconnectDB())
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error(err);
+      disconnectDB().finally(() => process.exit(1));
+    });
+}
+
 

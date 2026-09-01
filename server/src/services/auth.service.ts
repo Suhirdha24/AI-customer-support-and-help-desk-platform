@@ -69,7 +69,7 @@ export class AuthService {
 
     return {
       user: {
-        id: user.id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -107,7 +107,7 @@ export class AuthService {
 
     return {
       user: {
-        id: user.id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -125,7 +125,7 @@ export class AuthService {
     }
 
     return {
-      id: user.id,
+      id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: user.role,
@@ -136,7 +136,7 @@ export class AuthService {
 
   public generateToken(user: IUser): string {
     const payload: AuthUser = {
-      id: user.id,
+      id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: user.role,

@@ -84,7 +84,7 @@ export class TicketService {
     });
 
     // Queue background AI ticket classification
-    await queueService.addClassificationJob(ticket.id, user.id);
+    await queueService.addClassificationJob(ticket._id.toString(), user.id);
 
     return ticket;
   }

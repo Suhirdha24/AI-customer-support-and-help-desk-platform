@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { MessageType, MessageTypeType } from '../constants/ticket.constants.js';
 import { UserRoleType } from '../constants/roles.js';
 
@@ -12,7 +12,7 @@ export interface IAttachment {
   createdAt: Date;
 }
 
-export interface ITicketMessage extends Document {
+export interface ITicketMessage {
   _id: mongoose.Types.ObjectId;
   ticketId: mongoose.Types.ObjectId;
   authorId: mongoose.Types.ObjectId;
@@ -69,7 +69,7 @@ const ticketMessageSchema = new Schema<ITicketMessage>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

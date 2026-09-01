@@ -1,8 +1,9 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { UserRole, UserRoleType } from '../constants/roles.js';
 
-export interface IUser extends Document {
+export interface IUser {
   _id: mongoose.Types.ObjectId;
+  id?: string;
   name: string;
   email: string;
   passwordHash: string;
@@ -62,7 +63,7 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

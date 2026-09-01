@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface ITicketFeedback extends Document {
+export interface ITicketFeedback {
   _id: mongoose.Types.ObjectId;
   ticketId: mongoose.Types.ObjectId;
   customerId: mongoose.Types.ObjectId;
@@ -41,7 +41,7 @@ const ticketFeedbackSchema = new Schema<ITicketFeedback>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

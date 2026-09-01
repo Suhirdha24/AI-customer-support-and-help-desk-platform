@@ -125,10 +125,21 @@ export class AdminController {
       ]);
 
       const workloadMap = new Map<string, number>();
-      workloads.forEach((w) => workloadMap.set(w._id.toString(), w.openCount));
+      workloads.forEach((w) => {
+        if (w && w._id) {
+          workloadMap.set(w._id.toString(), w.openCount);
+        }
+      });
 
-      const agentList = agents.map((agent) => ({
-        ...agent.toJSON(),
+
+      const agentList = agents.map((agent: any) => ({
+        id: agent._id.toString(),
+        name: agent.name,
+        email: agent.email,
+        role: agent.role,
+        teamIds: agent.teamIds,
+        isActive: agent.isActive,
+        avatar: agent.avatar,
         activeTickets: workloadMap.get(agent._id.toString()) || 0,
       }));
 

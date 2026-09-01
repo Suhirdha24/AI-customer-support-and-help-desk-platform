@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import {
   TicketPriority,
   TicketPriorityType,
@@ -8,19 +8,20 @@ import {
   PrioritySourceType,
 } from '../constants/ticket.constants.js';
 
-export interface ITicket extends Document {
+export interface ITicket {
   _id: mongoose.Types.ObjectId;
+  id?: string;
   ticketNumber: string;
-  customerId: mongoose.Types.ObjectId;
+  customerId: mongoose.Types.ObjectId | any;
   subject: string;
   description: string;
-  categoryId: mongoose.Types.ObjectId;
+  categoryId: mongoose.Types.ObjectId | any;
   priority: TicketPriorityType;
   prioritySource: PrioritySourceType;
   status: TicketStatusType;
-  assignedAgentId?: mongoose.Types.ObjectId;
-  teamId?: mongoose.Types.ObjectId;
-  aiAnalysisId?: mongoose.Types.ObjectId;
+  assignedAgentId?: mongoose.Types.ObjectId | any;
+  teamId?: mongoose.Types.ObjectId | any;
+  aiAnalysisId?: mongoose.Types.ObjectId | any;
   createdAt: Date;
   updatedAt: Date;
   resolvedAt?: Date;
@@ -103,7 +104,7 @@ const ticketSchema = new Schema<ITicket>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

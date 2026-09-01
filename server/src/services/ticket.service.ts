@@ -18,7 +18,7 @@ import {
   MessageType,
 } from '../constants/ticket.constants.js';
 import { AuditEventType, NotificationType } from '../constants/events.js';
-import { NotFoundError, ValidationError } from '../errors/AppError.js';
+import { NotFoundError, ValidationError, AuthorizationError } from '../errors/AppError.js';
 
 export interface CreateTicketDTO {
   subject: string;
@@ -163,7 +163,16 @@ export class TicketService {
 
     // Search query on ticketNumber, subject, or description
     if (query.search && query.search.trim().length > 0) {
-      filter.$text = { $search: query.search.trim() };
+      const searchTerm = query.search.trim();
+      if (/^TKT-/i.test(searchTerm) || /^[A-Z0-9-]+$/i.test(searchTerm)) {
+        filter.$or = [
+          { ticketNumber: { $regex: searchTerm, $options: 'i' } },
+          { subject: { $regex: searchTerm, $options: 'i' } },
+          { description: { $regex: searchTerm, $options: 'i' } },
+        ];
+      } else {
+        filter.$text = { $search: searchTerm };
+      }
     }
 
     // Sorting
@@ -344,6 +353,60 @@ export class TicketService {
     });
 
     return updated!;
+  }
+
+  async updateTicket(
+    user: AuthUser,
+    ticketId: string,
+    dto: { subject?: string; description?: string; categoryId?: string }
+  ): Promise<ITicket> {
+    const ticket = await ticketRepository.findById(ticketId);
+    if (!ticket) {
+      throw new NotFoundError('Ticket not found.');
+    }
+
+    TicketRules.assertCanModifyTicket(user, ticket);
+
+    const updatePayload: Record<string, any> = {};
+    if (dto.subject) updatePayload.subject = dto.subject.trim();
+    if (dto.description) updatePayload.description = dto.description.trim();
+    if (dto.categoryId) updatePayload.categoryId = new mongoose.Types.ObjectId(dto.categoryId);
+
+    const updated = await ticketRepository.update(ticketId, updatePayload);
+    if (!updated) {
+      throw new NotFoundError('Failed to update ticket.');
+    }
+
+    await auditRepository.create({
+      actorId: new mongoose.Types.ObjectId(user.id),
+      actorRole: user.role,
+      eventType: AuditEventType.TICKET_UPDATED,
+      ticketId: ticket._id,
+      metadata: { fields: Object.keys(updatePayload) },
+    });
+
+    return updated;
+  }
+
+  async deleteTicket(user: AuthUser, ticketId: string): Promise<void> {
+    const ticket = await ticketRepository.findById(ticketId);
+    if (!ticket) {
+      throw new NotFoundError('Ticket not found.');
+    }
+
+    // Strict Data Retention Policy: Only ADMIN can delete, all other roles are forbidden
+    if (user.role !== UserRole.ADMIN) {
+      throw new AuthorizationError('Tickets cannot be deleted. Transition ticket to CLOSED status instead.');
+    }
+
+    await ticketRepository.delete(ticketId);
+    await auditRepository.create({
+      actorId: new mongoose.Types.ObjectId(user.id),
+      actorRole: user.role,
+      eventType: AuditEventType.TICKET_UPDATED,
+      ticketId: ticket._id,
+      metadata: { action: 'DELETED' },
+    });
   }
 }
 

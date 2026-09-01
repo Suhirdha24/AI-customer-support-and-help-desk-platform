@@ -135,6 +135,49 @@ describe('1. Authentication Tests', () => {
     expect(res.body.success).toBe(false);
     expect(res.body.error.code).toBe('AUTHENTICATION_REQUIRED');
   });
+
+  it('Test 5b: Registration privilege escalation attempt is strictly forced to CUSTOMER', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'Hacker User',
+        email: 'hacker@example.com',
+        password: 'Password123!',
+        role: 'ADMIN', // Attacker attempt to escalate
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.user.role).toBe(UserRole.CUSTOMER);
+    expect(res.body.data.user.role).not.toBe('ADMIN');
+  });
+
+  it('Test 5c: Deactivated user is rejected with 401 Unauthorized on protected routes', async () => {
+    // 1. Create a user to deactivate
+    const regRes = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'Temp User',
+        email: 'tempuser@example.com',
+        password: 'Password123!',
+      });
+    const tempUserId = regRes.body.data.user.id;
+    const tempToken = regRes.body.data.token;
+
+    // 2. Admin deactivates this user
+    await request(app)
+      .patch(`/api/admin/users/${tempUserId}/status`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ isActive: false });
+
+    // 3. Deactivated user attempts to access protected route with previous token
+    const accessRes = await request(app)
+      .get('/api/tickets')
+      .set('Authorization', `Bearer ${tempToken}`);
+
+    expect(accessRes.status).toBe(401);
+    expect(accessRes.body.success).toBe(false);
+    expect(accessRes.body.error.code).toBe('AUTHENTICATION_REQUIRED');
+  });
 });
 
 // ==========================================
@@ -177,6 +220,26 @@ describe('2. Resource-Level Authorization Tests', () => {
       .post('/api/admin/categories')
       .set('Authorization', `Bearer ${agentToken}`)
       .send({ name: 'Unauthorized Category' });
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.code).toBe('FORBIDDEN');
+  });
+
+  it('Test 9b: Customer cannot trigger AI analysis on tickets (403 Forbidden)', async () => {
+    const res = await request(app)
+      .post(`/api/ai/tickets/${customer2TicketId}/analyze`)
+      .set('Authorization', `Bearer ${customer1Token}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.code).toBe('FORBIDDEN');
+  });
+
+  it("Test 9c: Customer cannot view another customer's feedback (403 Forbidden)", async () => {
+    const res = await request(app)
+      .get(`/api/feedback/tickets/${customer2TicketId}`)
+      .set('Authorization', `Bearer ${customer1Token}`);
 
     expect(res.status).toBe(403);
     expect(res.body.success).toBe(false);
@@ -238,6 +301,24 @@ describe('3. Ticket Core & State Machine Tests', () => {
     expect(res.status).toBe(409);
     expect(res.body.success).toBe(false);
     expect(res.body.error.code).toBe('INVALID_STATE_TRANSITION');
+  });
+
+  it('Test 13b: Invalid status transition OPEN -> CLOSED rejected with 409', async () => {
+    const res = await request(app)
+      .patch(`/api/tickets/${customer2TicketId}/status`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: TicketStatus.CLOSED });
+
+    expect(res.status).toBe(409);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.code).toBe('INVALID_STATE_TRANSITION');
+  });
+
+  it('Test 13c: Specifically verify invalid transitions RESOLVED -> OPEN and CLOSED -> IN_PROGRESS are rejected', () => {
+    expect(TicketStateMachine.canTransition(TicketStatus.RESOLVED, TicketStatus.OPEN, UserRole.ADMIN)).toBe(false);
+    expect(TicketStateMachine.canTransition(TicketStatus.CLOSED, TicketStatus.IN_PROGRESS, UserRole.AGENT)).toBe(false);
+    expect(TicketStateMachine.canTransition(TicketStatus.OPEN, TicketStatus.CLOSED, UserRole.CUSTOMER)).toBe(false);
+    expect(TicketStateMachine.canTransition(TicketStatus.OPEN, TicketStatus.CLOSED, UserRole.ADMIN)).toBe(false);
   });
 
   it('Test 14: Assign ticket to an agent records assignment', async () => {
@@ -528,9 +609,10 @@ describe('8. Attachment Security Tests', () => {
       .attach('file', Buffer.from('Error log details: line 42 crashed.'), 'error.log');
 
     expect(res.status).toBe(200);
-    expect(res.body.data.fileName).toBe('error.log');
-    expect(res.body.data.storageKey).toBeDefined();
-    uploadedKey = res.body.data.storageKey;
+    const item = Array.isArray(res.body.data) ? res.body.data[0] : res.body.data;
+    expect(item.fileName).toBe('error.log');
+    expect(item.storageKey).toBeDefined();
+    uploadedKey = item.storageKey;
   });
 
   it('Test 34: Invalid executable file type is rejected by Multer filter', async () => {
@@ -553,5 +635,136 @@ describe('8. Attachment Security Tests', () => {
     expect(res.status).toBe(403);
     expect(res.body.success).toBe(false);
     expect(res.body.error.code).toBe('FORBIDDEN');
+  });
+});
+
+// ==========================================
+// 9. SEARCH, FILTER, SORT, PAGINATION & UPDATES (36 - 44)
+// ==========================================
+describe('9. Search, Filter, Sort, Pagination & Ticket Management', () => {
+  it('Test 36: Search by ticketNumber returns exact ticket', async () => {
+    const res = await request(app)
+      .get('/api/tickets?search=TKT-000001')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
+    expect(res.body.data[0].ticketNumber).toBe('TKT-000001');
+  });
+
+  it('Test 37: Filter tickets by status', async () => {
+    const res = await request(app)
+      .get('/api/tickets?status=OPEN')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    res.body.data.forEach((t: any) => {
+      expect(t.status).toBe('OPEN');
+    });
+  });
+
+  it('Test 38: Filter tickets by priority', async () => {
+    const res = await request(app)
+      .get('/api/tickets?priority=HIGH')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    res.body.data.forEach((t: any) => {
+      expect(t.priority).toBe('HIGH');
+    });
+  });
+
+  it('Test 39: Sort tickets by oldest', async () => {
+    const res = await request(app)
+      .get('/api/tickets?sort=oldest')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    if (res.body.data.length >= 2) {
+      const d1 = new Date(res.body.data[0].createdAt).getTime();
+      const d2 = new Date(res.body.data[1].createdAt).getTime();
+      expect(d1).toBeLessThanOrEqual(d2);
+    }
+  });
+
+  it('Test 40: Pagination returns valid metadata and adheres to page and limit', async () => {
+    const res = await request(app)
+      .get('/api/tickets?page=1&limit=2')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.length).toBeLessThanOrEqual(2);
+    expect(res.body.pagination).toBeDefined();
+    expect(res.body.pagination.page).toBe(1);
+    expect(res.body.pagination.limit).toBe(2);
+    expect(res.body.pagination.total).toBeGreaterThan(0);
+    expect(res.body.pagination.totalPages).toBeGreaterThanOrEqual(1);
+    expect(typeof res.body.pagination.hasNextPage).toBe('boolean');
+    expect(typeof res.body.pagination.hasPreviousPage).toBe('boolean');
+  });
+
+  it('Test 41: Authorized customer can update ticket details via PATCH /api/tickets/:id', async () => {
+    const res = await request(app)
+      .patch(`/api/tickets/${seededTicketId}`)
+      .set('Authorization', `Bearer ${customer1Token}`)
+      .send({ subject: 'Updated Invoice Issue - Urgent assistance needed' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.subject).toBe('Updated Invoice Issue - Urgent assistance needed');
+  });
+
+  it('Test 42: Unauthorized customer cannot update another customer ticket via PATCH /api/tickets/:id', async () => {
+    const res = await request(app)
+      .patch(`/api/tickets/${customer2TicketId}`)
+      .set('Authorization', `Bearer ${customer1Token}`)
+      .send({ subject: 'Malicious modification' });
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.code).toBe('FORBIDDEN');
+  });
+
+  it('Test 43: Non-admin cannot delete tickets via DELETE /api/tickets/:id (403 Forbidden)', async () => {
+    const res = await request(app)
+      .delete(`/api/tickets/${seededTicketId}`)
+      .set('Authorization', `Bearer ${customer1Token}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.code).toBe('FORBIDDEN');
+  });
+
+  it('Test 44: Admin can delete ticket via DELETE /api/tickets/:id', async () => {
+    // Create a disposable ticket to delete
+    const tktRes = await request(app)
+      .post('/api/tickets')
+      .set('Authorization', `Bearer ${customer1Token}`)
+      .send({
+        subject: 'Disposable Ticket for deletion test',
+        description: 'Testing admin ticket deletion capabilities.',
+        categoryId,
+      });
+
+    const disposableId = tktRes.body.data._id || tktRes.body.data.id;
+
+    const delRes = await request(app)
+      .delete(`/api/tickets/${disposableId}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(delRes.status).toBe(200);
+    expect(delRes.body.success).toBe(true);
+
+    // Verify it is gone
+    const verifyRes = await request(app)
+      .get(`/api/tickets/${disposableId}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(verifyRes.status).toBe(404);
   });
 });

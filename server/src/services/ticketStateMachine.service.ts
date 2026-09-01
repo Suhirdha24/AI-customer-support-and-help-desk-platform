@@ -11,14 +11,12 @@ export interface TransitionRule {
 
 export class TicketStateMachine {
   private static readonly rules: TransitionRule[] = [
-    // From OPEN
+    // From OPEN (Must be assigned or investigated; cannot jump straight to CLOSED)
     { from: TicketStatus.OPEN, to: TicketStatus.ASSIGNED, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },
     { from: TicketStatus.OPEN, to: TicketStatus.IN_PROGRESS, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },
-    { from: TicketStatus.OPEN, to: TicketStatus.CLOSED, allowedRoles: [UserRole.CUSTOMER, UserRole.ADMIN] },
 
     // From ASSIGNED
     { from: TicketStatus.ASSIGNED, to: TicketStatus.IN_PROGRESS, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },
-    { from: TicketStatus.ASSIGNED, to: TicketStatus.OPEN, allowedRoles: [UserRole.ADMIN] }, // Unassign
 
     // From IN_PROGRESS
     { from: TicketStatus.IN_PROGRESS, to: TicketStatus.WAITING_FOR_CUSTOMER, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },

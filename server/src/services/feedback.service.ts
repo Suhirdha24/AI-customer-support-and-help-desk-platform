@@ -5,6 +5,7 @@ import { ITicketFeedback } from '../models/TicketFeedback.js';
 import { AuthUser } from '../types/express.js';
 import { TicketStatus } from '../constants/ticket.constants.js';
 import { NotFoundError, ValidationError, AuthorizationError, ConflictError } from '../errors/AppError.js';
+import { TicketRules } from './ticketRules.js';
 
 export interface SubmitFeedbackDTO {
   rating: number;
@@ -57,6 +58,9 @@ export class FeedbackService {
     if (!ticket) {
       throw new NotFoundError('Ticket not found.');
     }
+
+    // Resource-level security check: customer can only view feedback on their own ticket
+    TicketRules.assertCanViewTicket(user, ticket);
 
     return feedbackRepository.findByTicketId(ticketId);
   }

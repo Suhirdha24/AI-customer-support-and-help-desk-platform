@@ -91,12 +91,14 @@ export class AIService {
     }
   }
 
-  async summarizeTicket(ticketId: string, userId: string): Promise<SummaryResult> {
+  async summarizeTicket(ticketId: string, user: AuthUser): Promise<SummaryResult> {
     const startTime = Date.now();
     const ticket = await ticketRepository.findById(ticketId);
     if (!ticket) {
       throw new NotFoundError('Ticket not found.');
     }
+
+    TicketRules.assertCanViewTicket(user, ticket);
 
     // Only fetch customer-safe messages (do not include internal notes in generic summaries)
     const messages = await messageRepository.findByTicketId(ticketId, false);
@@ -120,7 +122,7 @@ export class AIService {
         provider: 'OpenAI',
         model: 'gpt-4o-mini',
         ticketId: ticket._id,
-        userId: new mongoose.Types.ObjectId(userId),
+        userId: new mongoose.Types.ObjectId(user.id),
         status: 'SUCCESS',
         latencyMs,
       });
@@ -135,7 +137,7 @@ export class AIService {
         provider: 'OpenAI',
         model: 'gpt-4o-mini',
         ticketId: ticket._id,
-        userId: new mongoose.Types.ObjectId(userId),
+        userId: new mongoose.Types.ObjectId(user.id),
         status: 'FAILURE',
         latencyMs,
         errorType: err.name || 'UNKNOWN_ERROR',
@@ -145,12 +147,14 @@ export class AIService {
     }
   }
 
-  async suggestReply(ticketId: string, userId: string): Promise<SuggestedReplyResult> {
+  async suggestReply(ticketId: string, user: AuthUser): Promise<SuggestedReplyResult> {
     const startTime = Date.now();
     const ticket = await ticketRepository.findById(ticketId);
     if (!ticket) {
       throw new NotFoundError('Ticket not found.');
     }
+
+    TicketRules.assertCanViewTicket(user, ticket);
 
     const messages = await messageRepository.findByTicketId(ticketId, false);
     const customer = ticket.customerId as any;
@@ -179,7 +183,7 @@ export class AIService {
         provider: 'OpenAI',
         model: 'gpt-4o-mini',
         ticketId: ticket._id,
-        userId: new mongoose.Types.ObjectId(userId),
+        userId: new mongoose.Types.ObjectId(user.id),
         status: 'SUCCESS',
         latencyMs,
       });

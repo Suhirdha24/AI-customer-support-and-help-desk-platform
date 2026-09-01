@@ -26,20 +26,26 @@ export class AttachmentController {
 
   async uploadFile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      if (!req.file) {
+      const files = (req.files && Array.isArray(req.files) && req.files.length > 0)
+        ? (req.files as Express.Multer.File[])
+        : req.file ? [req.file] : [];
+
+      if (files.length === 0) {
         throw new ValidationError('No file uploaded.');
       }
 
+      const attachments = files.map((file) => ({
+        fileName: file.originalname,
+        storageKey: file.filename,
+        mimeType: file.mimetype,
+        size: file.size,
+        uploadedBy: req.user!.id,
+        createdAt: new Date(),
+      }));
+
       res.status(200).json({
         success: true,
-        data: {
-          fileName: req.file.originalname,
-          storageKey: req.file.filename,
-          mimeType: req.file.mimetype,
-          size: req.file.size,
-          uploadedBy: req.user!.id,
-          createdAt: new Date(),
-        },
+        data: attachments,
       });
     } catch (error) {
       next(error);

@@ -98,6 +98,30 @@ export class TicketController {
       next(error);
     }
   }
+
+  async updateTicket(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const ticket = await ticketService.updateTicket(req.user!, req.params.id, req.body);
+      res.status(200).json({
+        success: true,
+        data: ticket,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteTicket(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await ticketService.deleteTicket(req.user!, req.params.id);
+      res.status(200).json({
+        success: true,
+        data: { message: 'Ticket deleted successfully.' },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const ticketController = new TicketController();

@@ -68,6 +68,11 @@ export class TicketRepository {
   async aggregate(pipeline: any[]): Promise<any[]> {
     return Ticket.aggregate(pipeline).exec();
   }
+
+  async delete(id: string): Promise<boolean> {
+    const res = await Ticket.findByIdAndDelete(id).exec();
+    return !!res;
+  }
 }
 
 export const ticketRepository = new TicketRepository();

@@ -48,6 +48,12 @@ export class DashboardService {
 
     return {
       metrics: counts,
+      totalTickets: counts.total,
+      openTickets: counts.open,
+      inProgressTickets: counts.inProgress,
+      waitingTickets: counts.waiting,
+      resolvedTickets: counts.resolved,
+      closedTickets: counts.closed,
       recentTickets,
     };
   }
@@ -95,7 +101,13 @@ export class DashboardService {
         waitingForCustomer: waitingCount,
         resolvedToday: resolvedTodayCount,
       },
+      myAssignedTickets: myTicketsCount,
+      unassignedTickets: openUnassignedCount,
+      urgentTickets: urgentCount,
+      waitingCustomerTickets: waitingCount,
+      resolvedToday: resolvedTodayCount,
       myRecentTickets,
+      recentTickets: myRecentTickets,
     };
   }
 
@@ -186,6 +198,9 @@ export class DashboardService {
         ? Math.round(avgResolutionData[0].averageHours * 10) / 10
         : 0;
 
+    const openTicketsCount = statusBreakdown.find((s) => s._id === 'OPEN')?.count || 0;
+    const resolvedTicketsCount = statusBreakdown.find((s) => s._id === 'RESOLVED')?.count || 0;
+
     return {
       overview: {
         totalCustomers,
@@ -193,6 +208,11 @@ export class DashboardService {
         totalTickets,
         averageResolutionHours: avgResolutionHours,
       },
+      totalTickets,
+      openTickets: openTicketsCount,
+      resolvedTickets: resolvedTicketsCount,
+      csat: csatStats,
+      aiUsage: aiStats,
       statusBreakdown: statusBreakdown.map((s) => ({ status: s._id, count: s.count })),
       priorityBreakdown: priorityBreakdown.map((p) => ({ priority: p._id, count: p.count })),
       categoryBreakdown: categoryBreakdown.map((c) => ({

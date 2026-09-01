@@ -13,6 +13,8 @@ const router = Router();
 router.post('/', authenticate, ticketController.createTicket);
 router.get('/', authenticate, ticketController.listTickets);
 router.get('/:id', authenticate, ticketController.getTicketById);
+router.patch('/:id', authenticate, ticketController.updateTicket);
+router.delete('/:id', authenticate, ticketController.deleteTicket);
 
 // State transitions & assignments
 router.patch('/:id/status', authenticate, ticketController.updateStatus);
@@ -40,7 +42,7 @@ router.get('/:id/messages', authenticate, messageController.listMessages);
 router.post('/:id/messages', authenticate, messageController.createMessage);
 
 // Secure Attachments
-router.post('/upload', authenticate, uploadAttachment.single('file'), attachmentController.uploadFile);
+router.post('/upload', authenticate, uploadAttachment.any(), attachmentController.uploadFile);
 router.get(
   '/:ticketId/attachments/:attachmentId',
   authenticate,

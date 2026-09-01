@@ -12,8 +12,8 @@
 This document establishes the definitive **Requirements Traceability Matrix (RTM)** and audit evaluation for the **OmniSupport AI Customer Support & Helpdesk Platform**. Every architectural component, REST API endpoint, database schema, security mechanism, AI pipeline, frontend module, and test case has been inspected directly against source code and runtime behavior.
 
 ### Key Highlights
-- **Total Test Cases**: **44 automated tests** covering Authentication, Authorization/IDOR, State Transitions, Internal Notes, AI Validation, Grounding, Knowledge Base, CSAT, File Uploads, Search, Filter, Sort, Pagination, and Record Deletion.
-- **Test Pass Rate**: **100% (44/44 passing)**.
+- **Total Test Cases**: **49 automated tests** covering Authentication, Authorization/IDOR, State Transitions, Internal Notes, AI Validation, Grounding, Knowledge Base, CSAT, File Uploads, Search, Filter, Sort, Pagination, and Record Deletion.
+- **Test Pass Rate**: **100% (49/49 passing)**.
 - **Security Posture**: Zero IDOR vulnerabilities; strict tenant scoping at the database query layer; real-time JWT deactivation checks; public registration role escalation prevention; role-based access control (RBAC) enforced on all administrative routes; internal notes strictly isolated from customers and LLM prompts.
 - **RAG Architecture**: Honestly documented as an inverted-index full-text search RAG over MongoDB text indexes with confidence scoring and hallucination suppression rules.
 

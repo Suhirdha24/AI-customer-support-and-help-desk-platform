@@ -1,7 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { Sentiment, SentimentType } from '../constants/ticket.constants.js';
 
-export interface IAIAnalysis extends Document {
+export interface IAIAnalysis {
   _id: mongoose.Types.ObjectId;
   ticketId: mongoose.Types.ObjectId;
   category: string;
@@ -58,7 +58,7 @@ const aiAnalysisSchema = new Schema<IAIAnalysis>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

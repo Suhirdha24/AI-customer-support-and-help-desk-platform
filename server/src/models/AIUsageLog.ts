@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface IAIUsageLog extends Document {
+export interface IAIUsageLog {
   _id: mongoose.Types.ObjectId;
   operation: string;
   provider: string;
@@ -68,7 +68,7 @@ const aiUsageLogSchema = new Schema<IAIUsageLog>(
   {
     timestamps: { createdAt: true, updatedAt: false },
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

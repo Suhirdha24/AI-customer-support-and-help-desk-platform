@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface ICounter extends Document {
+export interface ICounter {
   _id: string;
   seq: number;
 }
@@ -18,7 +18,7 @@ export const getNextSequenceValue = async (sequenceName: string): Promise<number
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
-  return sequenceDocument.seq;
+  return sequenceDocument ? sequenceDocument.seq : 1;
 };
 
 export const generateTicketNumber = async (): Promise<string> => {

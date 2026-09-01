@@ -1,8 +1,8 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { AuditEventType, AuditEventTypeType } from '../constants/events.js';
 import { UserRoleType } from '../constants/roles.js';
 
-export interface IAuditLog extends Document {
+export interface IAuditLog {
   _id: mongoose.Types.ObjectId;
   actorId: mongoose.Types.ObjectId;
   actorRole: UserRoleType;
@@ -48,7 +48,7 @@ const auditLogSchema = new Schema<IAuditLog>(
   {
     timestamps: { createdAt: true, updatedAt: false },
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

@@ -8,20 +8,18 @@ const sanitizeFilter = winston.format((info) => {
     if (!obj || typeof obj !== 'object') return obj;
     if (Array.isArray(obj)) return obj.map(sanitize);
     
-    const sanitized: Record<string, any> = {};
-    for (const [key, value] of Object.entries(obj)) {
+    for (const key of Object.keys(obj)) {
       if (sensitiveKeys.some((s) => key.toLowerCase().includes(s))) {
-        sanitized[key] = '[REDACTED]';
-      } else if (typeof value === 'object') {
-        sanitized[key] = sanitize(value);
-      } else {
-        sanitized[key] = value;
+        obj[key] = '[REDACTED]';
+      } else if (typeof obj[key] === 'object') {
+        sanitize(obj[key]);
       }
     }
-    return sanitized;
+    return obj;
   };
 
-  return sanitize(info);
+  sanitize(info);
+  return info;
 });
 
 export const logger = winston.createLogger({

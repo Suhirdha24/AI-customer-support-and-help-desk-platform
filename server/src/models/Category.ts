@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface ICategory extends Document {
+export interface ICategory {
   _id: mongoose.Types.ObjectId;
   name: string;
   description?: string;
@@ -31,7 +31,7 @@ const categorySchema = new Schema<ICategory>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;

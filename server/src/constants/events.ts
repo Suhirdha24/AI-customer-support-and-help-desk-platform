@@ -13,6 +13,8 @@ export const AuditEventType = {
   AI_SUMMARY_CREATED: 'AI_SUMMARY_CREATED',
   AI_REPLY_GENERATED: 'AI_REPLY_GENERATED',
   AI_REPLY_SENT: 'AI_REPLY_SENT',
+  TICKET_UPDATED: 'TICKET_UPDATED',
+  TICKET_DELETED: 'TICKET_DELETED',
 } as const;
 
 export type AuditEventTypeType = (typeof AuditEventType)[keyof typeof AuditEventType];

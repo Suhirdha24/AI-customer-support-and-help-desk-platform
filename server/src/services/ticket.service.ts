@@ -403,7 +403,7 @@ export class TicketService {
     await auditRepository.create({
       actorId: new mongoose.Types.ObjectId(user.id),
       actorRole: user.role,
-      eventType: AuditEventType.TICKET_UPDATED,
+      eventType: AuditEventType.TICKET_DELETED,
       ticketId: ticket._id,
       metadata: { action: 'DELETED' },
     });

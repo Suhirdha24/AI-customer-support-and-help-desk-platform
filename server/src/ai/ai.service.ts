@@ -60,13 +60,15 @@ export class AIService {
 
       await ticketRepository.update(ticket._id.toString(), updatePayload);
 
+      const userIdStr = typeof user === 'string' ? user : user?.id;
+
       // Log AI telemetry
       await aiRepository.logUsage({
         operation: 'CLASSIFICATION',
         provider: 'OpenAI',
         model: 'gpt-4o-mini',
         ticketId: ticket._id,
-        userId: userId ? new mongoose.Types.ObjectId(userId) : undefined,
+        userId: userIdStr ? new mongoose.Types.ObjectId(userIdStr) : undefined,
         status: 'SUCCESS',
         latencyMs,
       });
@@ -76,12 +78,13 @@ export class AIService {
       const latencyMs = Date.now() - startTime;
       logger.error(`AI classification failed for ticket ${ticketId}:`, err);
 
+      const userIdStr = typeof user === 'string' ? user : user?.id;
       await aiRepository.logUsage({
         operation: 'CLASSIFICATION',
         provider: 'OpenAI',
         model: 'gpt-4o-mini',
         ticketId: ticket._id,
-        userId: userId ? new mongoose.Types.ObjectId(userId) : undefined,
+        userId: userIdStr ? new mongoose.Types.ObjectId(userIdStr) : undefined,
         status: 'FAILURE',
         latencyMs,
         errorType: err.name || 'UNKNOWN_ERROR',

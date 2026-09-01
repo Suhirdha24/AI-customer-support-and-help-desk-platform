@@ -118,7 +118,7 @@ export class AdminController {
           $group: {
             _id: '$assignedAgentId',
             openCount: {
-              $sum: { $cond: [{ $nin: ['$status', ['RESOLVED', 'CLOSED']] }, 1, 0] },
+              $sum: { $cond: [{ $in: ['$status', ['RESOLVED', 'CLOSED']] }, 0, 1] },
             },
           },
         },

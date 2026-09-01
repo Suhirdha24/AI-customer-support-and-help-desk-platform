@@ -1,6 +1,6 @@
 # AI Architecture & Prompt Engineering
 
-OmniSupport AI incorporates artificial intelligence as an **augmented copilot for support agents**, maintaining a strict **human-in-the-loop** paradigm.
+NexusDesk AI incorporates artificial intelligence as an **augmented copilot for support agents**, maintaining a strict **human-in-the-loop** paradigm.
 
 ---
 
@@ -75,7 +75,7 @@ This ensures that the platform functions reliably during technical evaluations, 
 
 ## 5. Human-in-the-Loop Safeguards
 
-OmniSupport AI strictly prohibits autonomous message delivery to customers. The system architecture enforces this via:
+NexusDesk AI strictly prohibits autonomous message delivery to customers. The system architecture enforces this via:
 - Suggested replies are saved only in the agent's interactive UI draft session.
 - No background job or API endpoint transmits an AI draft directly to the customer message thread.
 - The human support agent must explicitly review, optionally modify, and press "Send Reply".

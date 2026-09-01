@@ -1,6 +1,6 @@
-# OmniSupport AI — Intelligent Customer Support & Helpdesk Platform
+# NexusDesk AI — Intelligent Customer Support & Helpdesk Platform
 
-[![Tests](https://img.shields.io/badge/tests-34%20passed-emerald)](https://github.com/Suhirdha24/AI-customer-support-and-help-desk-platform)
+[![Tests](https://img.shields.io/badge/tests-49%20passed-emerald)](https://github.com/Suhirdha24/AI-customer-support-and-help-desk-platform)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-8.0-forestgreen)](https://www.mongodb.com/)
@@ -8,7 +8,7 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **OmniSupport AI** is a production-quality, full-stack AI-augmented customer support and helpdesk platform built using the **MERN** stack (MongoDB, Express, React, Node.js) with **100% end-to-end TypeScript**. It integrates automated multi-factor ticket triaging, contextual incident summarization, RAG-grounded reply suggestions with **human-in-the-loop governance**, deterministic state machine transitions, and triple-layer privacy for internal team notes.
+> **NexusDesk AI** is a production-quality, full-stack AI-augmented customer support and helpdesk platform built using the **MERN** stack (MongoDB, Express, React, Node.js) with **100% end-to-end TypeScript**. It integrates automated multi-factor ticket triaging, contextual incident summarization, RAG-grounded reply suggestions with **human-in-the-loop governance**, deterministic state machine transitions, and triple-layer privacy for internal team notes.
 
 ---
 
@@ -51,7 +51,7 @@
 
 ## 1. Primary Architecture & System Overview
 
-OmniSupport AI follows clean architecture principles with strict layer boundaries:
+NexusDesk AI follows clean architecture principles with strict layer boundaries:
 - **Presentation Layer**: React 18 Single Page Application with Tailwind CSS, Lucide icons, and Zustand.
 - **Transport Layer**: Express API with Helmet, CORS, Rate Limiting, and Winston request logging.
 - **Application Services**: Pure TypeScript business services enforcing state transitions, resource authorization, and domain invariants.
@@ -342,7 +342,7 @@ Ticket status transitions are strictly governed by `TicketStateMachine`:
 
 ## 12. Dual-Layer Authorization & Tenant Isolation
 
-OmniSupport AI prevents unauthorized access through two independent layers:
+NexusDesk AI prevents unauthorized access through two independent layers:
 1. **HTTP Router RBAC**: Validates role access (e.g. ensuring only `ADMIN` can reach `/api/admin/*`).
 2. **Resource-Level Authorization (`TicketRules`)**:
    - Customer A cannot view, reply to, or download attachments from Customer B's ticket.
@@ -353,7 +353,7 @@ OmniSupport AI prevents unauthorized access through two independent layers:
 
 ## 13. Private Internal Note Security (Triple Defense)
 
-Internal notes allow agents to discuss issues privately. OmniSupport AI implements **defense-in-depth**:
+Internal notes allow agents to discuss issues privately. NexusDesk AI implements **defense-in-depth**:
 1. **Controller Rejection**: If a `CUSTOMER` submits `isInternalNote: true`, the API rejects the request with `403 Forbidden`.
 2. **Service Assertion**: `TicketRules.assertCanAddInternalNote` verifies agent/admin role before proceeding.
 3. **Database Query Projection**: `messageRepository.findByTicketId` inspects the calling user's role. If the user is a `CUSTOMER`, `{ type: { $ne: 'INTERNAL_NOTE' } }` is applied at the MongoDB query level. Internal notes are **never retrieved from disk** for customers.
@@ -566,7 +566,7 @@ npm run seed --workspace=ai-helpdesk-server
 - **MongoDB Connection Refused**:
   Ensure MongoDB is running locally (`net start MongoDB` on Windows or `systemctl start mongod` on Linux).
 - **Redis Connection Warnings**:
-  If Redis is not installed locally, OmniSupport AI automatically activates its in-memory async worker. No action required.
+  If Redis is not installed locally, NexusDesk AI automatically activates its in-memory async worker. No action required.
 - **OpenAI Key Not Provided**:
   The offline heuristic simulator activates automatically. All classification, summarization, and suggested reply features remain functional.
 

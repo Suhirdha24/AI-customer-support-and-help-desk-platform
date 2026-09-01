@@ -56,7 +56,7 @@ export const LoginPage: React.FC = () => {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/30 mb-4">
             <Sparkles className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">OmniSupport AI</h1>
+          <h1 className="text-2xl font-extrabold text-white tracking-tight">NexusDesk AI</h1>
           <p className="text-sm text-slate-400 mt-1">Next-Generation AI-Augmented Customer Helpdesk</p>
         </div>
 

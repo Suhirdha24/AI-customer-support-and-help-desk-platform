@@ -1,8 +1,8 @@
-# Architecture Design Document: OmniSupport AI Platform
+# Architecture Design Document: NexusDesk AI Platform
 
 ## 1. High-Level Architecture Overview
 
-OmniSupport AI is a production-grade, enterprise customer support and helpdesk platform built on the MERN stack (MongoDB, Express, React, Node.js) with end-to-end TypeScript. The architecture emphasizes **security by default**, **resource-level tenant isolation**, **layered abstraction**, and **resilient AI orchestration**.
+NexusDesk AI is a production-grade, enterprise customer support and helpdesk platform built on the MERN stack (MongoDB, Express, React, Node.js) with end-to-end TypeScript. The architecture emphasizes **security by default**, **resource-level tenant isolation**, **layered abstraction**, and **resilient AI orchestration**.
 
 ```
                            +-------------------------------------+
@@ -69,7 +69,7 @@ OmniSupport AI is a production-grade, enterprise customer support and helpdesk p
 
 ## 3. Background Job Queue Subsystem
 
-AI ticket classification and embedding generation can introduce latency into standard HTTP request lifecycles. OmniSupport AI implements a resilient queue architecture:
+AI ticket classification and embedding generation can introduce latency into standard HTTP request lifecycles. NexusDesk AI implements a resilient queue architecture:
 
 1. **Primary Queue**: BullMQ backed by Redis.
 2. **Fallback Queue**: When Redis is unavailable, `queue.service.ts` seamlessly switches to an internal, non-blocking asynchronous event worker (`setImmediate` / `EventEmitter`).

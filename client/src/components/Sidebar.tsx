@@ -84,7 +84,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
           </div>
           <div>
             <h1 className="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
-              OmniSupport <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">AI</span>
+              NexusDesk <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">AI</span>
             </h1>
             <p className="text-[11px] text-slate-400 font-medium">Enterprise Helpdesk</p>
           </div>

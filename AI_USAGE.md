@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-This report documents the architectural, engineering, and security decisions made while integrating Artificial Intelligence into the **OmniSupport AI Helpdesk Platform**.
+This report documents the architectural, engineering, and security decisions made while integrating Artificial Intelligence into the **NexusDesk AI Helpdesk Platform**.
 
 ---
 
@@ -54,7 +54,7 @@ We implemented an offline heuristic analyzer that:
 
 ## 6. Human-in-the-Loop Governance
 
-OmniSupport AI enforces that **no customer-facing response is ever transmitted autonomously by AI**:
+NexusDesk AI enforces that **no customer-facing response is ever transmitted autonomously by AI**:
 - Suggested replies are rendered in an interactive preview drawer for the support agent.
 - The agent has full autonomy to Accept into Reply Box, Edit, Regenerate, or Dismiss.
 - Only when the human agent clicks "Send Reply" is the message persisted and visible to the customer.

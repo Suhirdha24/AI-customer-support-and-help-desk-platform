@@ -1,6 +1,6 @@
 # Security Architecture & Best Practices
 
-OmniSupport AI incorporates comprehensive security controls across transport, authentication, authorization, storage, and logging.
+NexusDesk AI incorporates comprehensive security controls across transport, authentication, authorization, storage, and logging.
 
 ---
 

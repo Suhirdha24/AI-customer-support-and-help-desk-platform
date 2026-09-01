@@ -1,5 +1,5 @@
 # Assessment Compliance Audit & Traceability Report
-**Project Name**: OmniSupport — AI Customer Support & Helpdesk Platform  
+**Project Name**: NexusDesk — AI Customer Support & Helpdesk Platform  
 **Audit Standard**: Comprehensive Full-Stack Assessment Specification (Phases 1–4)  
 **Audit Date**: September 2026  
 **Auditor**: Senior Full-Stack Architect & Engineering Review Team  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This document establishes the definitive **Requirements Traceability Matrix (RTM)** and audit evaluation for the **OmniSupport AI Customer Support & Helpdesk Platform**. Every architectural component, REST API endpoint, database schema, security mechanism, AI pipeline, frontend module, and test case has been inspected directly against source code and runtime behavior.
+This document establishes the definitive **Requirements Traceability Matrix (RTM)** and audit evaluation for the **NexusDesk AI Customer Support & Helpdesk Platform**. Every architectural component, REST API endpoint, database schema, security mechanism, AI pipeline, frontend module, and test case has been inspected directly against source code and runtime behavior.
 
 ### Key Highlights
 - **Total Test Cases**: **49 automated tests** covering Authentication, Authorization/IDOR, State Transitions, Internal Notes, AI Validation, Grounding, Knowledge Base, CSAT, File Uploads, Search, Filter, Sort, Pagination, and Record Deletion.

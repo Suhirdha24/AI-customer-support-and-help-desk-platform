@@ -32,7 +32,7 @@ export const RegisterPage: React.FC = () => {
       if (res.data.success) {
         const { token, user } = res.data.data;
         login(token, user);
-        toast.success(`Welcome to OmniSupport, ${user.name}!`);
+        toast.success(`Welcome to NexusDesk, ${user.name}!`);
         navigate('/customer/dashboard');
       }
     } catch (err: any) {

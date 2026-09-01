@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
           <Menu className="w-5 h-5" />
         </button>
         <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-500">
-          <span>OmniSupport</span>
+          <span>NexusDesk</span>
           <span>/</span>
           <span className="text-slate-800 capitalize">{user?.role?.toLowerCase()} Portal</span>
         </div>

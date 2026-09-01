@@ -1,6 +1,6 @@
 # Ticket State Machine Architecture
 
-The lifecycle of support tickets in OmniSupport AI is governed by a **deterministic finite state machine (FSM)** implemented in `server/src/services/ticketStateMachine.service.ts`.
+The lifecycle of support tickets in NexusDesk AI is governed by a **deterministic finite state machine (FSM)** implemented in `server/src/services/ticketStateMachine.service.ts`.
 
 ---
 

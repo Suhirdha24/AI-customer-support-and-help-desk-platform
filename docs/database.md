@@ -1,6 +1,6 @@
 # Database Architecture & Data Dictionary
 
-OmniSupport AI uses MongoDB with Mongoose 8. The database schema design guarantees referential consistency, atomic ticket sequence generation, rapid full-text search, and performant aggregation pipelines.
+NexusDesk AI uses MongoDB with Mongoose 8. The database schema design guarantees referential consistency, atomic ticket sequence generation, rapid full-text search, and performant aggregation pipelines.
 
 ---
 

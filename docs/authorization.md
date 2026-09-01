@@ -1,6 +1,6 @@
 # Authorization & Security Architecture
 
-OmniSupport AI enforces a dual-layered security architecture:
+NexusDesk AI enforces a dual-layered security architecture:
 1. **Role-Based Access Control (RBAC)** at the HTTP router layer.
 2. **Resource-Level Authorization (Tenant Isolation)** inside the Service layer.
 
@@ -20,7 +20,7 @@ OmniSupport AI enforces a dual-layered security architecture:
 
 RBAC checks whether a user *role* can hit a URL (e.g. `GET /api/tickets/:id`). However, RBAC alone cannot prevent Customer A from reading Customer B's ticket.
 
-OmniSupport AI solves this with `TicketRules`:
+NexusDesk AI solves this with `TicketRules`:
 ```ts
 // server/src/services/ticketRules.ts
 export class TicketRules {

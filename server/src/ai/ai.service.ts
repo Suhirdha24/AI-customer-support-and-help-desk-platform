@@ -201,7 +201,7 @@ export class AIService {
         provider: 'OpenAI',
         model: 'gpt-4o-mini',
         ticketId: ticket._id,
-        userId: new mongoose.Types.ObjectId(userId),
+        userId: new mongoose.Types.ObjectId(user.id),
         status: 'FAILURE',
         latencyMs,
         errorType: err.name || 'UNKNOWN_ERROR',

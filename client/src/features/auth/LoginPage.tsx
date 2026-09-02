@@ -15,6 +15,7 @@ import {
   User,
   CheckCircle2,
   X,
+  Leaf,
 } from 'lucide-react';
 
 type RoleTab = 'ADMIN' | 'AGENT' | 'CUSTOMER';
@@ -250,6 +251,21 @@ export const LoginPage: React.FC = () => {
       <div className="lg:w-1/2 xl:w-[48%] bg-white flex flex-col justify-center p-6 sm:p-10 lg:p-12 xl:p-14 overflow-y-auto h-full">
         {/* Right Center: Balanced Sign In Form */}
         <div className="max-w-md w-full mx-auto space-y-5 text-left py-4">
+          {/* Website Brand Header */}
+          <div className="flex items-center gap-2.5 pb-1">
+            <div className="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm shadow-emerald-600/20">
+              <Leaf className="w-4 h-4" />
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xl font-bold tracking-tight text-slate-900">
+                NexusDesk
+              </span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+                Eco
+              </span>
+            </div>
+          </div>
+
           {/* Header */}
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">

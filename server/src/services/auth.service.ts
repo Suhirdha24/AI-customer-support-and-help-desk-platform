@@ -120,6 +120,33 @@ export class AuthService {
     };
   }
 
+  async resetPassword(input: { email: string; newPassword: string }): Promise<{ message: string }> {
+    const { email, newPassword } = input;
+
+    if (!email || !newPassword) {
+      throw new ValidationError('Email address and new password are required.');
+    }
+
+    if (newPassword.length < 6) {
+      throw new ValidationError('New password must be at least 6 characters long.');
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await userRepository.findByEmail(normalizedEmail);
+    if (!user) {
+      throw new NotFoundError('No registered account found with this email address.');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+
+    await userRepository.update(user._id.toString(), { passwordHash });
+
+    return {
+      message: 'Password reset successfully. You can now log in with your new password.',
+    };
+  }
+
   async getCurrentUser(userId: string): Promise<AuthUser> {
     const user = await userRepository.findById(userId);
     if (!user) {

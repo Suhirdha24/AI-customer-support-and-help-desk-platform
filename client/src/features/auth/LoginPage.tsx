@@ -13,7 +13,8 @@ import {
   Shield,
   Headphones,
   User,
-  HelpCircle,
+  CheckCircle2,
+  X,
 } from 'lucide-react';
 
 type RoleTab = 'ADMIN' | 'AGENT' | 'CUSTOMER';
@@ -67,9 +68,75 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetNewPassword, setResetNewPassword] = useState('');
+  const [resetConfirmPassword, setResetConfirmPassword] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState<string | null>(null);
+  const [showResetPassword, setShowResetPassword] = useState(false);
 
   const { login, isAuthenticated, user } = useAuthStore();
   const navigate = useNavigate();
+
+  const handleOpenForgotModal = () => {
+    setResetEmail(email.trim());
+    setResetNewPassword('');
+    setResetConfirmPassword('');
+    setResetError(null);
+    setResetSuccess(null);
+    setForgotModalOpen(true);
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetError(null);
+    setResetSuccess(null);
+
+    const cleanResetEmail = resetEmail.trim().toLowerCase();
+    if (!cleanResetEmail) {
+      setResetError('Please enter your registered email address.');
+      return;
+    }
+    if (!resetNewPassword) {
+      setResetError('Please enter a new password.');
+      return;
+    }
+    if (resetNewPassword.length < 6) {
+      setResetError('Password must be at least 6 characters long.');
+      return;
+    }
+    if (resetNewPassword !== resetConfirmPassword) {
+      setResetError('Passwords do not match. Please re-enter.');
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+      const res = await apiClient.post('/auth/reset-password', {
+        email: cleanResetEmail,
+        newPassword: resetNewPassword,
+      });
+
+      if (res.data?.success) {
+        setResetSuccess(res.data.data?.message || 'Password reset successfully!');
+        toast.success('Password updated successfully! You can now sign in.');
+        setEmail(cleanResetEmail);
+        setPassword(resetNewPassword);
+        setTimeout(() => {
+          setForgotModalOpen(false);
+        }, 1500);
+      }
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        'Failed to reset password. Please verify your email address.';
+      setResetError(msg);
+    } finally {
+      setResetLoading(false);
+    }
+  };
 
   // Preload all natural images for instant tab switching
   useEffect(() => {
@@ -300,8 +367,8 @@ export const LoginPage: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setForgotModalOpen(true)}
-                className="text-xs text-emerald-700 hover:text-emerald-800 font-medium transition-colors"
+                onClick={handleOpenForgotModal}
+                className="text-xs text-emerald-700 hover:text-emerald-800 font-medium transition-colors cursor-pointer"
               >
                 Forgot password?
               </button>
@@ -342,30 +409,127 @@ export const LoginPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Forgot Password Modal */}
+      {/* Reset Password Modal */}
       {forgotModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-left">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 max-w-md w-full shadow-2xl text-left relative">
+            <button
+              type="button"
+              onClick={() => setForgotModalOpen(false)}
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
-              <HelpCircle className="w-5 h-5" />
+              <Lock className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1">Demo Access & Passwords</h3>
-            <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-              For all demo roles (Admin, Agent, Customer), the default password is{' '}
-              <code className="text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-mono font-bold">
-                Password123!
-              </code>
-              . You can switch between roles using the role switcher tabs above.
+
+            <h3 className="text-lg font-bold text-slate-900">Reset Password</h3>
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+              Enter your registered email address to set a new password.
             </p>
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => setForgotModalOpen(false)}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
-              >
-                Got it
-              </button>
-            </div>
+
+            {/* Error Message */}
+            {resetError && (
+              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div className="flex-1 leading-relaxed">{resetError}</div>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {resetSuccess && (
+              <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="flex-1 leading-relaxed">{resetSuccess}</div>
+              </div>
+            )}
+
+            <form onSubmit={handleResetPassword} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  Registered Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    required
+                    disabled={resetLoading}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  New Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <input
+                    type={showResetPassword ? 'text' : 'password'}
+                    value={resetNewPassword}
+                    onChange={(e) => setResetNewPassword(e.target.value)}
+                    placeholder="Enter new password (min 6 characters)"
+                    required
+                    disabled={resetLoading}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-10 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowResetPassword(!showResetPassword)}
+                    className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showResetPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  Confirm New Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <input
+                    type={showResetPassword ? 'text' : 'password'}
+                    value={resetConfirmPassword}
+                    onChange={(e) => setResetConfirmPassword(e.target.value)}
+                    placeholder="Re-enter new password"
+                    required
+                    disabled={resetLoading}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setForgotModalOpen(false)}
+                  disabled={resetLoading}
+                  className="px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={resetLoading}
+                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  {resetLoading && (
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  )}
+                  <span>Update Password</span>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -20,7 +20,7 @@ router.put('/teams/:id', authenticate, requireRole(UserRole.ADMIN), adminControl
 router.get('/users', authenticate, requireRole(UserRole.ADMIN), adminController.listUsers);
 router.patch('/users/:id/status', authenticate, requireRole(UserRole.ADMIN), adminController.toggleUserStatus);
 router.patch('/users/:id/role', authenticate, requireRole(UserRole.ADMIN), adminController.updateUserRole);
-router.get('/agents', authenticate, requireRole(UserRole.ADMIN), adminController.listAgents);
+router.get('/agents', authenticate, requireRole(UserRole.ADMIN, UserRole.AGENT), adminController.listAgents);
 
 // Telemetry & Audits
 router.get('/ai-usage', authenticate, requireRole(UserRole.ADMIN), adminController.getAIUsageLogs);

@@ -51,8 +51,8 @@ export const TicketListPage: React.FC = () => {
       params.set('limit', '10');
 
       const res = await apiClient.get(`/tickets?${params.toString()}`);
-      if (res.data.success) {
-        setTickets(res.data.data);
+      if (res.data?.success) {
+        setTickets(Array.isArray(res.data.data) ? res.data.data : []);
         if (res.data.pagination) {
           setPagination(res.data.pagination);
         }

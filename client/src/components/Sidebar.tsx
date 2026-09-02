@@ -167,7 +167,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
 
               {(isAdmin || isAgent) && (
                 <NavLink
-                  to="/admin/agents"
+                  to={isAdmin ? '/admin/performance' : '/agent/performance'}
                   onClick={onCloseMobile}
                   className={({ isActive }) =>
                     `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
@@ -191,7 +191,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
             </div>
             <div className="space-y-1">
               <NavLink
-                to={isAdmin ? '/admin/knowledge-base' : '/customer/knowledge-base'}
+                to={isAdmin ? '/admin/knowledge-base' : isAgent ? '/agent/knowledge-base' : '/customer/knowledge-base'}
                 onClick={onCloseMobile}
                 className={({ isActive }) =>
                   `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${

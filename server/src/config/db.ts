@@ -1,6 +1,14 @@
+import dns from 'dns';
 import mongoose from 'mongoose';
 import { env } from './env.js';
 import { logger } from '../logger/logger.js';
+
+// Resolve MongoDB SRV records reliably across Windows and local ISPs
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch {
+  // Fallback to default OS DNS if setServers is restricted
+}
 
 export const connectDB = async (): Promise<typeof mongoose> => {
   try {

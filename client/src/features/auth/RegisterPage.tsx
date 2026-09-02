@@ -65,13 +65,13 @@ export const RegisterPage: React.FC = () => {
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-white font-sans text-slate-800">
       {/* LEFT COLUMN: Customer Showcase & Photography (Fills 50% - 52% of window) */}
-      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 border-r border-slate-200/80 p-6 sm:p-10 lg:p-12 xl:p-16 flex flex-col justify-between relative overflow-hidden">
+      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 border-r border-slate-200/80 p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-between relative overflow-hidden h-full">
         {/* Soft ambient lighting */}
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Top Branding */}
-        <div className="relative z-10">
+        {/* Top Branding Bar */}
+        <div className="relative z-10 shrink-0">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 text-xs text-emerald-800 shadow-xs">
             <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
             <span className="font-bold text-slate-900">NexusDesk</span>
@@ -83,9 +83,9 @@ export const RegisterPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Center Content */}
-        <div className="my-auto py-6 space-y-4 relative z-10 text-left">
-          <div className="space-y-2">
+        {/* Content Section: Headline, Description & Feature Pills */}
+        <div className="relative z-10 text-left pt-3 shrink-0">
+          <div className="space-y-1.5">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
               Instant Care with Friendly Human & AI Support
             </h1>
@@ -95,7 +95,7 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap items-center gap-2 pt-1">
+          <div className="flex flex-wrap items-center gap-2 pt-2.5">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 font-medium shadow-xs">
               <Zap className="w-3.5 h-3.5 text-emerald-700" />
               <span>Zero Wait Time</span>
@@ -109,45 +109,57 @@ export const RegisterPage: React.FC = () => {
               <span>Carbon-Neutral</span>
             </span>
           </div>
+        </div>
 
-          {/* Photo Frame */}
-          <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md group mt-4">
-            <img
-              src="/images/natural_customer.jpg"
-              alt="Customer Support Experience"
-              className="w-full h-48 sm:h-56 lg:h-64 xl:h-72 object-cover rounded-t-2xl transition-all duration-500 group-hover:scale-[1.01]"
-            />
+        {/* Photo Frame that expands vertically to fill all available space */}
+        <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md group my-3 flex-1 flex flex-col min-h-[260px] max-h-[480px]">
+          <img
+            src="/images/natural_customer.jpg"
+            alt="Customer Support Experience"
+            className="w-full flex-1 min-h-0 object-cover rounded-t-2xl transition-all duration-500 group-hover:scale-[1.01]"
+          />
 
-            {/* Bottom Overlay Bar */}
-            <div className="bg-white/95 border-t border-slate-100 px-4 py-3 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center">
-                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                </div>
-                <div>
-                  <p className="font-bold text-slate-900 text-xs sm:text-sm">98% Customer Satisfaction</p>
-                  <p className="text-[11px] text-slate-500 hidden sm:block">Verified post-resolution reviews</p>
-                </div>
+          {/* Bottom Overlay Bar */}
+          <div className="bg-white/95 border-t border-slate-100 px-4 py-2.5 flex items-center justify-between text-xs shrink-0">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center">
+                <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
               </div>
-
-              <div className="flex items-center gap-1.5 font-medium text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-                <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Zero Carbon Support</span>
+              <div>
+                <p className="font-bold text-slate-900 text-xs sm:text-sm">98% Customer Satisfaction</p>
+                <p className="text-[11px] text-slate-500 hidden sm:block">Verified post-resolution reviews</p>
               </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 font-medium text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+              <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Zero Carbon Support</span>
             </div>
           </div>
         </div>
 
         {/* Bottom Sustainability Note */}
-        <div className="relative z-10 pt-2 text-xs text-slate-500 flex items-center gap-2">
+        <div className="relative z-10 text-xs text-slate-500 flex items-center gap-2 shrink-0">
           <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
           <span>Eco-certified customer care • Carbon-neutral compute</span>
         </div>
       </div>
 
       {/* RIGHT COLUMN: Account Creation Form (Fills other 50% of window) */}
-      <div className="lg:w-1/2 xl:w-[48%] bg-white flex flex-col justify-center items-center p-6 sm:p-10 lg:p-12 xl:p-16 overflow-y-auto">
-        <div className="max-w-md w-full my-auto space-y-6 text-left">
+      <div className="lg:w-1/2 xl:w-[48%] bg-white flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12 overflow-y-auto h-full">
+        {/* Right Top Bar */}
+        <div className="w-full flex items-center justify-between text-xs text-slate-500 shrink-0">
+          <div className="flex items-center gap-2 font-semibold text-slate-800">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>NexusDesk Customer Portal</span>
+          </div>
+          <div className="text-[11px] text-emerald-800 font-medium bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+            Self-Service
+          </div>
+        </div>
+
+        {/* Form Container */}
+        <div className="max-w-md w-full mx-auto my-auto space-y-5 text-left py-4">
           {/* Header */}
           <div>
             <div className="inline-flex lg:hidden items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20 mb-3">
@@ -270,12 +282,17 @@ export const RegisterPage: React.FC = () => {
           </form>
 
           {/* Footer */}
-          <p className="text-center text-xs text-slate-500 pt-2">
+          <p className="text-center text-xs text-slate-500 pt-1">
             Already registered?{' '}
             <Link to="/login" className="font-semibold text-emerald-700 hover:text-emerald-800 underline">
               Sign In
             </Link>
           </p>
+        </div>
+
+        {/* Right Bottom Footer */}
+        <div className="w-full text-center text-xs text-slate-400 shrink-0 pt-2">
+          <span>© 2026 NexusDesk Technologies • Verified Eco-Certified Platform</span>
         </div>
       </div>
     </div>

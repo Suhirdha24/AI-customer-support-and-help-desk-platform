@@ -13,7 +13,6 @@ import {
   Shield,
   Headphones,
   User,
-  Info,
   HelpCircle,
   Zap,
   Leaf,
@@ -216,9 +215,13 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
 
-    const targetRole = ROLES.find((r) => r.id === activeRole) || ROLES[0];
-    const cleanEmail = email.trim() || targetRole.email;
-    const cleanPassword = password || 'Password123!';
+    const cleanEmail = email.trim();
+    const cleanPassword = password;
+
+    if (!cleanEmail || !cleanPassword) {
+      setErrorMessage('Please enter your email address and password.');
+      return;
+    }
 
     try {
       setLoading(true);
@@ -376,11 +379,7 @@ export const LoginPage: React.FC = () => {
           <div>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
               <span className="font-semibold uppercase tracking-wider text-[11px] text-slate-500">
-                Select Workspace Role
-              </span>
-              <span className="text-xs text-emerald-700 flex items-center gap-1 font-medium">
-                <Info className="w-3.5 h-3.5" />
-                <span>Auto-fills credentials</span>
+                Workspace Role
               </span>
             </div>
 
@@ -419,14 +418,9 @@ export const LoginPage: React.FC = () => {
           <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
             {/* Email Address */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                  Email Address
-                </label>
-                <span className="text-xs text-slate-500 font-mono">
-                  Role: <strong className="text-slate-800 font-semibold">{currentRole.subLabel}</strong>
-                </span>
-              </div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                Email Address
+              </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
@@ -436,7 +430,7 @@ export const LoginPage: React.FC = () => {
                   id={`user_login_email_${activeRole}`}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={currentRole.email}
+                  placeholder="Enter your email address"
                   autoComplete="new-password"
                   disabled={loading}
                   className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
@@ -446,14 +440,9 @@ export const LoginPage: React.FC = () => {
 
             {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                  Password
-                </label>
-                <span className="text-xs text-slate-500 font-mono">
-                  Default: <strong className="text-emerald-700 font-semibold">Password123!</strong>
-                </span>
-              </div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                Password
+              </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
@@ -463,7 +452,7 @@ export const LoginPage: React.FC = () => {
                   id={`user_login_pwd_${activeRole}`}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password123!"
+                  placeholder="Enter your password"
                   autoComplete="new-password"
                   disabled={loading}
                   className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"

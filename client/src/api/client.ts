@@ -1,7 +1,28 @@
 import axios from 'axios';
 
+const resolveBaseURL = (): string => {
+  if (import.meta.env.VITE_API_URL) {
+    let url = import.meta.env.VITE_API_URL.trim();
+    if (!url.startsWith('http') && !url.startsWith('/')) {
+      url = `https://${url}`;
+    }
+    return url.replace(/\/+$/, '');
+  }
+
+  // Localhost development uses Vite proxy
+  if (
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ) {
+    return '/api';
+  }
+
+  // Production fallback to live deployed Render backend API
+  return 'https://nexusdesk-api-i4n5.onrender.com/api';
+};
+
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: resolveBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },

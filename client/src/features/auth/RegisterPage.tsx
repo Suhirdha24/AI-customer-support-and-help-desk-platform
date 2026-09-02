@@ -14,6 +14,7 @@ import {
   Leaf,
   Shield,
   Star,
+  AlertCircle,
 } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
@@ -22,6 +23,7 @@ export const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuthStore();
   const navigate = useNavigate();
 
@@ -30,12 +32,14 @@ export const RegisterPage: React.FC = () => {
     setName('');
     setEmail('');
     setPassword('');
+    setErrorMessage('');
   }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage('');
     if (!name.trim() || !email.trim() || !password) {
-      toast.error('Please fill in all required fields.');
+      setErrorMessage('Please fill in all required fields.');
       return;
     }
 
@@ -55,7 +59,8 @@ export const RegisterPage: React.FC = () => {
         navigate('/customer/dashboard');
       }
     } catch (err: any) {
-      const msg = err.response?.data?.error?.message || 'Registration failed. Please try again.';
+      const msg = err.response?.data?.error?.message || err.message || 'Registration failed. Please try again.';
+      setErrorMessage(msg);
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -173,17 +178,20 @@ export const RegisterPage: React.FC = () => {
             </p>
           </div>
 
+          {/* Inline Error Alert */}
+          {errorMessage && (
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div className="flex-1 leading-relaxed">{errorMessage}</div>
+            </div>
+          )}
+
           <form onSubmit={handleRegister} className="space-y-4" autoComplete="off">
             {/* Full Name */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                  Full Name
-                </label>
-                <span className="text-xs text-slate-500 font-mono">
-                  e.g. <span className="text-slate-800 font-semibold">Jane Doe</span>
-                </span>
-              </div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                Full Name
+              </label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
@@ -192,7 +200,7 @@ export const RegisterPage: React.FC = () => {
                   id="reg_fullname"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Jane Doe"
+                  placeholder="Enter your full name"
                   required
                   autoComplete="off"
                   disabled={loading}
@@ -201,16 +209,11 @@ export const RegisterPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Work Email */}
+            {/* Email Address */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                  Work Email
-                </label>
-                <span className="text-xs text-slate-500 font-mono">
-                  e.g. <span className="text-slate-800 font-semibold">alex@company.com</span>
-                </span>
-              </div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                Email Address
+              </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
@@ -219,7 +222,7 @@ export const RegisterPage: React.FC = () => {
                   id="reg_user_email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="alex@company.com"
+                  placeholder="Enter your email address"
                   required
                   autoComplete="new-password"
                   disabled={loading}
@@ -230,14 +233,9 @@ export const RegisterPage: React.FC = () => {
 
             {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                  Password
-                </label>
-                <span className="text-xs text-slate-500 font-mono">
-                  Min 8 characters
-                </span>
-              </div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                Password
+              </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
@@ -246,7 +244,7 @@ export const RegisterPage: React.FC = () => {
                   id="reg_user_password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Create a secure password"
+                  placeholder="Enter your password (min 6 characters)"
                   required
                   autoComplete="new-password"
                   disabled={loading}

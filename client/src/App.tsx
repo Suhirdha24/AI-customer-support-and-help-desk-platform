@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/useAuthStore.js';
 import { AppLayout } from './layouts/AppLayout.js';
+import { ToastContainer } from './components/ToastContainer.js';
 
 // Auth Pages
 import { LoginPage } from './features/auth/LoginPage.js';
@@ -43,51 +44,54 @@ export const App: React.FC = () => {
   };
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+    <>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-      {/* Root redirect based on role */}
-      <Route path="/" element={<Navigate to={getDefaultRedirect()} replace />} />
+        {/* Root redirect based on role */}
+        <Route path="/" element={<Navigate to={getDefaultRedirect()} replace />} />
 
-      {/* Customer Routes */}
-      <Route element={<AppLayout allowedRoles={['CUSTOMER']} />}>
-        <Route path="/customer/dashboard" element={<CustomerDashboard />} />
-        <Route path="/customer/performance" element={<SupportPerformanceOverview />} />
-        <Route path="/customer/tickets" element={<TicketListPage />} />
-        <Route path="/customer/tickets/create" element={<CreateTicketPage />} />
-        <Route path="/customer/tickets/:id" element={<TicketDetailPage />} />
-        <Route path="/customer/knowledge-base" element={<KnowledgeBasePage />} />
-      </Route>
+        {/* Customer Routes */}
+        <Route element={<AppLayout allowedRoles={['CUSTOMER']} />}>
+          <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+          <Route path="/customer/performance" element={<SupportPerformanceOverview />} />
+          <Route path="/customer/tickets" element={<TicketListPage />} />
+          <Route path="/customer/tickets/create" element={<CreateTicketPage />} />
+          <Route path="/customer/tickets/:id" element={<TicketDetailPage />} />
+          <Route path="/customer/knowledge-base" element={<KnowledgeBasePage />} />
+        </Route>
 
-      {/* Agent Routes */}
-      <Route element={<AppLayout allowedRoles={['AGENT', 'ADMIN']} />}>
-        <Route path="/agent/dashboard" element={<AgentDashboard />} />
-        <Route path="/agent/performance" element={<SupportPerformanceOverview />} />
-        <Route path="/performance" element={<SupportPerformanceOverview />} />
-        <Route path="/agent/tickets" element={<TicketListPage />} />
-        <Route path="/agent/tickets/:id" element={<TicketDetailPage />} />
-        <Route path="/agent/knowledge-base" element={<KnowledgeBasePage />} />
-      </Route>
+        {/* Agent Routes */}
+        <Route element={<AppLayout allowedRoles={['AGENT', 'ADMIN']} />}>
+          <Route path="/agent/dashboard" element={<AgentDashboard />} />
+          <Route path="/agent/performance" element={<SupportPerformanceOverview />} />
+          <Route path="/performance" element={<SupportPerformanceOverview />} />
+          <Route path="/agent/tickets" element={<TicketListPage />} />
+          <Route path="/agent/tickets/:id" element={<TicketDetailPage />} />
+          <Route path="/agent/knowledge-base" element={<KnowledgeBasePage />} />
+        </Route>
 
-      {/* Admin Routes */}
-      <Route element={<AppLayout allowedRoles={['ADMIN']} />}>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/performance" element={<SupportPerformanceOverview />} />
-        <Route path="/admin/tickets" element={<TicketListPage />} />
-        <Route path="/admin/tickets/:id" element={<TicketDetailPage />} />
-        <Route path="/admin/users" element={<UserManagementPage />} />
-        <Route path="/admin/agents" element={<AdminDashboard />} />
-        <Route path="/admin/teams" element={<TeamManagementPage />} />
-        <Route path="/admin/categories" element={<CategoryManagementPage />} />
-        <Route path="/admin/knowledge-base" element={<KnowledgeBasePage />} />
-        <Route path="/admin/audit-logs" element={<AuditLogsPage />} />
-        <Route path="/admin/ai-usage" element={<AIUsageLogsPage />} />
-      </Route>
+        {/* Admin Routes */}
+        <Route element={<AppLayout allowedRoles={['ADMIN']} />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/performance" element={<SupportPerformanceOverview />} />
+          <Route path="/admin/tickets" element={<TicketListPage />} />
+          <Route path="/admin/tickets/:id" element={<TicketDetailPage />} />
+          <Route path="/admin/users" element={<UserManagementPage />} />
+          <Route path="/admin/agents" element={<AdminDashboard />} />
+          <Route path="/admin/teams" element={<TeamManagementPage />} />
+          <Route path="/admin/categories" element={<CategoryManagementPage />} />
+          <Route path="/admin/knowledge-base" element={<KnowledgeBasePage />} />
+          <Route path="/admin/audit-logs" element={<AuditLogsPage />} />
+          <Route path="/admin/ai-usage" element={<AIUsageLogsPage />} />
+        </Route>
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to={getDefaultRedirect()} replace />} />
-    </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to={getDefaultRedirect()} replace />} />
+      </Routes>
+      <ToastContainer />
+    </>
   );
 };

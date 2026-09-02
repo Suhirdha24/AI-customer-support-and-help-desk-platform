@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { apiClient } from '../../api/client.js';
 import { useAuthStore } from '../../store/useAuthStore.js';
@@ -7,7 +7,7 @@ import { Modal } from '../../components/Modal.js';
 import { SkeletonCard } from '../../components/SkeletonLoader.js';
 import { EmptyState } from '../../components/EmptyState.js';
 import { KnowledgeBaseArticle, Category } from '../../types/index.js';
-import { Search, Plus, Tag, ArrowRight } from 'lucide-react';
+import { Search, Plus, Tag, ArrowRight, BookOpen } from 'lucide-react';
 
 export const KnowledgeBasePage: React.FC = () => {
   const { user } = useAuthStore();
@@ -32,7 +32,10 @@ export const KnowledgeBasePage: React.FC = () => {
 
   useEffect(() => {
     apiClient.get('/admin/categories').then((res) => {
-      if (res.data.success) setCategories(res.data.data);
+      if (res.data?.success) {
+        const cats = Array.isArray(res.data.data) ? res.data.data : res.data.data?.categories || [];
+        setCategories(cats);
+      }
     });
   }, []);
 
@@ -40,17 +43,25 @@ export const KnowledgeBasePage: React.FC = () => {
     try {
       setLoading(true);
       if (searchQuery.trim()) {
-        const res = await apiClient.get(`/knowledge-base/search?q=${encodeURIComponent(searchQuery.trim())}`);
-        if (res.data.success) setArticles(res.data.data);
+        const queryUrl = `/knowledge-base/search?q=${encodeURIComponent(searchQuery.trim())}${
+          selectedCategory ? `&category=${selectedCategory}&categoryId=${selectedCategory}` : ''
+        }`;
+        const res = await apiClient.get(queryUrl);
+        if (res.data?.success) {
+          setArticles(Array.isArray(res.data.data) ? res.data.data : []);
+        }
       } else {
         const url = selectedCategory
-          ? `/knowledge-base?categoryId=${selectedCategory}`
+          ? `/knowledge-base?category=${selectedCategory}&categoryId=${selectedCategory}`
           : '/knowledge-base';
         const res = await apiClient.get(url);
-        if (res.data.success) setArticles(res.data.data);
+        if (res.data?.success) {
+          setArticles(Array.isArray(res.data.data) ? res.data.data : []);
+        }
       }
     } catch (error) {
       console.error('Failed to load articles:', error);
+      setArticles([]);
     } finally {
       setLoading(false);
     }
@@ -59,6 +70,24 @@ export const KnowledgeBasePage: React.FC = () => {
   useEffect(() => {
     fetchArticles();
   }, [selectedCategory, searchQuery]);
+
+  // Client-side instant filter to guarantee exact category matching
+  const displayedArticles = useMemo(() => {
+    let list = articles;
+    if (selectedCategory) {
+      list = list.filter((article) => {
+        const catObj = article.categoryId;
+        const catId = typeof catObj === 'object' && catObj !== null ? (catObj as any).id || (catObj as any)._id : catObj;
+        const catName = typeof catObj === 'object' && catObj !== null ? (catObj as any).name : '';
+        const matchingCategory = categories.find((c) => c.id === selectedCategory);
+        return (
+          catId === selectedCategory ||
+          (matchingCategory && catName?.toLowerCase() === matchingCategory.name.toLowerCase())
+        );
+      });
+    }
+    return list;
+  }, [articles, selectedCategory, categories]);
 
   const handleCreateArticle = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +109,7 @@ export const KnowledgeBasePage: React.FC = () => {
         status: 'PUBLISHED',
       });
 
-      if (res.data.success) {
+      if (res.data?.success) {
         toast.success('Article published to Knowledge Base!');
         setShowCreateModal(false);
         setNewTitle('');
@@ -95,13 +124,20 @@ export const KnowledgeBasePage: React.FC = () => {
     }
   };
 
+  const getCategoryName = (cat: any) => {
+    if (typeof cat === 'object' && cat?.name) return cat.name;
+    const found = categories.find((c) => c.id === cat);
+    return found ? found.name : 'Documentation';
+  };
+
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-6xl mx-auto font-sans">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            Knowledge Base & Documentation
+          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <BookOpen className="w-6 h-6 text-indigo-600" />
+            <span>Knowledge Base & Documentation</span>
           </h2>
           <p className="text-sm text-slate-500">
             Self-service documentation, troubleshooting guides, and AI grounding source repository.
@@ -111,7 +147,7 @@ export const KnowledgeBasePage: React.FC = () => {
         {user?.role === 'ADMIN' && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-colors shrink-0"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-colors shrink-0 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Publish Article</span>
@@ -137,9 +173,8 @@ export const KnowledgeBasePage: React.FC = () => {
           <button
             onClick={() => {
               setSelectedCategory('');
-              setSearchQuery('');
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
               !selectedCategory
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -152,9 +187,8 @@ export const KnowledgeBasePage: React.FC = () => {
               key={cat.id}
               onClick={() => {
                 setSelectedCategory(cat.id);
-                setSearchQuery('');
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                 selectedCategory === cat.id
                   ? 'bg-indigo-600 text-white shadow-sm'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -173,30 +207,30 @@ export const KnowledgeBasePage: React.FC = () => {
           <SkeletonCard />
           <SkeletonCard />
         </div>
-      ) : articles.length === 0 ? (
+      ) : displayedArticles.length === 0 ? (
         <EmptyState
-          title="No articles found"
-          description="Try broadening your search term or select another category."
+          title="No articles found in this category"
+          description="Try selecting another category or publish a new article to this section."
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {articles.map((article) => (
+          {displayedArticles.map((article) => (
             <div
               key={article.id}
               onClick={() => setActiveArticle(article)}
-              className="bg-white border border-slate-200 hover:border-indigo-300 rounded-2xl p-5 shadow-subtle hover:shadow-card cursor-pointer transition-all flex flex-col justify-between"
+              className="bg-white border border-slate-200 hover:border-indigo-300 rounded-2xl p-5 shadow-subtle hover:shadow-card cursor-pointer transition-all flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-                    {article.categoryId?.name || 'Help'}
+                    {getCategoryName(article.categoryId)}
                   </span>
                   <span className="text-[11px] text-slate-400 font-medium">
-                    {new Date(article.createdAt).toLocaleDateString()}
+                    {article.createdAt ? new Date(article.createdAt).toLocaleDateString() : 'Recent'}
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 line-clamp-2 leading-snug">
+                <h3 className="text-base font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-indigo-600 transition-colors">
                   {article.title}
                 </h3>
 
@@ -217,7 +251,7 @@ export const KnowledgeBasePage: React.FC = () => {
                   ))}
                 </div>
 
-                <span className="text-xs font-semibold text-indigo-600 flex items-center gap-1">
+                <span className="text-xs font-semibold text-indigo-600 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                   <span>Read</span>
                   <ArrowRight className="w-3 h-3" />
                 </span>
@@ -237,9 +271,14 @@ export const KnowledgeBasePage: React.FC = () => {
         {activeArticle && (
           <div className="space-y-4">
             <div className="flex items-center gap-3 pb-3 border-b border-slate-100 text-xs text-slate-500">
-              <span className="font-semibold text-indigo-600">{activeArticle.categoryId?.name}</span>
+              <span className="font-semibold text-indigo-600">
+                {getCategoryName(activeArticle.categoryId)}
+              </span>
               <span>•</span>
-              <span>Published {new Date(activeArticle.createdAt).toLocaleDateString()}</span>
+              <span>
+                Published{' '}
+                {activeArticle.createdAt ? new Date(activeArticle.createdAt).toLocaleDateString() : 'Recently'}
+              </span>
             </div>
 
             <div className="text-sm text-slate-800 leading-relaxed whitespace-pre-wrap font-normal">
@@ -263,7 +302,7 @@ export const KnowledgeBasePage: React.FC = () => {
         )}
       </Modal>
 
-      {/* Admin Create Article Modal */}
+      {/* Create Article Modal */}
       <Modal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
@@ -272,26 +311,30 @@ export const KnowledgeBasePage: React.FC = () => {
       >
         <form onSubmit={handleCreateArticle} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-700 mb-1">Title *</label>
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              Article Title
+            </label>
             <input
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="e.g. Troubleshooting Webhook 504 Timeouts"
+              placeholder="e.g. Setting up Webhook Notifications"
               required
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:bg-white focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-700 mb-1">Category *</label>
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              Category
+            </label>
             <select
               value={newCategoryId}
               onChange={(e) => setNewCategoryId(e.target.value)}
               required
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:bg-white focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-500"
             >
-              <option value="">Select Category</option>
+              <option value="">Select a category...</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -301,40 +344,44 @@ export const KnowledgeBasePage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-700 mb-1">Article Body *</label>
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              Article Content (Markdown supported)
+            </label>
             <textarea
-              rows={8}
+              rows={6}
               value={newContent}
               onChange={(e) => setNewContent(e.target.value)}
-              placeholder="Write full resolution steps, root cause analysis, or reference guides..."
+              placeholder="Write clear, step-by-step documentation..."
               required
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-800 focus:bg-white focus:outline-none focus:border-indigo-500 leading-relaxed font-normal"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-500 leading-relaxed resize-y"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-700 mb-1">Tags (Comma-separated)</label>
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              Tags (comma separated)
+            </label>
             <input
               type="text"
               value={newTags}
               onChange={(e) => setNewTags(e.target.value)}
-              placeholder="webhook, timeout, api, troubleshooting"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:bg-white focus:outline-none focus:border-indigo-500"
+              placeholder="e.g. webhooks, api, integration"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-500"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <div className="pt-2 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={() => setShowCreateModal(false)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800"
+              className="px-4 py-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={creating}
-              className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm disabled:opacity-50"
+              className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-colors cursor-pointer"
             >
               {creating ? 'Publishing...' : 'Publish Article'}
             </button>

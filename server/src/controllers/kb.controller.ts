@@ -18,8 +18,11 @@ export class KBController {
         filter.status = req.query.status;
       }
 
-      if (req.query.category) {
-        filter.categoryId = new mongoose.Types.ObjectId(req.query.category as string);
+      const categoryParam = (req.query.category || req.query.categoryId) as string | undefined;
+      if (categoryParam && categoryParam !== 'all') {
+        if (mongoose.Types.ObjectId.isValid(categoryParam)) {
+          filter.categoryId = new mongoose.Types.ObjectId(categoryParam);
+        }
       }
 
       const [articles, total] = await Promise.all([
@@ -45,7 +48,7 @@ export class KBController {
   async searchArticles(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const query = (req.query.q as string) || '';
-      const categoryId = req.query.category as string | undefined;
+      const categoryId = (req.query.category || req.query.categoryId) as string | undefined;
       const articles = await kbRepository.searchPublished(query, categoryId);
 
       res.status(200).json({

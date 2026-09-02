@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
+import fs from 'fs';
 import { env } from './config/env.js';
 import { requestLogger } from './middleware/logger.middleware.js';
 import { generalLimiter } from './middleware/rateLimit.middleware.js';
@@ -24,12 +25,35 @@ export const createApp = (): Express => {
   // Security Middleware
   app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
+    contentSecurityPolicy: false, // Allow external assets/images in production
   }));
 
-  // CORS Configuration
+  // CORS Configuration - Permissive for production deployment across subdomains
+  const allowedOrigins = [
+    env.CLIENT_URL,
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:5000',
+    'http://127.0.0.1:5000',
+  ];
+
   app.use(
     cors({
-      origin: [env.CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (
+          env.CLIENT_URL === '*' ||
+          allowedOrigins.includes(origin) ||
+          origin.endsWith('.vercel.app') ||
+          origin.endsWith('.onrender.com') ||
+          origin.endsWith('.netlify.app') ||
+          origin.includes('localhost') ||
+          origin.includes('127.0.0.1')
+        ) {
+          return callback(null, true);
+        }
+        return callback(null, true);
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
@@ -72,7 +96,24 @@ export const createApp = (): Express => {
   app.use('/api/admin', adminRoutes);
   app.use('/api/notifications', notificationRoutes);
 
-  // 404 Catch-All
+  // Serve static client SPA if built in monolithic/fullstack environment
+  const clientDistPaths = [
+    path.resolve(process.cwd(), '../client/dist'),
+    path.resolve(process.cwd(), 'client/dist'),
+  ];
+  const clientDist = clientDistPaths.find((p) => fs.existsSync(p));
+
+  if (clientDist) {
+    app.use(express.static(clientDist));
+    app.get('*', (req: Request, res: Response, next: NextFunction) => {
+      if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+        return next();
+      }
+      res.sendFile(path.join(clientDist, 'index.html'));
+    });
+  }
+
+  // 404 Catch-All for API routes
   app.use((req: Request, _res: Response, next: NextFunction) => {
     next(new NotFoundError(`Endpoint '${req.method} ${req.originalUrl}' not found.`));
   });

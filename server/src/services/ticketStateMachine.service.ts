@@ -17,6 +17,8 @@ export class TicketStateMachine {
 
     // From ASSIGNED
     { from: TicketStatus.ASSIGNED, to: TicketStatus.IN_PROGRESS, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },
+    { from: TicketStatus.ASSIGNED, to: TicketStatus.WAITING_FOR_CUSTOMER, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },
+    { from: TicketStatus.ASSIGNED, to: TicketStatus.RESOLVED, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },
 
     // From IN_PROGRESS
     { from: TicketStatus.IN_PROGRESS, to: TicketStatus.WAITING_FOR_CUSTOMER, allowedRoles: [UserRole.AGENT, UserRole.ADMIN] },

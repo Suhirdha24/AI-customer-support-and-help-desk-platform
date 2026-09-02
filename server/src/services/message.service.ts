@@ -23,9 +23,20 @@ export class MessageService {
     ticketId: string,
     dto: CreateMessageDTO
   ): Promise<ITicketMessage> {
-    const { type, message, attachments = [] } = dto;
+    const rawMessage = (dto as any).message || (dto as any).content || (dto as any).body || '';
+    let type = (dto as any).type;
+    if (!type) {
+      if ((dto as any).isInternalNote) {
+        type = MessageType.INTERNAL_NOTE;
+      } else if (user.role === UserRole.CUSTOMER) {
+        type = MessageType.CUSTOMER_MESSAGE;
+      } else {
+        type = MessageType.AGENT_MESSAGE;
+      }
+    }
+    const attachments = dto.attachments || [];
 
-    if (!message || message.trim().length === 0) {
+    if (!rawMessage || rawMessage.trim().length === 0) {
       throw new ValidationError('Message body cannot be empty.');
     }
 
@@ -46,7 +57,7 @@ export class MessageService {
       authorId: new mongoose.Types.ObjectId(user.id),
       authorRole: user.role,
       type,
-      message: message.trim(),
+      message: rawMessage.trim(),
       attachments,
     });
 

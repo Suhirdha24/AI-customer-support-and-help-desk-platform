@@ -11,7 +11,9 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
+  KeyRound,
   HelpCircle,
+  Check,
 } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
@@ -21,6 +23,7 @@ export const LoginPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [selectedExample, setSelectedExample] = useState<string | null>(null);
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
 
   const { login, isAuthenticated, user } = useAuthStore();
@@ -41,7 +44,7 @@ export const LoginPage: React.FC = () => {
 
     const cleanEmail = email.trim();
     if (!cleanEmail || !password) {
-      setErrorMessage('Please enter both your email and password.');
+      setErrorMessage('Please enter both your email address and password.');
       return;
     }
 
@@ -73,7 +76,7 @@ export const LoginPage: React.FC = () => {
         err.response?.data?.error?.message ||
         err.response?.data?.message ||
         (err.message === 'Network Error'
-          ? 'Unable to connect to the authentication server. Please check your network connection.'
+          ? 'Unable to connect to the authentication server. Please check your backend connection.'
           : 'Invalid email or password. Please verify your credentials and try again.');
       setErrorMessage(msg);
       toast.error(msg);
@@ -82,22 +85,23 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  // Discreet demo account autofill helper
-  const handleAutofill = (demoEmail: string) => {
+  // Example credentials autofill
+  const handleAutofill = (demoEmail: string, roleKey: string) => {
     setEmail(demoEmail);
     setPassword('Password123!');
+    setSelectedExample(roleKey);
     setErrorMessage(null);
   };
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[36rem] h-[36rem] bg-gradient-to-tr from-indigo-600/15 via-emerald-600/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      {/* Ambient background lighting */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] h-[34rem] bg-gradient-to-tr from-indigo-600/15 via-emerald-600/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-500 text-white shadow-lg shadow-indigo-500/25 mb-3.5">
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-500 text-white shadow-lg shadow-indigo-500/25 mb-3">
             <Sparkles className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white">NexusDesk AI</h1>
@@ -107,10 +111,77 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Card */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-7 sm:p-8 shadow-2xl backdrop-blur-xl">
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-7 shadow-2xl backdrop-blur-xl">
+          {/* Example Credentials Box */}
+          <div className="mb-5 p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <KeyRound className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Example Credentials</span>
+              </span>
+              <span className="text-[11px] text-slate-400 font-mono">
+                Password: <strong className="text-emerald-300">Password123!</strong>
+              </span>
+            </div>
+
+            <p className="text-[11px] text-slate-400 mb-2.5">
+              Click an example role below to fill the login form:
+            </p>
+
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => handleAutofill('admin@example.com', 'admin')}
+                className={`px-2 py-2 rounded-lg text-left transition-all border text-xs cursor-pointer ${
+                  selectedExample === 'admin'
+                    ? 'bg-rose-500/15 border-rose-500/50 text-rose-200'
+                    : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white'
+                }`}
+              >
+                <div className="font-bold flex items-center justify-between">
+                  <span>Admin</span>
+                  {selectedExample === 'admin' && <Check className="w-3 h-3 text-rose-400" />}
+                </div>
+                <div className="text-[10px] text-slate-400 truncate mt-0.5">admin@example.com</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleAutofill('agent1@example.com', 'agent')}
+                className={`px-2 py-2 rounded-lg text-left transition-all border text-xs cursor-pointer ${
+                  selectedExample === 'agent'
+                    ? 'bg-indigo-500/15 border-indigo-500/50 text-indigo-200'
+                    : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white'
+                }`}
+              >
+                <div className="font-bold flex items-center justify-between">
+                  <span>Agent</span>
+                  {selectedExample === 'agent' && <Check className="w-3 h-3 text-indigo-400" />}
+                </div>
+                <div className="text-[10px] text-slate-400 truncate mt-0.5">agent1@example.com</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleAutofill('customer1@example.com', 'customer')}
+                className={`px-2 py-2 rounded-lg text-left transition-all border text-xs cursor-pointer ${
+                  selectedExample === 'customer'
+                    ? 'bg-emerald-500/15 border-emerald-500/50 text-emerald-200'
+                    : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white'
+                }`}
+              >
+                <div className="font-bold flex items-center justify-between">
+                  <span>Customer</span>
+                  {selectedExample === 'customer' && <Check className="w-3 h-3 text-emerald-400" />}
+                </div>
+                <div className="text-[10px] text-slate-400 truncate mt-0.5">customer1@example.com</div>
+              </button>
+            </div>
+          </div>
+
           {/* Inline Error Alert */}
           {errorMessage && (
-            <div className="mb-5 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start gap-2.5 animate-fadeIn">
+            <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start gap-2 animate-fadeIn">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
               <div className="flex-1 leading-relaxed">{errorMessage}</div>
             </div>
@@ -119,16 +190,21 @@ export const LoginPage: React.FC = () => {
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Email Address
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  Email Address
+                </label>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  e.g. <span className="text-slate-300">admin@example.com</span>
+                </span>
+              </div>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@company.com"
+                  placeholder="e.g. admin@example.com"
                   required
                   autoComplete="email"
                   disabled={loading}
@@ -138,17 +214,13 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   Password
                 </label>
-                <button
-                  type="button"
-                  onClick={() => setForgotModalOpen(true)}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
-                >
-                  Forgot password?
-                </button>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  e.g. <span className="text-slate-300">Password123!</span>
+                </span>
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
@@ -156,7 +228,7 @@ export const LoginPage: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder="e.g. Password123!"
                   required
                   autoComplete="current-password"
                   disabled={loading}
@@ -166,14 +238,14 @@ export const LoginPage: React.FC = () => {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-200 transition-colors"
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
+            <div className="flex items-center justify-between pt-0.5">
               <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300">
                 <input
                   type="checkbox"
@@ -183,12 +255,20 @@ export const LoginPage: React.FC = () => {
                 />
                 <span>Remember this device</span>
               </label>
+
+              <button
+                type="button"
+                onClick={() => setForgotModalOpen(true)}
+                className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+              >
+                Forgot password?
+              </button>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-3 flex items-center justify-center gap-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -203,41 +283,10 @@ export const LoginPage: React.FC = () => {
               )}
             </button>
           </form>
-
-          {/* Discreet Demo Autofill Helper */}
-          <div className="mt-7 pt-5 border-t border-slate-800">
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-2.5">
-              <span>Demo accounts:</span>
-              <span className="text-[11px] text-slate-500">Password: Password123!</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleAutofill('admin@example.com')}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-medium transition-colors text-center"
-              >
-                Admin
-              </button>
-              <button
-                type="button"
-                onClick={() => handleAutofill('agent1@example.com')}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-medium transition-colors text-center"
-              >
-                Agent
-              </button>
-              <button
-                type="button"
-                onClick={() => handleAutofill('customer1@example.com')}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-medium transition-colors text-center"
-              >
-                Customer
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-slate-400 mt-6">
+        <p className="text-center text-xs text-slate-400 mt-5">
           Don't have an account?{' '}
           <Link to="/register" className="font-semibold text-indigo-400 hover:text-indigo-300 underline">
             Register as a Customer
@@ -252,13 +301,12 @@ export const LoginPage: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3">
               <HelpCircle className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">Reset Password</h3>
+            <h3 className="text-base font-bold text-white mb-1">Example Logins & Reset</h3>
             <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-              For demo and development access, you can sign in with any demo role using password{' '}
-              <code className="text-indigo-300 bg-slate-800 px-1.5 py-0.5 rounded font-mono">
+              For demo and development access, you can sign in with any role using password{' '}
+              <code className="text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded font-mono font-bold">
                 Password123!
-              </code>{' '}
-              or contact your administrator.
+              </code>
             </p>
             <div className="flex justify-end">
               <button

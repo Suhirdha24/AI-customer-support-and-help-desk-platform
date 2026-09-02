@@ -13,8 +13,15 @@ export const AuditLogsPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await apiClient.get(`/admin/audit-logs?page=${page}&limit=15`);
-      if (res.data.success) {
-        setLogs(res.data.data);
+      if (res.data?.success) {
+        const payload = res.data.data;
+        if (Array.isArray(payload)) {
+          setLogs(payload);
+        } else if (payload && Array.isArray(payload.logs)) {
+          setLogs(payload.logs);
+        } else {
+          setLogs([]);
+        }
         if (res.data.pagination) {
           setTotalPages(res.data.pagination.totalPages);
         }

@@ -23,8 +23,14 @@ export const TeamManagementPage: React.FC = () => {
         apiClient.get('/admin/teams'),
         apiClient.get('/admin/agents'),
       ]);
-      if (tRes.data.success) setTeams(tRes.data.data);
-      if (aRes.data.success) setAgents(aRes.data.data);
+      if (tRes.data?.success) {
+        const tData = tRes.data.data;
+        setTeams(Array.isArray(tData) ? tData : tData?.teams || []);
+      }
+      if (aRes.data?.success) {
+        const aData = aRes.data.data;
+        setAgents(Array.isArray(aData) ? aData : aData?.agents || []);
+      }
     } catch (error) {
       console.error('Failed to load teams:', error);
     } finally {

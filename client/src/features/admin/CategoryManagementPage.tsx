@@ -18,8 +18,9 @@ export const CategoryManagementPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await apiClient.get('/admin/categories');
-      if (res.data.success) {
-        setCategories(res.data.data);
+      if (res.data?.success) {
+        const payload = res.data.data;
+        setCategories(Array.isArray(payload) ? payload : payload?.categories || []);
       }
     } catch (error) {
       console.error('Failed to load categories:', error);

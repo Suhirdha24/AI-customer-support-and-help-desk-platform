@@ -14,8 +14,9 @@ export const UserManagementPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await apiClient.get(`/admin/users${search ? `?search=${encodeURIComponent(search)}` : ''}`);
-      if (res.data.success) {
-        setUsers(res.data.data);
+      if (res.data?.success) {
+        const payload = res.data.data;
+        setUsers(Array.isArray(payload) ? payload : payload?.users || []);
       }
     } catch (error) {
       console.error('Failed to load users:', error);

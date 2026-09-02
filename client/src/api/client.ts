@@ -3,6 +3,10 @@ import axios from 'axios';
 const resolveBaseURL = (): string => {
   if (import.meta.env.VITE_API_URL) {
     let url = import.meta.env.VITE_API_URL.trim();
+    // Auto-fix if the env var was set to nexusdesk-api instead of nexusdesk-api-i4n5
+    if (url.includes('nexusdesk-api.onrender.com') && !url.includes('nexusdesk-api-i4n5')) {
+      url = url.replace('nexusdesk-api.onrender.com', 'nexusdesk-api-i4n5.onrender.com');
+    }
     if (!url.startsWith('http') && !url.startsWith('/')) {
       url = `https://${url}`;
     }

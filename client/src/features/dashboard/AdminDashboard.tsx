@@ -36,15 +36,28 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Top Header */}
-      <div>
-        <span className="text-xs font-bold uppercase tracking-wider text-rose-600">Enterprise Analytics</span>
-        <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mt-0.5">
-          Executive Platform Overview
-        </h2>
-        <p className="text-sm text-slate-500">
-          Aggregated ticket velocity, SLA fulfillment, CSAT scores, agent workload, and AI engine telemetry.
-        </p>
+      {/* Top Header & Fast Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-100">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            Natural & Sustainable Analytics
+          </span>
+          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mt-0.5">
+            Executive Platform Overview
+          </h2>
+          <p className="text-sm text-slate-500">
+            Real-time ticket velocity, CSAT benchmarks, agent workload, and sustainable AI infrastructure.
+          </p>
+        </div>
+
+        <a
+          href="/performance"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#10b981] hover:bg-[#059669] text-white rounded-xl text-xs font-bold shadow-sm transition-all shrink-0 active:scale-98"
+        >
+          <span>Support Performance Overview</span>
+          <span className="px-1.5 py-0.5 rounded bg-white/20 text-white text-[10px]">Reference Template</span>
+        </a>
       </div>
 
       {/* Metrics Row 1 */}

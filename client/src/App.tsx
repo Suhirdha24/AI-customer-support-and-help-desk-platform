@@ -11,6 +11,7 @@ import { RegisterPage } from './features/auth/RegisterPage.js';
 import { CustomerDashboard } from './features/dashboard/CustomerDashboard.js';
 import { AgentDashboard } from './features/dashboard/AgentDashboard.js';
 import { AdminDashboard } from './features/dashboard/AdminDashboard.js';
+import { SupportPerformanceOverview } from './features/dashboard/SupportPerformanceOverview.js';
 
 // Ticket Pages
 import { TicketListPage } from './features/tickets/TicketListPage.js';
@@ -53,6 +54,7 @@ export const App: React.FC = () => {
       {/* Customer Routes */}
       <Route element={<AppLayout allowedRoles={['CUSTOMER']} />}>
         <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+        <Route path="/customer/performance" element={<SupportPerformanceOverview />} />
         <Route path="/customer/tickets" element={<TicketListPage />} />
         <Route path="/customer/tickets/create" element={<CreateTicketPage />} />
         <Route path="/customer/tickets/:id" element={<TicketDetailPage />} />
@@ -62,6 +64,8 @@ export const App: React.FC = () => {
       {/* Agent Routes */}
       <Route element={<AppLayout allowedRoles={['AGENT', 'ADMIN']} />}>
         <Route path="/agent/dashboard" element={<AgentDashboard />} />
+        <Route path="/agent/performance" element={<SupportPerformanceOverview />} />
+        <Route path="/performance" element={<SupportPerformanceOverview />} />
         <Route path="/agent/tickets" element={<TicketListPage />} />
         <Route path="/agent/tickets/:id" element={<TicketDetailPage />} />
         <Route path="/agent/knowledge-base" element={<KnowledgeBasePage />} />
@@ -70,6 +74,7 @@ export const App: React.FC = () => {
       {/* Admin Routes */}
       <Route element={<AppLayout allowedRoles={['ADMIN']} />}>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/performance" element={<SupportPerformanceOverview />} />
         <Route path="/admin/tickets" element={<TicketListPage />} />
         <Route path="/admin/tickets/:id" element={<TicketDetailPage />} />
         <Route path="/admin/users" element={<UserManagementPage />} />

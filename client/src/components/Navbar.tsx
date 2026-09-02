@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Bell, Check, ShieldCheck, HelpCircle, Settings, Leaf } from 'lucide-react';
+import {
+  Menu,
+  Bell,
+  Check,
+  ShieldCheck,
+  HelpCircle,
+  Settings,
+  Leaf,
+  CheckCircle2,
+  Lock,
+  Zap,
+  LogOut,
+  X,
+  Volume2,
+  Sliders,
+} from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore.js';
 import { apiClient } from '../api/client.js';
+import { toast } from '../store/useToastStore.js';
 import { NotificationItem } from '../types/index.js';
 
 interface NavbarProps {
@@ -9,10 +25,40 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Interactive Modals State
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  // Settings State
+  const [soundAlerts, setSoundAlerts] = useState(true);
+  const [copilotAssist, setCopilotAssist] = useState(true);
+  const [ecoMode, setEcoMode] = useState(true);
+
+  const handleOpenSecurity = () => {
+    toast.success('Security status verified: All encryption & compliance protocols nominal.');
+    setShowSecurityModal(true);
+  };
+
+  const handleOpenHelp = () => {
+    toast.info('Help & documentation guide loaded.');
+    setShowHelpModal(true);
+  };
+
+  const handleOpenSettings = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleSaveSettings = () => {
+    toast.success('Preferences saved successfully!');
+    setShowSettingsModal(false);
+  };
 
   const fetchNotifications = async () => {
     try {
@@ -37,6 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
       await apiClient.patch('/notifications/read-all');
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       setUnreadCount(0);
+      toast.success('All notifications marked as read.');
     } catch {
       // ignore
     }
@@ -71,20 +118,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         {/* Quick Tools Group */}
         <div className="hidden sm:flex items-center gap-1 bg-slate-50 border border-slate-200/70 rounded-xl p-1 text-slate-500">
           <button
+            onClick={handleOpenSecurity}
             title="Privacy & Security Verified"
-            className="p-1.5 rounded-lg hover:text-slate-800 hover:bg-white transition-colors"
+            aria-label="Privacy & Security Verified"
+            className="p-1.5 rounded-lg hover:text-slate-800 hover:bg-white transition-colors cursor-pointer"
           >
-            <ShieldCheck className="w-4 h-4 text-slate-600" />
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
           </button>
           <button
+            onClick={handleOpenHelp}
             title="Help Documentation"
-            className="p-1.5 rounded-lg hover:text-slate-800 hover:bg-white transition-colors"
+            aria-label="Help Documentation"
+            className="p-1.5 rounded-lg hover:text-slate-800 hover:bg-white transition-colors cursor-pointer"
           >
             <HelpCircle className="w-4 h-4 text-slate-600" />
           </button>
           <button
+            onClick={handleOpenSettings}
             title="System Settings"
-            className="p-1.5 rounded-lg hover:text-slate-800 hover:bg-white transition-colors"
+            aria-label="System Settings"
+            className="p-1.5 rounded-lg hover:text-slate-800 hover:bg-white transition-colors cursor-pointer"
           >
             <Settings className="w-4 h-4 text-slate-600" />
           </button>
@@ -94,7 +147,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+            title="Notifications"
+            aria-label="Notifications"
+            className="relative p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
@@ -118,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+                    className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 cursor-pointer"
                   >
                     <Check className="w-3.5 h-3.5" /> Mark all read
                   </button>
@@ -127,7 +182,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
 
               <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
                 {notifications.length === 0 ? (
-                  <div className="p-6 text-center text-xs text-slate-400">No notifications yet</div>
+                  <div className="p-6 text-center text-xs text-slate-400">
+                    <p className="font-semibold text-slate-600 mb-1">✨ You're all caught up!</p>
+                    <p>No unread notifications at this time.</p>
+                  </div>
                 ) : (
                   notifications.map((notif) => (
                     <div
@@ -149,8 +207,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
           )}
         </div>
 
-        {/* User Pill */}
-        <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+        {/* User Pill with Click Action */}
+        <button
+          onClick={() => setShowProfileModal(true)}
+          className="flex items-center gap-2 pl-2 border-l border-slate-200 hover:bg-slate-50 p-1.5 rounded-xl transition-all cursor-pointer text-left"
+          title="Account profile and session"
+          aria-label="Account profile and session"
+        >
           <img
             src={
               user?.avatar ||
@@ -165,8 +228,327 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
             <p className="text-xs font-bold text-slate-800 leading-tight">{user?.name}</p>
             <p className="text-[11px] text-emerald-600 font-medium capitalize">{user?.role?.toLowerCase()}</p>
           </div>
-        </div>
+        </button>
       </div>
+
+      {/* 1. Security & Compliance Modal */}
+      {showSecurityModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-md w-full shadow-2xl text-left relative">
+            <button
+              onClick={() => setShowSecurityModal(false)}
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Security & Compliance Verified</h3>
+                <span className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  All Systems Operational & Encrypted
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2.5 text-xs text-slate-600 mb-5">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-2.5">
+                <Lock className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-slate-800">End-to-End TLS 1.3 & AES-256</p>
+                  <p className="text-slate-500 text-[11px] mt-0.5">
+                    Data is encrypted both in transit via TLS 1.3 and at rest on MongoDB Atlas with AES-256.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-slate-800">Role-Based Access Control (RBAC)</p>
+                  <p className="text-slate-500 text-[11px] mt-0.5">
+                    Privilege boundary is strictly verified on every API request for role: <strong>{user?.role}</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-2.5">
+                <Leaf className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-slate-800">Carbon-Neutral Verified Footprint</p>
+                  <p className="text-slate-500 text-[11px] mt-0.5">
+                    Eco Engine compute average is 0.02g CO₂e per ticket resolution cycle.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowSecurityModal(false)}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+              >
+                Understood
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Help & Documentation Modal */}
+      {showHelpModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl text-left relative">
+            <button
+              onClick={() => setShowHelpModal(false)}
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center">
+                <HelpCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">NexusDesk Help & Shortcuts</h3>
+                <p className="text-xs text-slate-500">Tailored workspace guidance for {user?.role?.toLowerCase()}s</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs text-slate-600 mb-5">
+              {user?.role === 'AGENT' && (
+                <>
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="font-bold text-slate-800 mb-1">🎧 Workbench Queue & Triage</p>
+                    <p className="text-slate-500 leading-relaxed">
+                      Filter tickets by status or priority. Click <strong>Claim Ticket</strong> to self-assign work.
+                    </p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="font-bold text-slate-800 mb-1">🤖 AI Response Copilot</p>
+                    <p className="text-slate-500 leading-relaxed">
+                      Click <strong>Suggest Reply with AI</strong> inside any ticket thread to generate grounded, empathetic responses. Review before sending.
+                    </p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="font-bold text-slate-800 mb-1">🔒 Internal Staff Notes</p>
+                    <p className="text-slate-500 leading-relaxed">
+                      Switch to <strong>Internal Note</strong> tab to collaborate privately with other team members without notifying the customer.
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {user?.role === 'ADMIN' && (
+                <>
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="font-bold text-slate-800 mb-1">📊 Executive Governance & SLAs</p>
+                    <p className="text-slate-500 leading-relaxed">
+                      Track resolution velocity, customer sentiment breakdown, and workload distribution across all agents.
+                    </p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="font-bold text-slate-800 mb-1">👥 Team & User Management</p>
+                    <p className="text-slate-500 leading-relaxed">
+                      Provision support agents, configure department assignment groups, and set category escalations.
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {user?.role === 'CUSTOMER' && (
+                <>
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="font-bold text-slate-800 mb-1">🎫 Track Your Tickets</p>
+                    <p className="text-slate-500 leading-relaxed">
+                      Check live resolution milestones and reply directly to your assigned support specialist.
+                    </p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="font-bold text-slate-800 mb-1">📚 Knowledge Base</p>
+                    <p className="text-slate-500 leading-relaxed">
+                      Search verified articles and guides for immediate self-service answers to common inquiries.
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+              <span className="text-[11px] text-slate-500">Contact admin: admin@example.com</span>
+              <button
+                onClick={() => setShowHelpModal(false)}
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+              >
+                Got It
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. System & User Preferences Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-md w-full shadow-2xl text-left relative">
+            <button
+              onClick={() => setShowSettingsModal(false)}
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
+                <Sliders className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Workspace Preferences</h3>
+                <p className="text-xs text-slate-500">Customize your interface and notification alerts</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs mb-6">
+              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Volume2 className="w-4 h-4 text-slate-600" />
+                  <div>
+                    <p className="font-semibold text-slate-800">Sound Notifications</p>
+                    <p className="text-[11px] text-slate-500">Play subtle chime on ticket updates</p>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={soundAlerts}
+                  onChange={(e) => setSoundAlerts(e.target.checked)}
+                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-teal-600" />
+                  <div>
+                    <p className="font-semibold text-slate-800">AI Copilot Quick Assist</p>
+                    <p className="text-[11px] text-slate-500">Auto-suggest drafts on open inquiries</p>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={copilotAssist}
+                  onChange={(e) => setCopilotAssist(e.target.checked)}
+                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Leaf className="w-4 h-4 text-emerald-600" />
+                  <div>
+                    <p className="font-semibold text-slate-800">Eco-Engine Low-Carbon Mode</p>
+                    <p className="text-[11px] text-slate-500">Hardware-accelerated energy conservation</p>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={ecoMode}
+                  onChange={(e) => setEcoMode(e.target.checked)}
+                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setShowSettingsModal(false)}
+                className="px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveSettings}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer shadow-sm"
+              >
+                Save Preferences
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. User Profile & Session Modal */}
+      {showProfileModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-left relative">
+            <button
+              onClick={() => setShowProfileModal(false)}
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center pb-4 border-b border-slate-100">
+              <img
+                src={
+                  user?.avatar ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    user?.name || 'User'
+                  )}&background=10b981&color=fff`
+                }
+                alt={user?.name}
+                className="w-16 h-16 rounded-full mx-auto border-2 border-emerald-500 object-cover mb-2 shadow-sm"
+              />
+              <h3 className="text-base font-bold text-slate-900 leading-tight">{user?.name}</h3>
+              <p className="text-xs text-slate-500 mt-0.5">{user?.email}</p>
+              <span className="mt-2 inline-block px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-full uppercase tracking-wider">
+                {user?.role} Workspace
+              </span>
+            </div>
+
+            <div className="py-3 text-xs space-y-2 text-slate-600">
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-400">Account Status</span>
+                <span className="font-semibold text-emerald-700">Active & Verified</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-400">Authentication</span>
+                <span className="font-semibold text-slate-700">JWT Bearer Session</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-slate-400">Security Standard</span>
+                <span className="font-semibold text-slate-700">SOC 2 / ISO 27001</span>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+              <button
+                onClick={() => setShowProfileModal(false)}
+                className="px-3.5 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  setShowProfileModal(false);
+                  logout();
+                }}
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

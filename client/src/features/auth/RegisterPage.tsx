@@ -63,17 +63,16 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen lg:h-screen lg:max-h-screen bg-slate-50 flex flex-col justify-center py-4 lg:py-2 px-4 sm:px-6 lg:px-8 relative overflow-y-auto lg:overflow-hidden font-sans text-slate-800">
-      {/* Soft natural ambient lighting */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-white font-sans text-slate-800">
+      {/* LEFT COLUMN: Customer Showcase & Photography (Fills 50% - 52% of window) */}
+      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 border-r border-slate-200/80 p-6 sm:p-10 lg:p-12 xl:p-16 flex flex-col justify-between relative overflow-hidden">
+        {/* Soft ambient lighting */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Main 2-Column Split Container: Fits in screen */}
-      <div className="max-w-5xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center relative z-10 my-auto">
-        {/* Left 7 Columns: Product Showcase & Natural Photography */}
-        <div className="lg:col-span-7 space-y-3 sm:space-y-3.5 text-left">
-          {/* Brand Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-emerald-200 text-xs text-emerald-800 shadow-xs">
+        {/* Top Branding */}
+        <div className="relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 text-xs text-emerald-800 shadow-xs">
             <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
             <span className="font-bold text-slate-900">NexusDesk</span>
             <span className="text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-semibold text-[10px] uppercase tracking-wider">
@@ -82,186 +81,196 @@ export const RegisterPage: React.FC = () => {
             <span className="text-slate-400">•</span>
             <span className="text-emerald-700 font-medium">Customer Onboarding</span>
           </div>
+        </div>
 
-          {/* Compact Natural Headline */}
-          <div className="space-y-1">
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug">
+        {/* Center Content */}
+        <div className="my-auto py-6 space-y-4 relative z-10 text-left">
+          <div className="space-y-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
               Instant Care with Friendly Human & AI Support
             </h1>
-            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-              Create your account to submit inquiries, track real-time resolution progress, and access verified self-service guides.
+            <p className="text-sm text-slate-600 max-w-xl leading-relaxed">
+              Create your account to submit inquiries, track real-time resolution progress, access verified self-service guides, and experience sustainable customer care.
             </p>
           </div>
 
-          {/* Inline Feature Value Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-slate-200/90 text-[11px] text-slate-700 font-medium shadow-2xs">
-              <Zap className="w-3 h-3 text-emerald-700" />
-              <span>Zero Wait</span>
+          {/* Feature Pills */}
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 font-medium shadow-xs">
+              <Zap className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Zero Wait Time</span>
             </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-slate-200/90 text-[11px] text-slate-700 font-medium shadow-2xs">
-              <Shield className="w-3 h-3 text-teal-700" />
-              <span>Secure Privacy</span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 font-medium shadow-xs">
+              <Shield className="w-3.5 h-3.5 text-teal-700" />
+              <span>Encrypted Privacy</span>
             </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-slate-200/90 text-[11px] text-slate-700 font-medium shadow-2xs">
-              <Leaf className="w-3 h-3 text-emerald-700" />
-              <span>Eco-Friendly</span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 font-medium shadow-xs">
+              <Leaf className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Carbon-Neutral</span>
             </span>
           </div>
 
-          {/* Natural Photo Frame */}
-          <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm group">
+          {/* Photo Frame */}
+          <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md group mt-4">
             <img
               src="/images/natural_customer.jpg"
-              alt="Customer Self-Service Support Experience"
-              className="w-full h-36 sm:h-40 lg:h-44 object-cover rounded-t-xl transition-all duration-500 group-hover:scale-[1.01]"
+              alt="Customer Support Experience"
+              className="w-full h-48 sm:h-56 lg:h-64 xl:h-72 object-cover rounded-t-2xl transition-all duration-500 group-hover:scale-[1.01]"
             />
 
-            {/* Natural Photo Bottom Overlay Bar */}
-            <div className="bg-white/95 border-t border-slate-100 px-3 py-2 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center">
-                  <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+            {/* Bottom Overlay Bar */}
+            <div className="bg-white/95 border-t border-slate-100 px-4 py-3 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center">
+                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
                 </div>
                 <div>
-                  <p className="font-bold text-slate-900 text-xs">98% Customer Satisfaction</p>
+                  <p className="font-bold text-slate-900 text-xs sm:text-sm">98% Customer Satisfaction</p>
+                  <p className="text-[11px] text-slate-500 hidden sm:block">Verified post-resolution reviews</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 font-medium text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
-                <Leaf className="w-3 h-3 text-emerald-600 shrink-0" />
+              <div className="flex items-center gap-1.5 font-medium text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span>Zero Carbon Support</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right 5 Columns: Clean White Registration Card */}
-        <div className="lg:col-span-5 w-full">
-          {/* Card Header */}
-          <div className="text-center mb-3.5 lg:text-left">
-            <div className="inline-flex lg:hidden items-center justify-center w-9 h-9 rounded-lg bg-emerald-600 text-white shadow-xs mb-2">
-              <Leaf className="w-4 h-4" />
+        {/* Bottom Sustainability Note */}
+        <div className="relative z-10 pt-2 text-xs text-slate-500 flex items-center gap-2">
+          <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span>Eco-certified customer care • Carbon-neutral compute</span>
+        </div>
+      </div>
+
+      {/* RIGHT COLUMN: Account Creation Form (Fills other 50% of window) */}
+      <div className="lg:w-1/2 xl:w-[48%] bg-white flex flex-col justify-center items-center p-6 sm:p-10 lg:p-12 xl:p-16 overflow-y-auto">
+        <div className="max-w-md w-full my-auto space-y-6 text-left">
+          {/* Header */}
+          <div>
+            <div className="inline-flex lg:hidden items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20 mb-3">
+              <Leaf className="w-5 h-5" />
             </div>
-            <h2 className="text-xl font-bold tracking-tight text-slate-900">Create an Account</h2>
-            <p className="mt-0.5 text-xs text-slate-500">
-              Get immediate, sustainable customer care
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Create an Account</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Get immediate, sustainable customer support
             </p>
           </div>
 
-          <div className="bg-white border border-slate-200/90 rounded-xl p-5 sm:p-6 shadow-lg shadow-slate-200/50">
-            <form onSubmit={handleRegister} className="space-y-3" autoComplete="off">
-              {/* Full Name */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                    Full Name
-                  </label>
-                  <span className="text-[10px] text-slate-500 font-mono">
-                    e.g. <span className="text-slate-700 font-medium">Jane Doe</span>
-                  </span>
-                </div>
-                <div className="relative">
-                  <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    name="reg_fullname"
-                    id="reg_fullname"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Jane Doe"
-                    required
-                    autoComplete="off"
-                    disabled={loading}
-                    className="w-full bg-slate-50/60 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
-                  />
-                </div>
+          <form onSubmit={handleRegister} className="space-y-4" autoComplete="off">
+            {/* Full Name */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                  Full Name
+                </label>
+                <span className="text-xs text-slate-500 font-mono">
+                  e.g. <span className="text-slate-700 font-medium">Jane Doe</span>
+                </span>
               </div>
-
-              {/* Work Email */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                    Work Email
-                  </label>
-                  <span className="text-[10px] text-slate-500 font-mono">
-                    e.g. <span className="text-slate-700 font-medium">alex@company.com</span>
-                  </span>
-                </div>
-                <div className="relative">
-                  <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                  <input
-                    type="email"
-                    name="reg_user_email"
-                    id="reg_user_email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="alex@company.com"
-                    required
-                    autoComplete="new-password"
-                    disabled={loading}
-                    className="w-full bg-slate-50/60 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
-                  />
-                </div>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type="text"
+                  name="reg_fullname"
+                  id="reg_fullname"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Jane Doe"
+                  required
+                  autoComplete="off"
+                  disabled={loading}
+                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                />
               </div>
+            </div>
 
-              {/* Password */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                    Password
-                  </label>
-                  <span className="text-[10px] text-slate-500 font-mono">
-                    Min 8 characters
-                  </span>
-                </div>
-                <div className="relative">
-                  <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="reg_user_password"
-                    id="reg_user_password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Create a secure password"
-                    required
-                    autoComplete="new-password"
-                    disabled={loading}
-                    className="w-full bg-slate-50/60 border border-slate-200 rounded-lg pl-9 pr-9 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                  >
-                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                  </button>
-                </div>
+            {/* Work Email */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                  Work Email
+                </label>
+                <span className="text-xs text-slate-500 font-mono">
+                  e.g. <span className="text-slate-700 font-medium">alex@company.com</span>
+                </span>
               </div>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type="email"
+                  name="reg_user_email"
+                  id="reg_user_email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="alex@company.com"
+                  required
+                  autoComplete="new-password"
+                  disabled={loading}
+                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                />
+              </div>
+            </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full mt-1.5 flex items-center justify-center gap-1.5 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm shadow-emerald-600/25 transition-all disabled:opacity-50 cursor-pointer"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Creating Account...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Create Account</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
+            {/* Password */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                  Password
+                </label>
+                <span className="text-xs text-slate-500 font-mono">
+                  Min 8 characters
+                </span>
+              </div>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="reg_user_password"
+                  id="reg_user_password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Create a secure password"
+                  required
+                  autoComplete="new-password"
+                  disabled={loading}
+                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
 
-          <p className="text-center text-[11px] text-slate-500 mt-3">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full mt-2 flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-semibold rounded-xl shadow-md shadow-emerald-600/20 transition-all disabled:opacity-50 cursor-pointer"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Creating Account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create Account</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Footer */}
+          <p className="text-center text-xs text-slate-500 pt-2">
             Already registered?{' '}
             <Link to="/login" className="font-semibold text-emerald-700 hover:text-emerald-800 underline">
               Sign In

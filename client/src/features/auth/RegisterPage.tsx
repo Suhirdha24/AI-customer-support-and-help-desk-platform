@@ -99,8 +99,8 @@ export const RegisterPage: React.FC = () => {
           {/* Hero Visual Showcase */}
           <div className="relative rounded-2xl overflow-hidden border border-slate-800/90 bg-slate-900/70 shadow-2xl group">
             <img
-              src="/images/ai_support_hero.jpg"
-              alt="NexusDesk AI Support Platform Dashboard"
+              src="/images/customer_hero.jpg"
+              alt="Customer Self-Service Support Portal"
               className="w-full h-auto object-cover rounded-2xl transition-transform duration-700 group-hover:scale-[1.01]"
             />
 

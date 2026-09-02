@@ -16,13 +16,23 @@ import {
   User,
   Info,
   HelpCircle,
-  Bot,
   Zap,
   Leaf,
   Activity,
+  Star,
+  Cpu,
+  Smile,
+  BarChart3,
 } from 'lucide-react';
 
 type RoleTab = 'ADMIN' | 'AGENT' | 'CUSTOMER';
+
+interface RoleProp {
+  icon: React.ElementType;
+  iconColor: string;
+  title: string;
+  desc: string;
+}
 
 interface RoleConfig {
   id: RoleTab;
@@ -32,6 +42,18 @@ interface RoleConfig {
   icon: React.ElementType;
   activeColor: string;
   badgeBg: string;
+  // Dynamic visual showcase properties
+  heroImage: string;
+  badgeText: string;
+  headlinePrefix: string;
+  headlineHighlight: string;
+  headlineGradient: string;
+  description: string;
+  overlayIcon: React.ElementType;
+  overlayTitle: string;
+  overlaySubtitle: string;
+  overlayPill: string;
+  props: RoleProp[];
 }
 
 const ROLES: RoleConfig[] = [
@@ -43,6 +65,37 @@ const ROLES: RoleConfig[] = [
     icon: Shield,
     activeColor: 'text-rose-400 border-rose-500/50 bg-rose-500/10',
     badgeBg: 'bg-rose-500',
+    heroImage: '/images/admin_hero.jpg',
+    badgeText: 'Enterprise Security & SLA Control',
+    headlinePrefix: 'Executive Governance & ',
+    headlineHighlight: 'System-Wide Telemetry',
+    headlineGradient: 'from-rose-400 via-pink-300 to-purple-400',
+    description:
+      'Oversee multi-team capacity, configure SLA benchmarks, audit security logs, and monitor zero-carbon infrastructure in real time.',
+    overlayIcon: Shield,
+    overlayTitle: 'Enterprise Security Command',
+    overlaySubtitle: '256-bit AES encryption & compliance audit logging',
+    overlayPill: '99.99% Uptime SLA',
+    props: [
+      {
+        icon: Shield,
+        iconColor: 'text-rose-400',
+        title: 'Zero-Trust RBAC',
+        desc: 'Role hierarchies & access locks',
+      },
+      {
+        icon: BarChart3,
+        iconColor: 'text-purple-400',
+        title: 'Executive Analytics',
+        desc: 'Global SLA & resolution gauges',
+      },
+      {
+        icon: Leaf,
+        iconColor: 'text-emerald-400',
+        title: 'Carbon Audit',
+        desc: '0.02g CO₂e green compute',
+      },
+    ],
   },
   {
     id: 'AGENT',
@@ -52,6 +105,37 @@ const ROLES: RoleConfig[] = [
     icon: Headphones,
     activeColor: 'text-indigo-400 border-indigo-500/50 bg-indigo-500/10',
     badgeBg: 'bg-indigo-500',
+    heroImage: '/images/agent_hero.jpg',
+    badgeText: 'AI Copilot Workstation',
+    headlinePrefix: 'Supercharge Support with ',
+    headlineHighlight: 'Real-time AI Copilot',
+    headlineGradient: 'from-indigo-400 via-cyan-300 to-teal-400',
+    description:
+      'Triage incoming tickets with generative suggested responses, track live customer sentiment, and collaborate with internal notes.',
+    overlayIcon: Headphones,
+    overlayTitle: 'Agent Productivity Suite',
+    overlaySubtitle: 'Context-aware AI suggested replies & sentiment gauges',
+    overlayPill: '1.8m Avg Resolution',
+    props: [
+      {
+        icon: Zap,
+        iconColor: 'text-indigo-400',
+        title: 'Auto-Draft Copilot',
+        desc: '1-click generative response drafts',
+      },
+      {
+        icon: Smile,
+        iconColor: 'text-cyan-400',
+        title: 'Sentiment Radar',
+        desc: 'Live emotional tone tracking',
+      },
+      {
+        icon: Cpu,
+        iconColor: 'text-violet-400',
+        title: 'Team Workload',
+        desc: 'Instant claiming & peer handoffs',
+      },
+    ],
   },
   {
     id: 'CUSTOMER',
@@ -61,6 +145,37 @@ const ROLES: RoleConfig[] = [
     icon: User,
     activeColor: 'text-emerald-400 border-emerald-500/50 bg-emerald-500/10',
     badgeBg: 'bg-emerald-500',
+    heroImage: '/images/customer_hero.jpg',
+    badgeText: 'Instant Self-Service Portal',
+    headlinePrefix: 'Instant Solutions with ',
+    headlineHighlight: 'Friendly AI Assistance',
+    headlineGradient: 'from-emerald-400 via-teal-300 to-cyan-400',
+    description:
+      'Submit inquiries with instant AI categorization, track live resolution updates, browse knowledge base guides, and rate your experience.',
+    overlayIcon: Star,
+    overlayTitle: 'Customer-First Experience',
+    overlaySubtitle: 'Self-service knowledge base & 5-star CSAT ratings',
+    overlayPill: '4.8/5 CSAT Score',
+    props: [
+      {
+        icon: Zap,
+        iconColor: 'text-emerald-400',
+        title: 'Zero Wait Time',
+        desc: 'Immediate AI triage & answers',
+      },
+      {
+        icon: Leaf,
+        iconColor: 'text-teal-400',
+        title: 'Help Center Docs',
+        desc: 'Categorized guides & articles',
+      },
+      {
+        icon: Star,
+        iconColor: 'text-amber-400',
+        title: 'CSAT Feedback',
+        desc: 'Transparent 5-star service ratings',
+      },
+    ],
   },
 ];
 
@@ -76,6 +191,14 @@ export const LoginPage: React.FC = () => {
 
   const { login, isAuthenticated, user } = useAuthStore();
   const navigate = useNavigate();
+
+  // Preload all role images into browser cache for instant tab transitions
+  useEffect(() => {
+    ROLES.forEach((r) => {
+      const img = new Image();
+      img.src = r.heroImage;
+    });
+  }, []);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -147,6 +270,7 @@ export const LoginPage: React.FC = () => {
   };
 
   const currentRole = ROLES.find((r) => r.id === activeRole) || ROLES[0];
+  const OverlayIcon = currentRole.overlayIcon;
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
@@ -156,82 +280,74 @@ export const LoginPage: React.FC = () => {
 
       {/* Main 2-Column Split Container */}
       <div className="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-        
         {/* Left 7 Columns: Product Showcase & Visual Artwork */}
         <div className="lg:col-span-7 space-y-6 text-left">
-          {/* Brand Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs text-slate-300 shadow-sm backdrop-blur-md">
+          {/* Brand Badge (Changes dynamically based on selected role) */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs text-slate-300 shadow-sm backdrop-blur-md transition-all">
             <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="font-bold text-white">NexusDesk AI</span>
             <span className="text-slate-500">•</span>
-            <span className="text-emerald-400 font-semibold">Eco-Engine 2.0</span>
+            <span className="text-emerald-400 font-semibold">{currentRole.badgeText}</span>
           </div>
 
-          {/* Headline */}
-          <div className="space-y-3">
+          {/* Headline (Changes dynamically based on selected role) */}
+          <div className="space-y-3 transition-all duration-300">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
-              Intelligent Support with{' '}
-              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">
-                Autonomous AI & Copilot
+              {currentRole.headlinePrefix}{' '}
+              <span className={`bg-gradient-to-r ${currentRole.headlineGradient} bg-clip-text text-transparent`}>
+                {currentRole.headlineHighlight}
               </span>
             </h1>
             <p className="text-sm sm:text-base text-slate-400 max-w-xl leading-relaxed">
-              Resolve inquiries in seconds. Empower your support team with AI triage, real-time response copilot suggestions, and carbon-neutral operations.
+              {currentRole.description}
             </p>
           </div>
 
-          {/* Hero Visual Showcase with Interactive Glow */}
-          <div className="relative rounded-2xl overflow-hidden border border-slate-800/90 bg-slate-900/70 shadow-2xl group">
+          {/* Hero Visual Showcase: Changes image dynamically with role */}
+          <div className="relative rounded-2xl overflow-hidden border border-slate-800/90 bg-slate-900/70 shadow-2xl group min-h-[260px] sm:min-h-[340px]">
             <img
-              src="/images/ai_support_hero.jpg"
-              alt="NexusDesk AI Support Platform Dashboard"
-              className="w-full h-auto object-cover rounded-2xl transition-transform duration-700 group-hover:scale-[1.01]"
+              key={currentRole.id}
+              src={currentRole.heroImage}
+              alt={`${currentRole.label} Workspace Preview`}
+              className="w-full h-auto object-cover rounded-2xl transition-all duration-500 group-hover:scale-[1.01] animate-fadeIn"
             />
 
-            {/* Bottom Glass Overlay */}
+            {/* Bottom Glass Overlay (Role-specific telemetry) */}
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-transparent p-4 sm:p-5 flex items-center justify-between text-xs backdrop-blur-[2px]">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 flex items-center justify-center">
-                  <Bot className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-slate-800/80 border border-slate-700/60 text-white flex items-center justify-center">
+                  <OverlayIcon className="w-5 h-5 text-indigo-300" />
                 </div>
                 <div>
-                  <p className="font-bold text-white text-xs sm:text-sm">Eco-Audited AI Triage</p>
-                  <p className="text-[11px] text-slate-400">Zero-shot categorization & sentiment detection</p>
+                  <p className="font-bold text-white text-xs sm:text-sm">{currentRole.overlayTitle}</p>
+                  <p className="text-[11px] text-slate-400">{currentRole.overlaySubtitle}</p>
                 </div>
               </div>
 
               <div className="hidden sm:flex items-center gap-2 font-mono text-[11px] text-emerald-400 bg-emerald-950/80 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
                 <Activity className="w-3.5 h-3.5 animate-pulse" />
-                <span>0.02g CO₂e / run</span>
+                <span>{currentRole.overlayPill}</span>
               </div>
             </div>
           </div>
 
-          {/* Feature Highlights Grid */}
+          {/* Feature Highlights Grid (Changes dynamically per role) */}
           <div className="grid grid-cols-3 gap-3 pt-1">
-            <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-sm">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-white mb-1">
-                <Zap className="w-3.5 h-3.5 text-indigo-400" />
-                <span>1.8m Avg SLA</span>
-              </div>
-              <p className="text-[11px] text-slate-400 leading-snug">Instant first contact resolution</p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-sm">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-white mb-1">
-                <Leaf className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Eco-Audited</span>
-              </div>
-              <p className="text-[11px] text-slate-400 leading-snug">Carbon-neutral compute</p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-sm">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-white mb-1">
-                <Shield className="w-3.5 h-3.5 text-rose-400" />
-                <span>Full RBAC</span>
-              </div>
-              <p className="text-[11px] text-slate-400 leading-snug">Admin, Agent & Customer views</p>
-            </div>
+            {currentRole.props.map((prop, idx) => {
+              const PropIcon = prop.icon;
+              return (
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-sm transition-all"
+                >
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-white mb-1">
+                    <PropIcon className={`w-3.5 h-3.5 ${prop.iconColor}`} />
+                    <span>{prop.title}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 leading-snug">{prop.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
 

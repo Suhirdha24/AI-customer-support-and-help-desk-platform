@@ -58,6 +58,18 @@
   border-radius: 9999px;
 }
 
+/* Prevent Chrome / Edge autofill from turning dark inputs white */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 50px #020617 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }

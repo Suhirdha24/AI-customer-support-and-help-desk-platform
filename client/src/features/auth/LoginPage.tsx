@@ -82,6 +82,13 @@ export const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
+  // Reset form to pure empty placeholder state on role switch
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+    setErrorMessage(null);
+  }, [activeRole]);
+
   const handleRoleSelect = (role: RoleConfig) => {
     setActiveRole(role.id);
     setEmail('');
@@ -200,7 +207,7 @@ export const LoginPage: React.FC = () => {
           )}
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
             {/* Email Address */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
@@ -214,11 +221,14 @@ export const LoginPage: React.FC = () => {
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
+                  key={`email-${activeRole}`}
                   type="email"
+                  name={`user_login_email_${activeRole}`}
+                  id={`user_login_email_${activeRole}`}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={currentRole.email}
-                  autoComplete="email"
+                  autoComplete="new-password"
                   disabled={loading}
                   className="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all disabled:opacity-60"
                 />
@@ -238,11 +248,14 @@ export const LoginPage: React.FC = () => {
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
+                  key={`pwd-${activeRole}`}
                   type={showPassword ? 'text' : 'password'}
+                  name={`user_login_pwd_${activeRole}`}
+                  id={`user_login_pwd_${activeRole}`}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password123!"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   disabled={loading}
                   className="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all disabled:opacity-60"
                 />

@@ -240,7 +240,13 @@ export const TicketDetailPage: React.FC = () => {
       setSuggestingReply(true);
       const res = await apiClient.post(`/ai/tickets/${id}/suggest-reply`);
       if (res.data.success) {
-        setSuggestedReply(res.data.data);
+        const raw = res.data.data;
+        const normalized = {
+          ...raw,
+          replyText: raw.replyText || raw.suggestedReply || '',
+          groundingArticles: raw.groundingArticles || (raw.referencedArticles?.map((t: any) => typeof t === 'string' ? { title: t } : t)) || [],
+        };
+        setSuggestedReply(normalized);
       }
     } catch (err: any) {
       toast.error(err.response?.data?.error?.message || 'Failed to generate suggested reply');
@@ -251,8 +257,9 @@ export const TicketDetailPage: React.FC = () => {
 
   // Human accepts AI suggestion into reply textarea
   const acceptSuggestedReply = () => {
-    if (suggestedReply?.replyText) {
-      setReplyText(suggestedReply.replyText);
+    const text = suggestedReply?.replyText || suggestedReply?.suggestedReply;
+    if (text) {
+      setReplyText(text);
       setIsInternalNote(false);
       setSuggestedReply(null);
       toast.info('AI reply copied to reply box. Please review and edit before sending.');
@@ -500,18 +507,24 @@ export const TicketDetailPage: React.FC = () => {
               </div>
 
               <div className="p-4 bg-white rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed whitespace-pre-wrap mb-4 font-normal shadow-subtle">
-                {suggestedReply.replyText}
+                {suggestedReply.replyText || suggestedReply.suggestedReply || (
+                  <span className="text-slate-400 italic">Generating suggested response...</span>
+                )}
               </div>
 
-              {suggestedReply.groundingArticles && suggestedReply.groundingArticles.length > 0 && (
+              {((suggestedReply.groundingArticles && suggestedReply.groundingArticles.length > 0) ||
+                (suggestedReply.referencedArticles && suggestedReply.referencedArticles.length > 0)) && (
                 <div className="mb-4 text-xs text-slate-500">
                   <span className="font-semibold text-slate-700 mr-2">Referenced Knowledge Base Articles:</span>
                   <div className="flex flex-wrap gap-1 mt-1">
-                    {suggestedReply.groundingArticles.map((art: any, i: number) => (
-                      <span key={i} className="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-medium">
-                        {art.title}
-                      </span>
-                    ))}
+                    {(suggestedReply.groundingArticles || suggestedReply.referencedArticles || []).map((art: any, i: number) => {
+                      const title = typeof art === 'string' ? art : art?.title || 'Knowledge Record';
+                      return (
+                        <span key={i} className="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-medium">
+                          {title}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               )}

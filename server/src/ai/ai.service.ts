@@ -191,7 +191,11 @@ export class AIService {
         latencyMs,
       });
 
-      return result;
+      return {
+        ...result,
+        replyText: result.suggestedReply,
+        groundingArticles: result.referencedArticles?.map((title: string) => ({ title })) || [],
+      } as any;
     } catch (err: any) {
       const latencyMs = Date.now() - startTime;
       logger.error(`AI suggested reply failed for ticket ${ticketId}:`, err);

@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/useAuthStore.js';
 import { Sidebar } from '../components/Sidebar.js';
 import { Navbar } from '../components/Navbar.js';
 import { ToastContainer } from '../components/ToastContainer.js';
+import { ErrorBoundary } from '../components/ErrorBoundary.js';
 
 interface AppLayoutProps {
   allowedRoles?: ('CUSTOMER' | 'AGENT' | 'ADMIN')[];
@@ -48,7 +49,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ allowedRoles }) => {
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
         <Navbar onToggleSidebar={() => setSidebarOpen((prev) => !prev)} />
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-          <Outlet />
+          <ErrorBoundary fallbackTitle="Dashboard View Encountered an Issue">
+            <Outlet />
+          </ErrorBoundary>
         </main>
       </div>
 

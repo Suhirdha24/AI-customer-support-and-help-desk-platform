@@ -11,19 +11,63 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  KeyRound,
+  Shield,
+  Headphones,
+  User,
+  Info,
   HelpCircle,
-  Check,
 } from 'lucide-react';
 
+type RoleTab = 'ADMIN' | 'AGENT' | 'CUSTOMER';
+
+interface RoleConfig {
+  id: RoleTab;
+  label: string;
+  subLabel: string;
+  email: string;
+  icon: React.ElementType;
+  activeColor: string;
+  badgeBg: string;
+}
+
+const ROLES: RoleConfig[] = [
+  {
+    id: 'ADMIN',
+    label: 'Admin',
+    subLabel: 'Platform Administrator',
+    email: 'admin@example.com',
+    icon: Shield,
+    activeColor: 'text-rose-400 border-rose-500/50 bg-rose-500/10',
+    badgeBg: 'bg-rose-500',
+  },
+  {
+    id: 'AGENT',
+    label: 'Agent',
+    subLabel: 'Support Specialist',
+    email: 'agent1@example.com',
+    icon: Headphones,
+    activeColor: 'text-indigo-400 border-indigo-500/50 bg-indigo-500/10',
+    badgeBg: 'bg-indigo-500',
+  },
+  {
+    id: 'CUSTOMER',
+    label: 'Customer',
+    subLabel: 'Client Inquiries',
+    email: 'customer1@example.com',
+    icon: User,
+    activeColor: 'text-emerald-400 border-emerald-500/50 bg-emerald-500/10',
+    badgeBg: 'bg-emerald-500',
+  },
+];
+
 export const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [activeRole, setActiveRole] = useState<RoleTab>('ADMIN');
+  const [email, setEmail] = useState('admin@example.com');
+  const [password, setPassword] = useState('Password123!');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [selectedExample, setSelectedExample] = useState<string | null>(null);
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
 
   const { login, isAuthenticated, user } = useAuthStore();
@@ -37,6 +81,13 @@ export const LoginPage: React.FC = () => {
       else navigate('/customer/dashboard', { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
+
+  const handleRoleSelect = (role: RoleConfig) => {
+    setActiveRole(role.id);
+    setEmail(role.email);
+    setPassword('Password123!');
+    setErrorMessage(null);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +127,7 @@ export const LoginPage: React.FC = () => {
         err.response?.data?.error?.message ||
         err.response?.data?.message ||
         (err.message === 'Network Error'
-          ? 'Unable to connect to the authentication server. Please check your backend connection.'
+          ? 'Unable to connect to the authentication server. Please check your network connection.'
           : 'Invalid email or password. Please verify your credentials and try again.');
       setErrorMessage(msg);
       toast.error(msg);
@@ -85,18 +136,12 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  // Example credentials autofill
-  const handleAutofill = (demoEmail: string, roleKey: string) => {
-    setEmail(demoEmail);
-    setPassword('Password123!');
-    setSelectedExample(roleKey);
-    setErrorMessage(null);
-  };
+  const currentRole = ROLES.find((r) => r.id === activeRole) || ROLES[0];
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
       {/* Ambient background lighting */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] h-[34rem] bg-gradient-to-tr from-indigo-600/15 via-emerald-600/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] h-[34rem] bg-gradient-to-tr from-indigo-600/15 via-emerald-600/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         {/* Brand Header */}
@@ -112,70 +157,38 @@ export const LoginPage: React.FC = () => {
 
         {/* Card */}
         <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-7 shadow-2xl backdrop-blur-xl">
-          {/* Example Credentials Box */}
-          <div className="mb-5 p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Example Credentials</span>
+          {/* Sleek Segmented Role Tab Selector */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+              <span className="font-semibold uppercase tracking-wider text-[11px] text-slate-400">
+                Select Workspace Role
               </span>
-              <span className="text-[11px] text-slate-400 font-mono">
-                Password: <strong className="text-emerald-300">Password123!</strong>
+              <span className="text-[11px] text-indigo-400 flex items-center gap-1">
+                <Info className="w-3 h-3" />
+                <span>Auto-fills credentials</span>
               </span>
             </div>
 
-            <p className="text-[11px] text-slate-400 mb-2.5">
-              Click an example role below to fill the login form:
-            </p>
-
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleAutofill('admin@example.com', 'admin')}
-                className={`px-2 py-2 rounded-lg text-left transition-all border text-xs cursor-pointer ${
-                  selectedExample === 'admin'
-                    ? 'bg-rose-500/15 border-rose-500/50 text-rose-200'
-                    : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white'
-                }`}
-              >
-                <div className="font-bold flex items-center justify-between">
-                  <span>Admin</span>
-                  {selectedExample === 'admin' && <Check className="w-3 h-3 text-rose-400" />}
-                </div>
-                <div className="text-[10px] text-slate-400 truncate mt-0.5">admin@example.com</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleAutofill('agent1@example.com', 'agent')}
-                className={`px-2 py-2 rounded-lg text-left transition-all border text-xs cursor-pointer ${
-                  selectedExample === 'agent'
-                    ? 'bg-indigo-500/15 border-indigo-500/50 text-indigo-200'
-                    : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white'
-                }`}
-              >
-                <div className="font-bold flex items-center justify-between">
-                  <span>Agent</span>
-                  {selectedExample === 'agent' && <Check className="w-3 h-3 text-indigo-400" />}
-                </div>
-                <div className="text-[10px] text-slate-400 truncate mt-0.5">agent1@example.com</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleAutofill('customer1@example.com', 'customer')}
-                className={`px-2 py-2 rounded-lg text-left transition-all border text-xs cursor-pointer ${
-                  selectedExample === 'customer'
-                    ? 'bg-emerald-500/15 border-emerald-500/50 text-emerald-200'
-                    : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white'
-                }`}
-              >
-                <div className="font-bold flex items-center justify-between">
-                  <span>Customer</span>
-                  {selectedExample === 'customer' && <Check className="w-3 h-3 text-emerald-400" />}
-                </div>
-                <div className="text-[10px] text-slate-400 truncate mt-0.5">customer1@example.com</div>
-              </button>
+            <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-950/80 border border-slate-800 rounded-xl">
+              {ROLES.map((role) => {
+                const Icon = role.icon;
+                const isActive = activeRole === role.id;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => handleRoleSelect(role)}
+                    className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      isActive
+                        ? `${role.activeColor} shadow-sm border`
+                        : 'text-slate-400 hover:text-slate-200 border border-transparent hover:bg-slate-900'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{role.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -189,13 +202,14 @@ export const LoginPage: React.FC = () => {
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email Address */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   Email Address
                 </label>
                 <span className="text-[11px] text-slate-400 font-mono">
-                  e.g. <span className="text-slate-300">admin@example.com</span>
+                  Role: <strong className="text-slate-300 font-semibold">{currentRole.subLabel}</strong>
                 </span>
               </div>
               <div className="relative">
@@ -204,7 +218,7 @@ export const LoginPage: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. admin@example.com"
+                  placeholder="e.g. name@company.com"
                   required
                   autoComplete="email"
                   disabled={loading}
@@ -213,13 +227,14 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   Password
                 </label>
                 <span className="text-[11px] text-slate-400 font-mono">
-                  e.g. <span className="text-slate-300">Password123!</span>
+                  Default: <strong className="text-emerald-400 font-semibold">Password123!</strong>
                 </span>
               </div>
               <div className="relative">
@@ -228,7 +243,7 @@ export const LoginPage: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="e.g. Password123!"
+                  placeholder="••••••••••••"
                   required
                   autoComplete="current-password"
                   disabled={loading}
@@ -245,6 +260,7 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Options */}
             <div className="flex items-center justify-between pt-0.5">
               <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300">
                 <input
@@ -265,6 +281,7 @@ export const LoginPage: React.FC = () => {
               </button>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
@@ -273,11 +290,11 @@ export const LoginPage: React.FC = () => {
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Signing in...</span>
+                  <span>Signing in as {currentRole.label}...</span>
                 </>
               ) : (
                 <>
-                  <span>Sign In</span>
+                  <span>Sign in as {currentRole.label}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -301,18 +318,19 @@ export const LoginPage: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3">
               <HelpCircle className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">Example Logins & Reset</h3>
+            <h3 className="text-base font-bold text-white mb-1">Demo Access & Passwords</h3>
             <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-              For demo and development access, you can sign in with any role using password{' '}
+              For all demo roles (Admin, Agent, Customer), the default password is{' '}
               <code className="text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded font-mono font-bold">
                 Password123!
               </code>
+              . You can switch between roles using the top tab bar.
             </p>
             <div className="flex justify-end">
               <button
                 type="button"
                 onClick={() => setForgotModalOpen(false)}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-colors"
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
               >
                 Got it
               </button>

@@ -263,45 +263,45 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-white font-sans text-slate-800">
       {/* LEFT COLUMN: Product Showcase & Photography (Takes 50% - 52% of the window) */}
-      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 border-r border-slate-200/80 p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-between relative overflow-hidden h-full">
+      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 border-r border-slate-200/80 p-6 sm:p-8 lg:p-12 xl:p-14 flex flex-col justify-between relative overflow-hidden h-full">
         {/* Soft natural ambient lighting */}
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Branding Bar */}
         <div className="relative z-10 shrink-0">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 text-xs text-emerald-800 shadow-xs">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
-            <span className="font-bold text-slate-900">NexusDesk</span>
-            <span className="text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-semibold text-[10px] uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white border border-emerald-200 text-sm text-emerald-900 shadow-xs font-semibold">
+            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-extrabold text-slate-900">NexusDesk</span>
+            <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-bold text-xs uppercase tracking-wider">
               Eco
             </span>
             <span className="text-slate-400">•</span>
-            <span className="text-emerald-700 font-medium">{currentRole.badgeText}</span>
+            <span className="text-emerald-700 font-bold">{currentRole.badgeText}</span>
           </div>
         </div>
 
         {/* Content Section: Headline, Description & Feature Pills */}
-        <div className="relative z-10 text-left pt-3 shrink-0">
-          <div className="space-y-1.5 transition-all duration-300">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        <div className="relative z-10 text-left pt-4 shrink-0">
+          <div className="space-y-2.5 transition-all duration-300">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
               {currentRole.headline}
             </h1>
-            <p className="text-sm text-slate-600 max-w-xl leading-relaxed">
+            <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-2xl leading-relaxed">
               {currentRole.description}
             </p>
           </div>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap items-center gap-2 pt-2.5">
+          <div className="flex flex-wrap items-center gap-2.5 pt-3.5">
             {currentRole.props.map((prop, idx) => {
               const PropIcon = prop.icon;
               return (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 font-medium shadow-xs"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-sm text-slate-800 font-bold shadow-xs"
                 >
-                  <PropIcon className={`w-3.5 h-3.5 ${prop.iconColor}`} />
+                  <PropIcon className={`w-4.5 h-4.5 ${prop.iconColor}`} />
                   <span>{prop.title}</span>
                 </span>
               );
@@ -310,36 +310,36 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Photo Frame that expands vertically to fill all available space */}
-        <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md group my-3 flex-1 flex flex-col min-h-[260px] max-h-[480px]">
+        <div className="relative rounded-3xl overflow-hidden border-2 border-slate-200/90 bg-white shadow-xl shadow-slate-200/60 group my-4 flex-1 flex flex-col min-h-[300px]">
           <img
             key={currentRole.id}
             src={currentRole.heroImage}
             alt={`${currentRole.label} Workspace`}
-            className="w-full flex-1 min-h-0 object-cover rounded-t-2xl transition-all duration-500 group-hover:scale-[1.01]"
+            className="w-full flex-1 min-h-0 object-cover rounded-t-3xl transition-all duration-500 group-hover:scale-[1.01]"
           />
 
           {/* Bottom Overlay Bar */}
-          <div className="bg-white/95 border-t border-slate-100 px-4 py-2.5 flex items-center justify-between text-xs shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center">
-                <OverlayIcon className="w-4 h-4" />
+          <div className="bg-white/95 border-t border-slate-100 px-6 py-4 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200/90 text-emerald-700 flex items-center justify-center shrink-0">
+                <OverlayIcon className="w-6 h-6" />
               </div>
               <div>
-                <p className="font-bold text-slate-900 text-xs sm:text-sm">{currentRole.overlayTitle}</p>
-                <p className="text-[11px] text-slate-500 hidden sm:block">{currentRole.overlaySubtitle}</p>
+                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{currentRole.overlayTitle}</p>
+                <p className="text-xs sm:text-sm text-slate-500 font-medium hidden sm:block">{currentRole.overlaySubtitle}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 font-medium text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-              <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl">
+              <Leaf className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{currentRole.overlayPill}</span>
             </div>
           </div>
         </div>
 
         {/* Bottom Sustainability Tagline */}
-        <div className="relative z-10 text-xs text-slate-500 flex items-center gap-2 shrink-0">
-          <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+        <div className="relative z-10 text-sm text-slate-600 font-medium flex items-center gap-2.5 shrink-0 pt-1">
+          <Leaf className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
           <span>Carbon-neutral AI compute • Certified 0.02g CO₂e inference footprint</span>
         </div>
       </div>

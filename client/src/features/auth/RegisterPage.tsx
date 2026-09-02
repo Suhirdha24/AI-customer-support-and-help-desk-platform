@@ -85,65 +85,53 @@ export const RegisterPage: React.FC = () => {
 
           {/* Compact Natural Headline */}
           <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug">
               Instant Care with Friendly Human & AI Support
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
               Create your account to submit inquiries, track real-time resolution progress, and access verified self-service guides.
             </p>
           </div>
 
+          {/* Inline Feature Value Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-slate-200/90 text-[11px] text-slate-700 font-medium shadow-2xs">
+              <Zap className="w-3 h-3 text-emerald-700" />
+              <span>Zero Wait</span>
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-slate-200/90 text-[11px] text-slate-700 font-medium shadow-2xs">
+              <Shield className="w-3 h-3 text-teal-700" />
+              <span>Secure Privacy</span>
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-slate-200/90 text-[11px] text-slate-700 font-medium shadow-2xs">
+              <Leaf className="w-3 h-3 text-emerald-700" />
+              <span>Eco-Friendly</span>
+            </span>
+          </div>
+
           {/* Natural Photo Frame */}
-          <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-white shadow-md shadow-slate-200/50 group">
+          <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm group">
             <img
               src="/images/natural_customer.jpg"
               alt="Customer Self-Service Support Experience"
-              className="w-full h-44 sm:h-52 lg:h-56 xl:h-60 object-cover rounded-t-xl transition-all duration-500 group-hover:scale-[1.01]"
+              className="w-full h-36 sm:h-40 lg:h-44 object-cover rounded-t-xl transition-all duration-500 group-hover:scale-[1.01]"
             />
 
             {/* Natural Photo Bottom Overlay Bar */}
-            <div className="bg-white/95 border-t border-slate-100 px-3.5 py-2 sm:py-2.5 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center">
-                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+            <div className="bg-white/95 border-t border-slate-100 px-3 py-2 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center">
+                  <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                 </div>
                 <div>
                   <p className="font-bold text-slate-900 text-xs">98% Customer Satisfaction</p>
-                  <p className="text-[10px] text-slate-500 hidden sm:block">Real-time status tracking & verified feedback</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 font-medium text-[10px] sm:text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+              <div className="flex items-center gap-1 font-medium text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
                 <Leaf className="w-3 h-3 text-emerald-600 shrink-0" />
                 <span>Zero Carbon Support</span>
               </div>
-            </div>
-          </div>
-
-          {/* 3 Compact Natural Value Prop Cards */}
-          <div className="grid grid-cols-3 gap-2.5 pt-0.5">
-            <div className="p-2.5 rounded-lg bg-white border border-slate-200/80 shadow-xs transition-all">
-              <div className="flex items-center gap-1 text-xs font-bold text-slate-900 mb-0.5">
-                <Zap className="w-3 h-3 text-emerald-700" />
-                <span className="truncate">Zero Wait</span>
-              </div>
-              <p className="text-[10px] text-slate-500 leading-tight truncate">Instant self-service answers</p>
-            </div>
-
-            <div className="p-2.5 rounded-lg bg-white border border-slate-200/80 shadow-xs transition-all">
-              <div className="flex items-center gap-1 text-xs font-bold text-slate-900 mb-0.5">
-                <Shield className="w-3 h-3 text-teal-700" />
-                <span className="truncate">Secure Privacy</span>
-              </div>
-              <p className="text-[10px] text-slate-500 leading-tight truncate">End-to-end encrypted</p>
-            </div>
-
-            <div className="p-2.5 rounded-lg bg-white border border-slate-200/80 shadow-xs transition-all">
-              <div className="flex items-center gap-1 text-xs font-bold text-slate-900 mb-0.5">
-                <Leaf className="w-3 h-3 text-emerald-700" />
-                <span className="truncate">Eco-Friendly</span>
-              </div>
-              <p className="text-[10px] text-slate-500 leading-tight truncate">Carbon-neutral compute</p>
             </div>
           </div>
         </div>

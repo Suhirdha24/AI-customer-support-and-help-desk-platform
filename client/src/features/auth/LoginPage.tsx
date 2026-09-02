@@ -270,38 +270,38 @@ export const LoginPage: React.FC = () => {
 
         {/* Top Branding Bar */}
         <div className="relative z-10 shrink-0">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white border border-emerald-200 text-sm text-emerald-900 shadow-xs font-semibold">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-extrabold text-slate-900">NexusDesk</span>
-            <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-bold text-xs uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-emerald-200 text-xs text-emerald-900 shadow-2xs font-semibold">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-bold text-slate-900">NexusDesk</span>
+            <span className="text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-bold text-[10px] uppercase tracking-wider">
               Eco
             </span>
             <span className="text-slate-400">•</span>
-            <span className="text-emerald-700 font-bold">{currentRole.badgeText}</span>
+            <span className="text-emerald-700 font-medium">{currentRole.badgeText}</span>
           </div>
         </div>
 
         {/* Content Section: Headline, Description & Feature Pills */}
-        <div className="relative z-10 text-left pt-4 shrink-0">
-          <div className="space-y-2.5 transition-all duration-300">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
+        <div className="relative z-10 text-left pt-2.5 shrink-0">
+          <div className="space-y-1.5 transition-all duration-300">
+            <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug">
               {currentRole.headline}
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed">
               {currentRole.description}
             </p>
           </div>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap items-center gap-2.5 pt-3.5">
+          <div className="flex flex-wrap items-center gap-2 pt-2">
             {currentRole.props.map((prop, idx) => {
               const PropIcon = prop.icon;
               return (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-sm text-slate-800 font-bold shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 font-semibold shadow-2xs"
                 >
-                  <PropIcon className={`w-4.5 h-4.5 ${prop.iconColor}`} />
+                  <PropIcon className={`w-3.5 h-3.5 ${prop.iconColor}`} />
                   <span>{prop.title}</span>
                 </span>
               );
@@ -310,36 +310,36 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Photo Frame that expands vertically to fill all available space */}
-        <div className="relative rounded-3xl overflow-hidden border-2 border-slate-200/90 bg-white shadow-xl shadow-slate-200/60 group my-4 flex-1 flex flex-col min-h-[300px]">
+        <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md group my-3 flex-1 flex flex-col min-h-[260px] max-h-[500px]">
           <img
             key={currentRole.id}
             src={currentRole.heroImage}
             alt={`${currentRole.label} Workspace`}
-            className="w-full flex-1 min-h-0 object-cover rounded-t-3xl transition-all duration-500 group-hover:scale-[1.01]"
+            className="w-full flex-1 min-h-0 object-cover rounded-t-2xl transition-all duration-500 group-hover:scale-[1.01]"
           />
 
           {/* Bottom Overlay Bar */}
-          <div className="bg-white/95 border-t border-slate-100 px-6 py-4 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200/90 text-emerald-700 flex items-center justify-center shrink-0">
-                <OverlayIcon className="w-6 h-6" />
+          <div className="bg-white/95 border-t border-slate-100 px-4 py-2.5 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200/90 text-emerald-700 flex items-center justify-center shrink-0">
+                <OverlayIcon className="w-4 h-4" />
               </div>
               <div>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{currentRole.overlayTitle}</p>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium hidden sm:block">{currentRole.overlaySubtitle}</p>
+                <p className="font-bold text-slate-900 text-xs sm:text-sm">{currentRole.overlayTitle}</p>
+                <p className="text-[11px] text-slate-500 font-normal hidden sm:block">{currentRole.overlaySubtitle}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl">
-              <Leaf className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="flex items-center gap-1.5 font-semibold text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md">
+              <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
               <span>{currentRole.overlayPill}</span>
             </div>
           </div>
         </div>
 
         {/* Bottom Sustainability Tagline */}
-        <div className="relative z-10 text-sm text-slate-600 font-medium flex items-center gap-2.5 shrink-0 pt-1">
-          <Leaf className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
+        <div className="relative z-10 text-xs text-slate-500 font-normal flex items-center gap-2 shrink-0 pt-1">
+          <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
           <span>Carbon-neutral AI compute • Certified 0.02g CO₂e inference footprint</span>
         </div>
       </div>
@@ -347,44 +347,44 @@ export const LoginPage: React.FC = () => {
       {/* RIGHT COLUMN: Authentication Form (Fills the other 50% of the screen) */}
       <div className="lg:w-1/2 xl:w-[48%] bg-white flex flex-col justify-between p-6 sm:p-10 lg:p-12 xl:p-14 overflow-y-auto h-full">
         {/* Right Top Bar */}
-        <div className="w-full flex items-center justify-between text-xs sm:text-sm text-slate-500 shrink-0">
-          <div className="flex items-center gap-2.5 font-bold text-slate-800">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="w-full flex items-center justify-between text-xs text-slate-500 shrink-0">
+          <div className="flex items-center gap-2 font-semibold text-slate-800">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>NexusDesk Support Network</span>
           </div>
-          <div className="text-xs text-emerald-800 font-bold bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-lg shadow-2xs">
+          <div className="text-[11px] text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md">
             Live v2.4
           </div>
         </div>
 
-        {/* Right Center: Prominent Sign In Form */}
-        <div className="max-w-lg w-full mx-auto my-auto space-y-6 text-left py-4">
+        {/* Right Center: Balanced Sign In Form */}
+        <div className="max-w-md w-full mx-auto my-auto space-y-5 text-left py-4">
           {/* Header */}
           <div>
-            <div className="inline-flex lg:hidden items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20 mb-3">
-              <Leaf className="w-6 h-6" />
+            <div className="inline-flex lg:hidden items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20 mb-3">
+              <Leaf className="w-5 h-5" />
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
               Sign In
             </h2>
-            <p className="mt-2 text-sm sm:text-base text-slate-500">
+            <p className="mt-1 text-xs sm:text-sm text-slate-500">
               Select your role to access your dedicated workspace
             </p>
           </div>
 
           {/* Segmented Role Selector */}
           <div>
-            <div className="flex items-center justify-between text-xs sm:text-sm text-slate-500 mb-2">
-              <span className="font-bold uppercase tracking-wider text-xs text-slate-600">
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
+              <span className="font-semibold uppercase tracking-wider text-[11px] text-slate-500">
                 Select Workspace Role
               </span>
-              <span className="text-xs sm:text-sm text-emerald-700 flex items-center gap-1.5 font-semibold">
-                <Info className="w-4 h-4" />
+              <span className="text-xs text-emerald-700 flex items-center gap-1 font-medium">
+                <Info className="w-3.5 h-3.5" />
                 <span>Auto-fills credentials</span>
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 p-1.5 bg-slate-100 border border-slate-200/80 rounded-2xl">
+            <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 border border-slate-200/80 rounded-xl">
               {ROLES.map((role) => {
                 const Icon = role.icon;
                 const isActive = activeRole === role.id;
@@ -393,13 +393,13 @@ export const LoginPage: React.FC = () => {
                     key={role.id}
                     type="button"
                     onClick={() => handleRoleSelect(role)}
-                    className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-white text-slate-900 font-extrabold shadow-sm border border-slate-200'
-                        : 'text-slate-600 hover:text-slate-900 border border-transparent hover:bg-slate-200/60 font-semibold'
+                        ? 'bg-white text-slate-900 font-bold shadow-xs border border-slate-200'
+                        : 'text-slate-600 hover:text-slate-900 border border-transparent hover:bg-slate-200/60 font-medium'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${isActive ? 'text-emerald-700' : 'text-slate-400'}`} />
+                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-700' : 'text-slate-400'}`} />
                     <span>{role.label}</span>
                   </button>
                 );
@@ -409,26 +409,26 @@ export const LoginPage: React.FC = () => {
 
           {/* Inline Error Alert */}
           {errorMessage && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-2.5">
-              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <div className="flex-1 leading-relaxed">{errorMessage}</div>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5" autoComplete="off">
+          <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
             {/* Email Address */}
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wider">
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
                   Email Address
                 </label>
-                <span className="text-xs sm:text-sm text-slate-500 font-mono">
-                  Role: <strong className="text-slate-800 font-bold">{currentRole.subLabel}</strong>
+                <span className="text-xs text-slate-500 font-mono">
+                  Role: <strong className="text-slate-800 font-semibold">{currentRole.subLabel}</strong>
                 </span>
               </div>
               <div className="relative">
-                <Mail className="w-5 h-5 text-slate-400 absolute left-4 top-4" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
                   key={`email-${activeRole}`}
                   type="email"
@@ -439,23 +439,23 @@ export const LoginPage: React.FC = () => {
                   placeholder={currentRole.email}
                   autoComplete="new-password"
                   disabled={loading}
-                  className="w-full bg-slate-50/70 border-2 border-slate-200 rounded-2xl pl-12 pr-4 py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/15 transition-all disabled:opacity-60"
+                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wider">
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
                   Password
                 </label>
-                <span className="text-xs sm:text-sm text-slate-500 font-mono">
-                  Default: <strong className="text-emerald-700 font-bold">Password123!</strong>
+                <span className="text-xs text-slate-500 font-mono">
+                  Default: <strong className="text-emerald-700 font-semibold">Password123!</strong>
                 </span>
               </div>
               <div className="relative">
-                <Lock className="w-5 h-5 text-slate-400 absolute left-4 top-4" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
                   key={`pwd-${activeRole}`}
                   type={showPassword ? 'text' : 'password'}
@@ -466,27 +466,27 @@ export const LoginPage: React.FC = () => {
                   placeholder="Password123!"
                   autoComplete="new-password"
                   disabled={loading}
-                  className="w-full bg-slate-50/70 border-2 border-slate-200 rounded-2xl pl-12 pr-12 py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/15 transition-all disabled:opacity-60"
+                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
             {/* Options */}
-            <div className="flex items-center justify-between pt-1">
-              <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm text-slate-600 font-medium">
+            <div className="flex items-center justify-between pt-0.5">
+              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-600 font-medium">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4.5 h-4.5 rounded-md border-slate-300 bg-white text-emerald-600 focus:ring-emerald-500/30"
+                  className="w-4 h-4 rounded border-slate-300 bg-white text-emerald-600 focus:ring-emerald-500/30"
                 />
                 <span>Remember this device</span>
               </label>
@@ -494,7 +494,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setForgotModalOpen(true)}
-                className="text-xs sm:text-sm text-emerald-700 hover:text-emerald-800 font-semibold transition-colors"
+                className="text-xs text-emerald-700 hover:text-emerald-800 font-medium transition-colors"
               >
                 Forgot password?
               </button>
@@ -504,33 +504,33 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 flex items-center justify-center gap-2.5 py-3.5 sm:py-4 px-5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm sm:text-base font-bold rounded-2xl shadow-lg shadow-emerald-600/25 transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full mt-2 flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-semibold rounded-xl shadow-md shadow-emerald-600/20 transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   <span>Signing in as {currentRole.label}...</span>
                 </>
               ) : (
                 <>
                   <span>Sign in as {currentRole.label}</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
           {/* Footer */}
-          <p className="text-center text-xs sm:text-sm text-slate-600 pt-1">
+          <p className="text-center text-xs text-slate-500 pt-1">
             Don't have an account?{' '}
-            <Link to="/register" className="font-bold text-emerald-700 hover:text-emerald-800 underline">
+            <Link to="/register" className="font-semibold text-emerald-700 hover:text-emerald-800 underline">
               Register as a Customer
             </Link>
           </p>
         </div>
 
         {/* Right Bottom Footer */}
-        <div className="w-full text-center text-xs sm:text-sm text-slate-400 shrink-0 pt-2 font-medium">
+        <div className="w-full text-center text-xs text-slate-400 shrink-0 pt-2 font-normal">
           <span>© 2026 NexusDesk Technologies • Verified Eco-Certified Platform</span>
         </div>
       </div>

@@ -62,8 +62,8 @@ const ROLES: RoleConfig[] = [
 
 export const LoginPage: React.FC = () => {
   const [activeRole, setActiveRole] = useState<RoleTab>('ADMIN');
-  const [email, setEmail] = useState('admin@example.com');
-  const [password, setPassword] = useState('Password123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -84,8 +84,8 @@ export const LoginPage: React.FC = () => {
 
   const handleRoleSelect = (role: RoleConfig) => {
     setActiveRole(role.id);
-    setEmail(role.email);
-    setPassword('Password123!');
+    setEmail('');
+    setPassword('');
     setErrorMessage(null);
   };
 
@@ -93,17 +93,16 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
 
-    const cleanEmail = email.trim();
-    if (!cleanEmail || !password) {
-      setErrorMessage('Please enter both your email address and password.');
-      return;
-    }
+    // Use typed value or active role placeholder default
+    const targetRole = ROLES.find((r) => r.id === activeRole) || ROLES[0];
+    const cleanEmail = email.trim() || targetRole.email;
+    const cleanPassword = password || 'Password123!';
 
     try {
       setLoading(true);
       const res = await apiClient.post('/auth/login', {
         email: cleanEmail,
-        password,
+        password: cleanPassword,
       });
 
       if (res.data?.success && res.data?.data) {
@@ -218,8 +217,7 @@ export const LoginPage: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. name@company.com"
-                  required
+                  placeholder={currentRole.email}
                   autoComplete="email"
                   disabled={loading}
                   className="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all disabled:opacity-60"
@@ -243,8 +241,7 @@ export const LoginPage: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  required
+                  placeholder="Password123!"
                   autoComplete="current-password"
                   disabled={loading}
                   className="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all disabled:opacity-60"

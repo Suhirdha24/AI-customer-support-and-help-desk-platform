@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/useAuthStore.js';
 import { AppLayout } from './layouts/AppLayout.js';
 import { ToastContainer } from './components/ToastContainer.js';
+import { ServerWarmingBanner } from './components/ServerWarmingBanner.js';
 
 // Auth Pages
 import { LoginPage } from './features/auth/LoginPage.js';
@@ -92,6 +93,7 @@ export const App: React.FC = () => {
           <Route path="*" element={<Navigate to={getDefaultRedirect()} replace />} />
         </Routes>
       <ToastContainer />
+      <ServerWarmingBanner />
     </>
   );
 };

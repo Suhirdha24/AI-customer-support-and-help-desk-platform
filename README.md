@@ -1,5 +1,6 @@
 # NexusDesk AI — Intelligent Customer Support & Helpdesk Platform
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-nexusdesk--client.onrender.com-success?style=for-the-badge&logo=render)](https://nexusdesk-client.onrender.com)
 [![Tests](https://img.shields.io/badge/tests-49%20passed-emerald)](https://github.com/Suhirdha24/AI-customer-support-and-help-desk-platform)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
@@ -7,6 +8,9 @@
 [![React](https://img.shields.io/badge/React-18-cyan)](https://react.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> 🚀 **Live Production Application**: [https://nexusdesk-client.onrender.com](https://nexusdesk-client.onrender.com)  
+> **Backend API**: [https://nexusdesk-api-i4n5.onrender.com/api](https://nexusdesk-api-i4n5.onrender.com/api)
 
 > **NexusDesk AI** is a production-quality, full-stack AI-augmented customer support and helpdesk platform built using the **MERN** stack (MongoDB, Express, React, Node.js) with **100% end-to-end TypeScript**. It integrates automated multi-factor ticket triaging, contextual incident summarization, RAG-grounded reply suggestions with **human-in-the-loop governance**, deterministic state machine transitions, and triple-layer privacy for internal team notes.
 
@@ -574,6 +578,8 @@ npm run seed --workspace=ai-helpdesk-server
 
 ## 31. Production Deployment Checklist
 
+- [x] **Live Frontend Web App**: [https://nexusdesk-client.onrender.com](https://nexusdesk-client.onrender.com)
+- [x] **Live Backend API**: [https://nexusdesk-api-i4n5.onrender.com/api](https://nexusdesk-api-i4n5.onrender.com/api)
 - [x] Configure production `MONGODB_URI` with authentication and TLS.
 - [x] Set strong 64-character `JWT_SECRET`.
 - [x] Configure production `CLIENT_URL` for CORS.

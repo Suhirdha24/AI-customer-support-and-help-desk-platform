@@ -307,14 +307,14 @@ export const SupportPerformanceOverview: React.FC = () => {
   return (
     <div className={`space-y-6 ${framedView ? 'max-w-7xl mx-auto' : 'w-full'} transition-all duration-300`}>
       <div
-        className={`bg-white transition-all duration-300 ${
+        className={`bg-white dark:bg-slate-900 transition-all duration-300 ${
           framedView
-            ? 'rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-elevated'
-            : 'rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-subtle'
+            ? 'rounded-3xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-elevated'
+            : 'rounded-2xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 shadow-subtle'
         }`}
       >
         {/* Top Header & Navigation Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
@@ -865,14 +865,14 @@ export const SupportPerformanceOverview: React.FC = () => {
             {/* MIDDLE ROW: TICKET STATUS CONCENTRIC GAUGE & TOP USED TAGS */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-6">
               {/* TICKET STATUS CONCENTRIC RADIAL DONUT GAUGE (5 cols) */}
-              <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-slate-700">Ticket status</h3>
+                  <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Ticket status</h3>
                   <button
                     onClick={() => {
                       setSelectedStatus(selectedStatus === 'CLOSED' ? 'ALL' : 'CLOSED');
                     }}
-                    className="text-xs font-semibold text-indigo-600 hover:underline"
+                    className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
                   >
                     {selectedStatus === 'CLOSED' ? 'Show All' : 'Filter Closed'}
                   </button>
@@ -883,9 +883,9 @@ export const SupportPerformanceOverview: React.FC = () => {
                   <div className="relative w-56 h-56 flex items-center justify-center">
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
                       {/* Background track rings */}
-                      <circle cx="100" cy="100" r="82" fill="none" stroke="#f1f5f9" strokeWidth="12" />
-                      <circle cx="100" cy="100" r="64" fill="none" stroke="#f1f5f9" strokeWidth="12" />
-                      <circle cx="100" cy="100" r="46" fill="none" stroke="#f1f5f9" strokeWidth="12" />
+                      <circle cx="100" cy="100" r="82" fill="none" stroke="currentColor" className="text-slate-100 dark:text-slate-800" strokeWidth="12" />
+                      <circle cx="100" cy="100" r="64" fill="none" stroke="currentColor" className="text-slate-100 dark:text-slate-800" strokeWidth="12" />
+                      <circle cx="100" cy="100" r="46" fill="none" stroke="currentColor" className="text-slate-100 dark:text-slate-800" strokeWidth="12" />
 
                       {/* Outer Ring: Closed / Resolved tickets (Violet #8b5cf6) */}
                       <circle
@@ -932,62 +932,62 @@ export const SupportPerformanceOverview: React.FC = () => {
 
                     {/* Center Shield Badge */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-200/80 flex items-center justify-center shadow-subtle">
-                        <ShieldCheck className="w-6 h-6 text-indigo-600 stroke-[2]" />
+                      <div className="w-12 h-12 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800 flex items-center justify-center shadow-subtle">
+                        <ShieldCheck className="w-6 h-6 text-indigo-600 dark:text-indigo-400 stroke-[2]" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Bottom Legend with Colored Vertical Indicators */}
-                <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100">
+                <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
                   {/* Green: Total */}
                   <div
                     onClick={() => setSelectedStatus('ALL')}
-                    className="flex items-start gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg transition-colors"
+                    className="flex items-start gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 p-1.5 rounded-lg transition-colors"
                   >
                     <div className="w-1.5 h-8 rounded-full bg-[#10b981] mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-base font-extrabold text-slate-900 leading-tight">{dynamicTotalTickets}</p>
-                      <p className="text-[11px] text-slate-500 font-medium">Total tickets</p>
+                      <p className="text-base font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{dynamicTotalTickets}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Total tickets</p>
                     </div>
                   </div>
 
                   {/* Amber: Created */}
                   <div
                     onClick={() => setSelectedStatus('OPEN')}
-                    className="flex items-start gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg transition-colors"
+                    className="flex items-start gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 p-1.5 rounded-lg transition-colors"
                   >
                     <div className="w-1.5 h-8 rounded-full bg-[#f59e0b] mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-base font-extrabold text-slate-900 leading-tight">{dynamicCreatedTickets}</p>
-                      <p className="text-[11px] text-slate-500 font-medium">Created</p>
+                      <p className="text-base font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{dynamicCreatedTickets}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Created</p>
                     </div>
                   </div>
 
                   {/* Violet: Closed */}
                   <div
                     onClick={() => setSelectedStatus('CLOSED')}
-                    className="flex items-start gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg transition-colors"
+                    className="flex items-start gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 p-1.5 rounded-lg transition-colors"
                   >
                     <div className="w-1.5 h-8 rounded-full bg-[#8b5cf6] mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-base font-extrabold text-slate-900 leading-tight">{dynamicClosedTickets}</p>
-                      <p className="text-[11px] text-slate-500 font-medium">Closed</p>
+                      <p className="text-base font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{dynamicClosedTickets}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Closed</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* TOP USED TAGS HORIZONTAL BAR DISTRIBUTION (7 cols) */}
-              <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
+              <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between pb-4">
-                    <h3 className="text-sm font-semibold text-slate-700">Top used tags</h3>
+                    <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Top used tags</h3>
                     {activeTagFilter && (
                       <button
                         onClick={() => setActiveTagFilter(null)}
-                        className="text-xs font-semibold text-emerald-600 hover:underline"
+                        className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
                       >
                         Clear tag filter ({activeTagFilter})
                       </button>
@@ -995,7 +995,7 @@ export const SupportPerformanceOverview: React.FC = () => {
                   </div>
 
                   {/* Table Column Headers */}
-                  <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400 pb-2 border-b border-slate-100">
+                  <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 pb-2 border-b border-slate-100 dark:border-slate-800">
                     <span>Tags (Click to filter)</span>
                     <div className="flex items-center gap-10 pr-2">
                       <span className="w-8 text-right">Total</span>

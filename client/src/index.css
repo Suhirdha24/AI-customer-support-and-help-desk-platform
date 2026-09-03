@@ -11,6 +11,120 @@
   }
 }
 
+/* ==========================================================================
+   Comprehensive Dark Mode Adaptive Surface & Contrast System
+   Ensures seamless, harmonious dark mode switching across all cards, panels,
+   forms, tables, dropdowns, and UI widgets without blinding white surfaces.
+   ========================================================================== */
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #020617; /* slate-950 */
+  color: #f1f5f9; /* slate-100 */
+}
+
+/* Background surfaces */
+html.dark .bg-white:not([class*="dark:bg-"]) {
+  background-color: #0f172a !important; /* slate-900 */
+}
+
+html.dark .bg-slate-50:not([class*="dark:bg-"]),
+html.dark .bg-slate-50\/50:not([class*="dark:bg-"]),
+html.dark .bg-slate-50\/70:not([class*="dark:bg-"]),
+html.dark .bg-slate-50\/80:not([class*="dark:bg-"]) {
+  background-color: #1e293b !important; /* slate-800 */
+}
+
+html.dark .bg-slate-100:not([class*="dark:bg-"]) {
+  background-color: #1e293b !important; /* slate-800 */
+}
+
+/* Border styling */
+html.dark .border-slate-100:not([class*="dark:border-"]),
+html.dark .border-slate-200:not([class*="dark:border-"]),
+html.dark .border-slate-200\/70:not([class*="dark:border-"]),
+html.dark .border-slate-200\/80:not([class*="dark:border-"]),
+html.dark .border-slate-200\/90:not([class*="dark:border-"]),
+html.dark .border-slate-300:not([class*="dark:border-"]) {
+  border-color: #334155 !important; /* slate-700 */
+}
+
+html.dark .divide-slate-100:not([class*="dark:divide-"]) > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200:not([class*="dark:divide-"]) > :not([hidden]) ~ :not([hidden]) {
+  border-color: #334155 !important;
+}
+
+/* Typography contrast */
+html.dark .text-slate-900:not([class*="dark:text-"]) {
+  color: #f8fafc !important; /* slate-50 */
+}
+
+html.dark .text-slate-800:not([class*="dark:text-"]) {
+  color: #f1f5f9 !important; /* slate-100 */
+}
+
+html.dark .text-slate-700:not([class*="dark:text-"]) {
+  color: #cbd5e1 !important; /* slate-300 */
+}
+
+html.dark .text-slate-600:not([class*="dark:text-"]) {
+  color: #94a3b8 !important; /* slate-400 */
+}
+
+html.dark .text-slate-500:not([class*="dark:text-"]) {
+  color: #94a3b8 !important; /* slate-400 */
+}
+
+html.dark .text-slate-400:not([class*="dark:text-"]) {
+  color: #64748b !important; /* slate-500 */
+}
+
+/* Form Controls (Inputs, Selects, Textareas) */
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([class*="dark:bg-"]),
+html.dark textarea:not([class*="dark:bg-"]),
+html.dark select:not([class*="dark:bg-"]) {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+html.dark option {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+/* Hover states */
+html.dark .hover\:bg-slate-50:hover:not([class*="dark:hover:bg-"]) {
+  background-color: #1e293b !important;
+}
+
+html.dark .hover\:bg-slate-100:hover:not([class*="dark:hover:bg-"]) {
+  background-color: #334155 !important;
+}
+
+html.dark .hover\:text-slate-900:hover:not([class*="dark:hover:text-"]),
+html.dark .hover\:text-slate-800:hover:not([class*="dark:hover:text-"]) {
+  color: #ffffff !important;
+}
+
+/* Table rows */
+html.dark table tbody tr:hover {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+}
+
+/* Donut concentric chart SVG tracks */
+html.dark circle[stroke="#f1f5f9"] {
+  stroke: #1e293b !important;
+}
+
 /* Custom micro-animations */
 @keyframes slideIn {
   from {

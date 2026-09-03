@@ -23,16 +23,21 @@
    forms, tables, dropdowns, and UI widgets without blinding white surfaces.
    ========================================================================== */
 
-html.dark {
+html {
+  background-color: #f8fafc;
+  color: #0f172a;
+  min-height: 100%;
+}
+
+html.dark,
+html.dark body,
+html.dark #root {
+  background-color: #020617 !important;
+  color: #f1f5f9 !important;
   color-scheme: dark;
 }
 
-html.dark body {
-  background-color: #020617; /* slate-950 */
-  color: #f1f5f9; /* slate-100 */
-}
-
-/* Background surfaces */
+/* Global Background surfaces */
 html.dark .bg-white:not([class*="dark:bg-"]) {
   background-color: #0f172a !important; /* slate-900 */
 }
@@ -41,11 +46,20 @@ html.dark .bg-slate-50:not([class*="dark:bg-"]),
 html.dark .bg-slate-50\/50:not([class*="dark:bg-"]),
 html.dark .bg-slate-50\/70:not([class*="dark:bg-"]),
 html.dark .bg-slate-50\/80:not([class*="dark:bg-"]) {
-  background-color: #1e293b !important; /* slate-800 */
+  background-color: #0f172a !important; /* slate-900 */
 }
 
 html.dark .bg-slate-100:not([class*="dark:bg-"]) {
   background-color: #1e293b !important; /* slate-800 */
+}
+
+/* Custom hex pastels in dark mode */
+html.dark [class*="bg-[#eef2ff]"],
+html.dark [class*="bg-[#e0e7ff]"] {
+  background-color: #1e293b !important; /* slate-800 */
+}
+html.dark [class*="bg-[#f1f5f9]"] {
+  background-color: #0f172a !important;
 }
 
 /* Border styling */

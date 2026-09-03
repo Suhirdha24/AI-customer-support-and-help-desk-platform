@@ -1020,19 +1020,19 @@ export const SupportPerformanceOverview: React.FC = () => {
                         >
                           {/* Pastel horizontal bar background fill */}
                           <div
-                            className="absolute inset-y-0 left-0 bg-[#eef2ff] group-hover:bg-[#e0e7ff] rounded-lg transition-all duration-300"
+                            className="absolute inset-y-0 left-0 bg-[#eef2ff] dark:bg-indigo-950/50 group-hover:bg-[#e0e7ff] dark:group-hover:bg-indigo-900/60 rounded-lg transition-all duration-300"
                             style={{ width: `${tag.widthPercent}%` }}
                           />
 
                           {/* Content on top */}
                           <div className="relative flex items-center justify-between py-2 px-3 text-xs">
-                            <span className="font-semibold text-slate-800 flex items-center gap-1.5">
+                            <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                               {tag.name}
                               {isSelected && <Check className="w-3 h-3 text-emerald-600" />}
                             </span>
                             <div className="flex items-center gap-10 pr-2 font-mono">
-                              <span className="w-8 text-right font-bold text-slate-800">{tag.count}</span>
-                              <span className="w-8 text-right text-slate-400">{tag.delta}</span>
+                              <span className="w-8 text-right font-bold text-slate-800 dark:text-slate-200">{tag.count}</span>
+                              <span className="w-8 text-right text-slate-400 dark:text-slate-500">{tag.delta}</span>
                             </div>
                           </div>
                         </div>
@@ -1270,40 +1270,40 @@ export const SupportPerformanceOverview: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-4">
+            <div className="bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800 rounded-xl p-4">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Cache Response Speed</span>
               <div className="flex items-baseline gap-1.5 mt-1">
                 <span className="text-2xl font-extrabold text-emerald-600">&lt;5ms</span>
-                <span className="text-xs text-emerald-700 font-semibold">Instant read</span>
+                <span className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold">Instant read</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">In-memory caching with auto-invalidation</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">In-memory caching with auto-invalidation</p>
             </div>
 
-            <div className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-4">
+            <div className="bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800 rounded-xl p-4">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Mean First Response</span>
               <div className="flex items-baseline gap-1.5 mt-1">
-                <span className="text-2xl font-extrabold text-slate-800">4m 12s</span>
-                <span className="text-xs text-emerald-600 font-semibold">Top tier</span>
+                <span className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">4m 12s</span>
+                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Top tier</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">Customer inquiries acknowledged rapidly</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Customer inquiries acknowledged rapidly</p>
             </div>
 
-            <div className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-4">
+            <div className="bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800 rounded-xl p-4">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Algorithm Latency</span>
               <div className="flex items-baseline gap-1.5 mt-1">
-                <span className="text-2xl font-extrabold text-indigo-600">18ms</span>
+                <span className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">18ms</span>
                 <span className="text-xs text-slate-400">average</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">High compute efficiency & fast responses</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">High compute efficiency & fast responses</p>
             </div>
 
-            <div className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-4">
+            <div className="bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800 rounded-xl p-4">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Uptime SLA</span>
               <div className="flex items-baseline gap-1.5 mt-1">
                 <span className="text-2xl font-extrabold text-emerald-600">99.99%</span>
-                <span className="text-xs text-emerald-600 font-bold">Verified</span>
+                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">Verified</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">Enterprise cloud compute infrastructure</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Enterprise cloud compute infrastructure</p>
             </div>
           </div>
         </div>

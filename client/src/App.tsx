@@ -1,42 +1,33 @@
-import React, { useEffect, Suspense, lazy } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/useAuthStore.js';
 import { AppLayout } from './layouts/AppLayout.js';
 import { ToastContainer } from './components/ToastContainer.js';
 
-// Auth Pages (Immediate load)
+// Auth Pages
 import { LoginPage } from './features/auth/LoginPage.js';
 import { RegisterPage } from './features/auth/RegisterPage.js';
 
-// Lazy Loaded Dashboard Pages
-const CustomerDashboard = lazy(() => import('./features/dashboard/CustomerDashboard.js').then((m) => ({ default: m.CustomerDashboard })));
-const AgentDashboard = lazy(() => import('./features/dashboard/AgentDashboard.js').then((m) => ({ default: m.AgentDashboard })));
-const AdminDashboard = lazy(() => import('./features/dashboard/AdminDashboard.js').then((m) => ({ default: m.AdminDashboard })));
-const SupportPerformanceOverview = lazy(() => import('./features/dashboard/SupportPerformanceOverview.js').then((m) => ({ default: m.SupportPerformanceOverview })));
+// Dashboard Pages
+import { CustomerDashboard } from './features/dashboard/CustomerDashboard.js';
+import { AgentDashboard } from './features/dashboard/AgentDashboard.js';
+import { AdminDashboard } from './features/dashboard/AdminDashboard.js';
+import { SupportPerformanceOverview } from './features/dashboard/SupportPerformanceOverview.js';
 
-// Lazy Loaded Ticket Pages
-const TicketListPage = lazy(() => import('./features/tickets/TicketListPage.js').then((m) => ({ default: m.TicketListPage })));
-const CreateTicketPage = lazy(() => import('./features/tickets/CreateTicketPage.js').then((m) => ({ default: m.CreateTicketPage })));
-const TicketDetailPage = lazy(() => import('./features/tickets/TicketDetailPage.js').then((m) => ({ default: m.TicketDetailPage })));
+// Ticket Pages
+import { TicketListPage } from './features/tickets/TicketListPage.js';
+import { CreateTicketPage } from './features/tickets/CreateTicketPage.js';
+import { TicketDetailPage } from './features/tickets/TicketDetailPage.js';
 
-// Lazy Loaded Knowledge Base
-const KnowledgeBasePage = lazy(() => import('./features/knowledge-base/KnowledgeBasePage.js').then((m) => ({ default: m.KnowledgeBasePage })));
+// Knowledge Base
+import { KnowledgeBasePage } from './features/knowledge-base/KnowledgeBasePage.js';
 
-// Lazy Loaded Admin Management
-const UserManagementPage = lazy(() => import('./features/admin/UserManagementPage.js').then((m) => ({ default: m.UserManagementPage })));
-const CategoryManagementPage = lazy(() => import('./features/admin/CategoryManagementPage.js').then((m) => ({ default: m.CategoryManagementPage })));
-const TeamManagementPage = lazy(() => import('./features/admin/TeamManagementPage.js').then((m) => ({ default: m.TeamManagementPage })));
-const AuditLogsPage = lazy(() => import('./features/admin/AuditLogsPage.js').then((m) => ({ default: m.AuditLogsPage })));
-const AIUsageLogsPage = lazy(() => import('./features/admin/AIUsageLogsPage.js').then((m) => ({ default: m.AIUsageLogsPage })));
-
-const PageFallback: React.FC = () => (
-  <div className="flex items-center justify-center p-12 min-h-[300px]">
-    <div className="flex flex-col items-center gap-2 text-slate-400">
-      <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-      <span className="text-xs font-medium">Loading view...</span>
-    </div>
-  </div>
-);
+// Admin Management
+import { UserManagementPage } from './features/admin/UserManagementPage.js';
+import { CategoryManagementPage } from './features/admin/CategoryManagementPage.js';
+import { TeamManagementPage } from './features/admin/TeamManagementPage.js';
+import { AuditLogsPage } from './features/admin/AuditLogsPage.js';
+import { AIUsageLogsPage } from './features/admin/AIUsageLogsPage.js';
 
 export const App: React.FC = () => {
   const { user, isAuthenticated, fetchMe } = useAuthStore();
@@ -54,8 +45,7 @@ export const App: React.FC = () => {
 
   return (
     <>
-      <Suspense fallback={<PageFallback />}>
-        <Routes>
+      <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -101,7 +91,6 @@ export const App: React.FC = () => {
           {/* Fallback */}
           <Route path="*" element={<Navigate to={getDefaultRedirect()} replace />} />
         </Routes>
-      </Suspense>
       <ToastContainer />
     </>
   );

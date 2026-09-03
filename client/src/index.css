@@ -4,10 +4,16 @@
 
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Outfit', 'DM Sans', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.012em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     @apply text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-950 transition-colors duration-150;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'DM Sans', sans-serif;
+    letter-spacing: -0.025em;
   }
 }
 

@@ -56,3 +56,68 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// High-speed In-Memory Cache with Stale-While-Revalidate
+const apiCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL_MS = 20000; // 20 seconds fresh TTL
+const originalGet = apiClient.get.bind(apiClient);
+const originalPost = apiClient.post.bind(apiClient);
+const originalPut = apiClient.put.bind(apiClient);
+const originalPatch = apiClient.patch.bind(apiClient);
+const originalDelete = apiClient.delete.bind(apiClient);
+
+// Intercept GET for instant cache retrieval
+apiClient.get = (async (url: string, config?: any) => {
+  const cacheKey = `${url}_${JSON.stringify(config?.params || {})}`;
+  const cached = apiCache.get(cacheKey);
+  const now = Date.now();
+
+  if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+    // Non-blocking background revalidation if older than 5s
+    if (now - cached.timestamp > 5000) {
+      originalGet(url, config)
+        .then((res) => {
+          if (res.data?.success) {
+            apiCache.set(cacheKey, { data: res.data, timestamp: Date.now() });
+          }
+        })
+        .catch(() => {});
+    }
+    return { data: cached.data, status: 200, statusText: 'OK', headers: {}, config: config || {} };
+  }
+
+  const res = await originalGet(url, config);
+  if (res.data?.success) {
+    apiCache.set(cacheKey, { data: res.data, timestamp: Date.now() });
+  }
+  return res;
+}) as any;
+
+// Automatically invalidate cache on mutating actions
+const invalidateCache = () => apiCache.clear();
+apiClient.post = (async (...args: any[]) => {
+  invalidateCache();
+  return (originalPost as any)(...args);
+}) as any;
+apiClient.put = (async (...args: any[]) => {
+  invalidateCache();
+  return (originalPut as any)(...args);
+}) as any;
+apiClient.patch = (async (...args: any[]) => {
+  invalidateCache();
+  return (originalPatch as any)(...args);
+}) as any;
+apiClient.delete = (async (...args: any[]) => {
+  invalidateCache();
+  return (originalDelete as any)(...args);
+}) as any;
+
+// Background keep-alive to prevent Render free tier cold-starts
+if (typeof window !== 'undefined') {
+  const pingHealth = () => {
+    originalGet('/health').catch(() => {});
+  };
+  setTimeout(pingHealth, 1000);
+  setInterval(pingHealth, 210000); // every 3.5 minutes
+}
+

@@ -133,13 +133,13 @@ export const AdminDashboard: React.FC = () => {
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Natural & Sustainable Helpdesk Operations
+            High-Performance Helpdesk Operations
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
             Executive Platform Overview
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Real-time ticket velocity, CSAT benchmarks, agent workload, and eco-efficient AI infrastructure.
+            Real-time ticket velocity, CSAT benchmarks, agent workload, and AI copilot infrastructure.
           </p>
         </div>
 
@@ -399,12 +399,12 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-              <span className="text-[11px] font-semibold text-slate-400 uppercase">Eco Engine Status</span>
+              <span className="text-[11px] font-semibold text-slate-400 uppercase">AI Copilot Engine</span>
               <p className="text-sm font-extrabold text-emerald-600 mt-2 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                Active (0.02g CO₂e)
+                Active & Operational
               </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Zero-bloat architecture</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">High-throughput processing</p>
             </div>
           </div>
         </div>

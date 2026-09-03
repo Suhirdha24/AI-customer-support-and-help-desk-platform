@@ -9,7 +9,7 @@ import {
   Bot,
   Zap,
   Activity,
-  Leaf,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const AIUsageLogsPage: React.FC = () => {
@@ -109,14 +109,14 @@ export const AIUsageLogsPage: React.FC = () => {
         </div>
 
         <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-subtle">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Eco Footprint</span>
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">System Uptime</span>
           <div className="flex items-center justify-between mt-1">
-            <h3 className="text-2xl font-extrabold text-emerald-600">0.02g</h3>
+            <h3 className="text-2xl font-extrabold text-emerald-600">99.9%</h3>
             <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <Leaf className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">CO₂e per prompt execution</p>
+          <p className="text-[11px] text-slate-400 mt-1">High availability guaranteed</p>
         </div>
       </div>
 

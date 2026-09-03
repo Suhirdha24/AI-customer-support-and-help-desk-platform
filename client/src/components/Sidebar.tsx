@@ -12,7 +12,7 @@ import {
   Bot,
   FileText,
   LogOut,
-  Leaf,
+  Headphones,
   BarChart3,
 } from 'lucide-react';
 
@@ -59,17 +59,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
         {/* Brand Header */}
         <div className="h-16 px-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-sm shadow-emerald-500/20">
-              <Leaf className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-sm shadow-indigo-600/20">
+              <Headphones className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="font-bold text-sm tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+              <h1 className="font-bold text-sm tracking-tight text-slate-900 dark:text-white">
                 NexusDesk
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
-                  Eco
-                </span>
               </h1>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Sustainable Helpdesk</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Customer Support</p>
             </div>
           </div>
         </div>
@@ -248,15 +245,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
           )}
         </div>
 
-        {/* Eco Badge & User Card Footer */}
+        {/* System Status & User Card Footer */}
         <div className="p-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/90 space-y-3">
-          {/* Carbon Conscious Pill */}
+          {/* Operational Status Pill */}
           <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-subtle text-[11px]">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-slate-600 dark:text-slate-300 font-medium">Eco Footprint</span>
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-slate-600 dark:text-slate-300 font-medium">System Status</span>
             </div>
-            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">0.02g CO₂e</span>
+            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">Operational</span>
           </div>
 
           {/* User profile */}

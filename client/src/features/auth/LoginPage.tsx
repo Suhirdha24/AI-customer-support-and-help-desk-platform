@@ -15,7 +15,6 @@ import {
   User,
   CheckCircle2,
   X,
-  Leaf,
   Sun,
   Moon,
 } from 'lucide-react';
@@ -278,17 +277,12 @@ export const LoginPage: React.FC = () => {
         <div className="max-w-md w-full mx-auto space-y-5 text-left py-4">
           {/* Website Brand Header */}
           <div className="flex items-center gap-2.5 pb-1">
-            <div className="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm shadow-emerald-600/20">
-              <Leaf className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-sm shadow-indigo-600/20">
+              <Headphones className="w-4 h-4" />
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                NexusDesk
-              </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 uppercase tracking-wide">
-                Eco
-              </span>
-            </div>
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              NexusDesk
+            </span>
           </div>
 
           {/* Header */}
@@ -446,7 +440,7 @@ export const LoginPage: React.FC = () => {
 
         {/* Right Bottom Footer */}
         <div className="w-full text-center text-xs text-slate-400 dark:text-slate-500 shrink-0 pt-2 font-normal">
-          <span>© 2026 NexusDesk Technologies • Verified Eco-Certified Platform</span>
+          <span>© 2026 NexusDesk Technologies • Intelligent Customer Support Platform</span>
         </div>
       </div>
 

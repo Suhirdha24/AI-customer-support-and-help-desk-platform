@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   HelpCircle,
   Sparkles,
-  Leaf,
   ChevronDown,
   X,
   FileSpreadsheet,
@@ -46,7 +45,7 @@ export const SupportPerformanceOverview: React.FC = () => {
   // Filtering & View state
   const [timeRange, setTimeRange] = useState('This Month');
   const [timeDropdownOpen, setTimeDropdownOpen] = useState(false);
-  const [activeView, setActiveView] = useState<'overview' | 'tickets' | 'agents' | 'eco'>('overview');
+  const [activeView, setActiveView] = useState<'overview' | 'tickets' | 'agents' | 'system'>('overview');
   const [dataViewsOpen, setDataViewsOpen] = useState(false);
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -261,7 +260,7 @@ export const SupportPerformanceOverview: React.FC = () => {
         totalTickets: dynamicTotalTickets,
         createdTickets: dynamicCreatedTickets,
         closedTickets: dynamicClosedTickets,
-        ecoCO2Grams: 0.02,
+        systemUptime: '99.99%',
       },
       tickets: filteredTickets.map((t) => ({
         ticketNumber: t.ticketNumber,
@@ -306,12 +305,11 @@ export const SupportPerformanceOverview: React.FC = () => {
   };
 
   return (
-    <div className={framedView ? 'p-4 sm:p-8 bg-[#93b7e8] min-h-screen rounded-3xl transition-all' : 'space-y-6'}>
-      {/* Inner Dashboard Canvas */}
+    <div className={`space-y-6 ${framedView ? 'max-w-7xl mx-auto' : 'w-full'} transition-all duration-300`}>
       <div
-        className={`bg-white ${
+        className={`bg-white transition-all duration-300 ${
           framedView
-            ? 'rounded-2xl shadow-elevated border border-slate-200/80 p-6 sm:p-8'
+            ? 'rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-elevated'
             : 'rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-subtle'
         }`}
       >
@@ -319,9 +317,9 @@ export const SupportPerformanceOverview: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <Leaf className="w-3 h-3 text-emerald-600" />
-                Eco-Optimized Platform
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <Sparkles className="w-3 h-3 text-indigo-600" />
+                Performance & Telemetry Hub
               </span>
               <button
                 onClick={() => setFramedView(!framedView)}
@@ -554,7 +552,7 @@ export const SupportPerformanceOverview: React.FC = () => {
                   { id: 'overview', label: 'Performance Overview' },
                   { id: 'tickets', label: 'Live Tickets Table' },
                   { id: 'agents', label: 'Agent Workload Matrix' },
-                  { id: 'eco', label: 'Eco Footprint Audit' },
+                  { id: 'system', label: 'System Telemetry & Health' },
                 ].map((v) => (
                   <button
                     key={v.id}
@@ -932,10 +930,10 @@ export const SupportPerformanceOverview: React.FC = () => {
                       />
                     </svg>
 
-                    {/* Center Natural Shield / Leaf Badge */}
+                    {/* Center Shield Badge */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200/80 flex items-center justify-center shadow-subtle">
-                        <ShieldCheck className="w-6 h-6 text-emerald-600 stroke-[2]" />
+                      <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-200/80 flex items-center justify-center shadow-subtle">
+                        <ShieldCheck className="w-6 h-6 text-indigo-600 stroke-[2]" />
                       </div>
                     </div>
                   </div>
@@ -1208,77 +1206,77 @@ export const SupportPerformanceOverview: React.FC = () => {
           </div>
         )}
 
-        {/* VIEW 4: ECO FOOTPRINT TELEMETRY */}
-        {activeView === 'eco' && (
+        {/* VIEW 4: SYSTEM & CLOUD TELEMETRY */}
+        {activeView === 'system' && (
           <div className="pt-6 space-y-6 animate-fade-in">
             <div>
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-emerald-600" />
-                Green Computing & Carbon Footprint Telemetry
+                <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                Cloud Infrastructure & Architecture Telemetry
               </h3>
               <p className="text-xs text-slate-500">
-                NexusDesk AI utilizes lightweight algorithms and zero-bloat rendering to minimize energy consumption
+                NexusDesk utilizes lightweight micro-services, reactive caching, and non-blocking I/O to maximize performance
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-emerald-50/50 border border-emerald-200/70 rounded-2xl p-5">
-                <p className="text-[11px] font-bold uppercase text-emerald-700">Carbon Intensity</p>
-                <h4 className="text-3xl font-extrabold text-emerald-900 mt-1">0.02g</h4>
-                <p className="text-xs text-emerald-700 mt-1">CO₂e per ticket resolved</p>
-                <p className="text-[11px] text-emerald-600 mt-2 font-medium">85% lower than average web apps</p>
+              <div className="bg-indigo-50/50 border border-indigo-200/70 rounded-2xl p-5">
+                <p className="text-[11px] font-bold uppercase text-indigo-700">Platform Availability</p>
+                <h4 className="text-3xl font-extrabold text-indigo-900 mt-1">99.99%</h4>
+                <p className="text-xs text-indigo-700 mt-1">Multi-region active redundancy</p>
+                <p className="text-[11px] text-indigo-600 mt-2 font-medium">Enterprise uptime standard</p>
               </div>
 
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
                 <p className="text-[11px] font-bold uppercase text-slate-500">DOM Rendering Time</p>
                 <h4 className="text-3xl font-extrabold text-slate-900 mt-1">12ms</h4>
-                <p className="text-xs text-slate-600 mt-1">Zero heavy charting bundles</p>
-                <p className="text-[11px] text-slate-400 mt-2">Native SVG concentric arcs</p>
+                <p className="text-xs text-slate-600 mt-1">Optimized bundle size</p>
+                <p className="text-[11px] text-slate-400 mt-2">Code-split lazy routes</p>
               </div>
 
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Green Energy Offset</p>
-                <h4 className="text-3xl font-extrabold text-emerald-600 mt-1">100%</h4>
-                <p className="text-xs text-slate-600 mt-1">Renewable datacenter host</p>
-                <p className="text-[11px] text-slate-400 mt-2">Certified carbon neutral</p>
+                <p className="text-[11px] font-bold uppercase text-slate-500">API Cache Latency</p>
+                <h4 className="text-3xl font-extrabold text-emerald-600 mt-1">&lt;5ms</h4>
+                <p className="text-xs text-slate-600 mt-1">In-memory TTL cache active</p>
+                <p className="text-[11px] text-slate-400 mt-2">Sub-millisecond reads</p>
               </div>
 
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Tree Equivalent Offset</p>
-                <h4 className="text-3xl font-extrabold text-emerald-700 mt-1">14.2</h4>
-                <p className="text-xs text-slate-600 mt-1">Trees saved annually</p>
-                <p className="text-[11px] text-slate-400 mt-2">Based on current ticket volume</p>
+                <p className="text-[11px] font-bold uppercase text-slate-500">System Resilience</p>
+                <h4 className="text-3xl font-extrabold text-indigo-700 mt-1">100%</h4>
+                <p className="text-xs text-slate-600 mt-1">Zero unhandled exceptions</p>
+                <p className="text-[11px] text-slate-400 mt-2">Continuous automated triage</p>
               </div>
             </div>
           </div>
         )}
 
-        {/* BOTTOM ROW: WORKLOAD & SUSTAINABLE COMPUTING METRICS */}
+        {/* BOTTOM ROW: WORKLOAD & INFRASTRUCTURE METRICS */}
         <div className="pt-8 border-t border-slate-100 mt-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Workload & Sustainability Impact</h3>
+              <h3 className="text-base font-bold text-slate-900">Workload & Infrastructure Performance</h3>
               <p className="text-xs text-slate-500">
-                Sustainable computing footprint and active team response distribution
+                High-availability infrastructure telemetry and active team response distribution
               </p>
             </div>
             <button
-              onClick={() => setActiveView('eco')}
-              className="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-1.5 transition-colors"
+              onClick={() => setActiveView('system')}
+              className="text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-full border border-indigo-200 flex items-center gap-1.5 transition-colors cursor-pointer"
             >
-              <Leaf className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Inspect Eco Metrics</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Inspect Telemetry</span>
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-4">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">CO₂e Per Resolution</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Cache Response Speed</span>
               <div className="flex items-baseline gap-1.5 mt-1">
-                <span className="text-2xl font-extrabold text-emerald-600">0.02g</span>
-                <span className="text-xs text-emerald-700 font-semibold">-85% vs standard</span>
+                <span className="text-2xl font-extrabold text-emerald-600">&lt;5ms</span>
+                <span className="text-xs text-emerald-700 font-semibold">Instant read</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">Lightweight non-bloated server execution</p>
+              <p className="text-[11px] text-slate-500 mt-1">In-memory caching with auto-invalidation</p>
             </div>
 
             <div className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-4">
@@ -1300,12 +1298,12 @@ export const SupportPerformanceOverview: React.FC = () => {
             </div>
 
             <div className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-4">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Renewable Match</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Uptime SLA</span>
               <div className="flex items-baseline gap-1.5 mt-1">
-                <span className="text-2xl font-extrabold text-emerald-600">100%</span>
+                <span className="text-2xl font-extrabold text-emerald-600">99.99%</span>
                 <span className="text-xs text-emerald-600 font-bold">Verified</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">Green datacenter compute infrastructure</p>
+              <p className="text-[11px] text-slate-500 mt-1">Enterprise cloud compute infrastructure</p>
             </div>
           </div>
         </div>

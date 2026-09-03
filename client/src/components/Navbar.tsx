@@ -6,7 +6,7 @@ import {
   ShieldCheck,
   HelpCircle,
   Settings,
-  Leaf,
+  Activity,
   CheckCircle2,
   Lock,
   Zap,
@@ -33,18 +33,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const { theme, resolvedTheme, setTheme, toggleTheme } = useThemeStore();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  // Interactive Modals State
   const [showSecurityModal, setShowSecurityModal] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [autoSync, setAutoSync] = useState(true);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // Settings State
   const [soundAlerts, setSoundAlerts] = useState(true);
   const [copilotAssist, setCopilotAssist] = useState(true);
-  const [ecoMode, setEcoMode] = useState(true);
 
   const handleOpenSecurity = () => {
     toast.success('Security status verified: All encryption & compliance protocols nominal.');
@@ -113,11 +111,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
 
       {/* Right controls */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Eco Engine Footprint Badge */}
+        {/* Systems Operational Badge */}
         <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/80 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-medium">
-          <Leaf className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span>Eco Engine: 0.02g CO₂e</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5" />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <span>Systems Operational</span>
         </div>
 
         {/* Quick Tools Group */}
@@ -300,11 +297,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
               </div>
 
               <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700 flex items-start gap-2.5">
-                <Leaf className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-slate-800 dark:text-slate-200">Carbon-Neutral Verified Footprint</p>
+                  <p className="font-semibold text-slate-800 dark:text-slate-200">High-Availability Cloud Infrastructure</p>
                   <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
-                    Eco Engine compute average is 0.02g CO₂e per ticket resolution cycle.
+                    Multi-region automated failover with 99.99% uptime guarantee.
                   </p>
                 </div>
               </div>
@@ -517,17 +514,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
 
               <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700">
                 <div className="flex items-center gap-2">
-                  <Leaf className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <Activity className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   <div>
-                    <p className="font-semibold text-slate-800 dark:text-slate-200">Eco-Engine Low-Carbon Mode</p>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Hardware-accelerated energy conservation</p>
+                    <p className="font-semibold text-slate-800 dark:text-slate-200">Real-Time Queue Sync</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Automatic background ticket updates</p>
                   </div>
                 </div>
                 <input
                   type="checkbox"
-                  checked={ecoMode}
-                  onChange={(e) => setEcoMode(e.target.checked)}
-                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
+                  checked={autoSync}
+                  onChange={(e) => setAutoSync(e.target.checked)}
+                  className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500/20 cursor-pointer"
                 />
               </div>
             </div>

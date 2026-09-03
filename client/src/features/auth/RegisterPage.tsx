@@ -12,7 +12,10 @@ import {
   EyeOff,
   AlertCircle,
   Leaf,
+  Sun,
+  Moon,
 } from 'lucide-react';
+import { useThemeStore } from '../../store/useThemeStore.js';
 
 export const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -22,6 +25,7 @@ export const RegisterPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuthStore();
+  const { resolvedTheme, toggleTheme } = useThemeStore();
   const navigate = useNavigate();
 
   // Ensure form fields always start completely empty with clean placeholders
@@ -65,22 +69,43 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-white font-sans text-slate-800">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-white dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 relative transition-colors duration-150">
+      {/* Top right theme toggle button */}
+      <div className="absolute top-4 right-4 z-30">
+        <button
+          type="button"
+          onClick={() => {
+            toggleTheme();
+            const next = resolvedTheme === 'dark' ? 'Light' : 'Dark';
+            toast.info(`Switched to ${next} Mode`);
+          }}
+          title={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Toggle theme"
+          className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-xs transition-all cursor-pointer"
+        >
+          {resolvedTheme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-slate-600" />
+          )}
+        </button>
+      </div>
+
       {/* LEFT COLUMN: Customer Showcase & Photography */}
-      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 border-r border-slate-200/80 p-6 sm:p-8 lg:p-12 xl:p-14 flex flex-col justify-between relative overflow-hidden h-full">
+      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 dark:bg-slate-900/50 border-r border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-8 lg:p-12 xl:p-14 flex flex-col justify-between relative overflow-hidden h-full">
         {/* Soft ambient lighting */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 dark:bg-emerald-950/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 dark:bg-teal-950/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Headline Section */}
         <div className="relative z-10 text-left pt-2 pb-2 shrink-0">
-          <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
             Instant Care with Friendly Human & AI Support
           </h1>
         </div>
 
         {/* Clean Photo Frame */}
-        <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md my-2 flex-1 flex flex-col min-h-[320px]">
+        <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-md my-2 flex-1 flex flex-col min-h-[320px]">
           <img
             src="/images/natural_customer.jpg"
             alt="Customer Support Experience"
@@ -90,7 +115,7 @@ export const RegisterPage: React.FC = () => {
       </div>
 
       {/* RIGHT COLUMN: Account Creation Form */}
-      <div className="lg:w-1/2 xl:w-[48%] bg-white flex flex-col justify-center p-6 sm:p-10 lg:p-12 xl:p-14 overflow-y-auto h-full">
+      <div className="lg:w-1/2 xl:w-[48%] bg-white dark:bg-slate-950 flex flex-col justify-center p-6 sm:p-10 lg:p-12 xl:p-14 overflow-y-auto h-full">
         {/* Form Container */}
         <div className="max-w-md w-full mx-auto space-y-5 text-left py-4">
           {/* Website Brand Header */}
@@ -99,10 +124,10 @@ export const RegisterPage: React.FC = () => {
               <Leaf className="w-4 h-4" />
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xl font-bold tracking-tight text-slate-900">
+              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                 NexusDesk
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 uppercase tracking-wide">
                 Eco
               </span>
             </div>
@@ -110,18 +135,18 @@ export const RegisterPage: React.FC = () => {
 
           {/* Header */}
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
               Create an Account
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-slate-500">
+            <p className="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               Get immediate, sustainable customer support
             </p>
           </div>
 
           {/* Inline Error Alert */}
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 text-xs flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
               <div className="flex-1 leading-relaxed">{errorMessage}</div>
             </div>
           )}
@@ -129,7 +154,7 @@ export const RegisterPage: React.FC = () => {
           <form onSubmit={handleRegister} className="space-y-4" autoComplete="off">
             {/* Full Name */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                 Full Name
               </label>
               <div className="relative">
@@ -144,14 +169,14 @@ export const RegisterPage: React.FC = () => {
                   required
                   autoComplete="off"
                   disabled={loading}
-                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                  className="w-full bg-slate-50/70 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
                 />
               </div>
             </div>
 
             {/* Email Address */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                 Email Address
               </label>
               <div className="relative">
@@ -166,14 +191,14 @@ export const RegisterPage: React.FC = () => {
                   required
                   autoComplete="new-password"
                   disabled={loading}
-                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                  className="w-full bg-slate-50/70 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                 Password
               </label>
               <div className="relative">
@@ -188,13 +213,13 @@ export const RegisterPage: React.FC = () => {
                   required
                   autoComplete="new-password"
                   disabled={loading}
-                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                  className="w-full bg-slate-50/70 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-10 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -222,16 +247,16 @@ export const RegisterPage: React.FC = () => {
           </form>
 
           {/* Footer */}
-          <p className="text-center text-xs text-slate-500 pt-1">
+          <p className="text-center text-xs text-slate-500 dark:text-slate-400 pt-1">
             Already registered?{' '}
-            <Link to="/login" className="font-semibold text-emerald-700 hover:text-emerald-800 underline">
+            <Link to="/login" className="font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 underline">
               Sign In
             </Link>
           </p>
         </div>
 
         {/* Right Bottom Footer */}
-        <div className="w-full text-center text-xs text-slate-400 shrink-0 pt-2 font-normal">
+        <div className="w-full text-center text-xs text-slate-400 dark:text-slate-500 shrink-0 pt-2 font-normal">
           <span>© 2026 NexusDesk Technologies • Verified Eco-Certified Platform</span>
         </div>
       </div>

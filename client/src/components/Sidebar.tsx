@@ -34,49 +34,56 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
   const isAgent = user?.role === 'AGENT';
   const isCustomer = user?.role === 'CUSTOMER';
 
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+      isActive
+        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold shadow-xs'
+        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60'
+    }`;
+
   return (
     <>
       {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/30 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden"
           onClick={onCloseMobile}
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200/80 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Brand Header */}
-        <div className="h-16 px-5 flex items-center justify-between border-b border-slate-100">
+        <div className="h-16 px-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-sm shadow-emerald-500/20">
               <Leaf className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="font-bold text-sm tracking-tight text-slate-900 flex items-center gap-1.5">
+              <h1 className="font-bold text-sm tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
                 NexusDesk
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
                   Eco
                 </span>
               </h1>
-              <p className="text-[11px] text-slate-400 font-medium">Sustainable Helpdesk</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Sustainable Helpdesk</p>
             </div>
           </div>
         </div>
 
         {/* Current Role Banner */}
-        <div className="px-5 py-2.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between text-xs">
-          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Portal Mode</span>
+        <div className="px-5 py-2.5 bg-slate-50/70 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Portal Mode</span>
           <span
             className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
               isAdmin
-                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900'
                 : isAgent
-                ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
-                : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900'
+                : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900'
             }`}
           >
             {user?.role}
@@ -87,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
         <div className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
           {/* Group 1: CORE / LIVE WORKSPACE */}
           <div>
-            <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               <span>{isCustomer ? 'My Workspace' : 'Live Operations'}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             </div>
@@ -95,30 +102,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
               <NavLink
                 to={isAdmin ? '/admin/dashboard' : isAgent ? '/agent/dashboard' : '/customer/dashboard'}
                 onClick={onCloseMobile}
-                className={({ isActive }) =>
-                  `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                    isActive
-                      ? 'bg-slate-100 text-slate-900 font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`
-                }
+                className={navLinkClass}
               >
-                <LayoutDashboard className="w-4 h-4 text-slate-500 shrink-0" />
+                <LayoutDashboard className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                 <span>{isCustomer ? 'Dashboard Overview' : 'Live Dashboard'}</span>
               </NavLink>
 
               <NavLink
                 to={isAdmin ? '/admin/tickets' : isAgent ? '/agent/tickets' : '/customer/tickets'}
                 onClick={onCloseMobile}
-                className={({ isActive }) =>
-                  `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                    isActive
-                      ? 'bg-slate-100 text-slate-900 font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`
-                }
+                className={navLinkClass}
               >
-                <TicketIcon className="w-4 h-4 text-slate-500 shrink-0" />
+                <TicketIcon className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                 <span>{isAdmin ? 'All Inquiries' : isAgent ? 'Tickets Queue' : 'My Support Tickets'}</span>
               </NavLink>
 
@@ -129,21 +124,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
                   className={({ isActive }) =>
                     `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
                       isActive
-                        ? 'bg-emerald-50 text-emerald-800 font-bold border border-emerald-200'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60'
                     }`
                   }
                 >
-                  <PlusCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <PlusCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span>Submit New Ticket</span>
                 </NavLink>
               )}
             </div>
           </div>
 
-          {/* Group 2: SUPPORT PERFORMANCE (The user's inspired view) */}
+          {/* Group 2: SUPPORT PERFORMANCE */}
           <div>
-            <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               <span>Performance & Analytics</span>
             </div>
             <div className="space-y-1">
@@ -153,14 +148,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
                     isActive
-                      ? 'bg-emerald-50 text-emerald-800 font-bold shadow-subtle border border-emerald-200/80'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold shadow-subtle border border-emerald-200/80 dark:border-emerald-800'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60'
                   }`
                 }
               >
-                <BarChart3 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <BarChart3 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span>Performance Overview</span>
-                <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
+                <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">
                   Featured
                 </span>
               </NavLink>
@@ -169,15 +164,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
                 <NavLink
                   to={isAdmin ? '/admin/performance' : '/agent/performance'}
                   onClick={onCloseMobile}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-slate-100 text-slate-900 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`
-                  }
+                  className={navLinkClass}
                 >
-                  <Users className="w-4 h-4 text-slate-500 shrink-0" />
+                  <Users className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>Agent Workloads</span>
                 </NavLink>
               )}
@@ -186,22 +175,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
 
           {/* Group 3: KNOWLEDGE & HELP CENTER */}
           <div>
-            <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               <span>Knowledge Base</span>
             </div>
             <div className="space-y-1">
               <NavLink
                 to={isAdmin ? '/admin/knowledge-base' : isAgent ? '/agent/knowledge-base' : '/customer/knowledge-base'}
                 onClick={onCloseMobile}
-                className={({ isActive }) =>
-                  `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                    isActive
-                      ? 'bg-slate-100 text-slate-900 font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`
-                }
+                className={navLinkClass}
               >
-                <BookOpen className="w-4 h-4 text-slate-500 shrink-0" />
+                <BookOpen className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                 <span>Help Center & Articles</span>
               </NavLink>
 
@@ -209,15 +192,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
                 <NavLink
                   to="/admin/categories"
                   onClick={onCloseMobile}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-slate-100 text-slate-900 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`
-                  }
+                  className={navLinkClass}
                 >
-                  <Layers className="w-4 h-4 text-slate-500 shrink-0" />
+                  <Layers className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>Ticket Categories</span>
                 </NavLink>
               )}
@@ -227,67 +204,43 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
           {/* Group 4: ADMIN CONTROLS & AI */}
           {isAdmin && (
             <div>
-              <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              <div className="flex items-center justify-between px-3 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 <span>Platform Administration</span>
               </div>
               <div className="space-y-1">
                 <NavLink
                   to="/admin/users"
                   onClick={onCloseMobile}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-slate-100 text-slate-900 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`
-                  }
+                  className={navLinkClass}
                 >
-                  <Users className="w-4 h-4 text-slate-500 shrink-0" />
+                  <Users className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>Users Directory</span>
                 </NavLink>
 
                 <NavLink
                   to="/admin/teams"
                   onClick={onCloseMobile}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-slate-100 text-slate-900 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`
-                  }
+                  className={navLinkClass}
                 >
-                  <Briefcase className="w-4 h-4 text-slate-500 shrink-0" />
+                  <Briefcase className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>Support Teams</span>
                 </NavLink>
 
                 <NavLink
                   to="/admin/ai-usage"
                   onClick={onCloseMobile}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-slate-100 text-slate-900 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`
-                  }
+                  className={navLinkClass}
                 >
-                  <Bot className="w-4 h-4 text-slate-500 shrink-0" />
+                  <Bot className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>AI Telemetry & Copilot</span>
                 </NavLink>
 
                 <NavLink
                   to="/admin/audit-logs"
                   onClick={onCloseMobile}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-slate-100 text-slate-900 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`
-                  }
+                  className={navLinkClass}
                 >
-                  <FileText className="w-4 h-4 text-slate-500 shrink-0" />
+                  <FileText className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>Compliance Audit Trail</span>
                 </NavLink>
               </div>
@@ -296,14 +249,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
         </div>
 
         {/* Eco Badge & User Card Footer */}
-        <div className="p-3.5 border-t border-slate-100 bg-slate-50/70 space-y-3">
+        <div className="p-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/90 space-y-3">
           {/* Carbon Conscious Pill */}
-          <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200/80 shadow-subtle text-[11px]">
+          <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-subtle text-[11px]">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-slate-600 font-medium">Eco Footprint</span>
+              <span className="text-slate-600 dark:text-slate-300 font-medium">Eco Footprint</span>
             </div>
-            <span className="font-mono font-bold text-emerald-700">0.02g CO₂e</span>
+            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">0.02g CO₂e</span>
           </div>
 
           {/* User profile */}
@@ -317,18 +270,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
                   )}&background=10b981&color=fff`
                 }
                 alt={user?.name}
-                className="w-8 h-8 rounded-full object-cover border border-slate-200"
+                className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700"
               />
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-slate-800 truncate">{user?.name}</p>
-                <p className="text-[10px] text-slate-400 capitalize">{user?.role?.toLowerCase()}</p>
+                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">{user?.name}</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 capitalize">{user?.role?.toLowerCase()}</p>
               </div>
             </div>
 
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+              aria-label="Sign Out"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
             </button>

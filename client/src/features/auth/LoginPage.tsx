@@ -16,7 +16,10 @@ import {
   CheckCircle2,
   X,
   Leaf,
+  Sun,
+  Moon,
 } from 'lucide-react';
+import { useThemeStore } from '../../store/useThemeStore.js';
 
 type RoleTab = 'ADMIN' | 'AGENT' | 'CUSTOMER';
 
@@ -78,6 +81,7 @@ export const LoginPage: React.FC = () => {
   const [showResetPassword, setShowResetPassword] = useState(false);
 
   const { login, isAuthenticated, user } = useAuthStore();
+  const { resolvedTheme, toggleTheme } = useThemeStore();
   const navigate = useNavigate();
 
   const handleOpenForgotModal = () => {
@@ -222,22 +226,43 @@ export const LoginPage: React.FC = () => {
   const currentRole = ROLES.find((r) => r.id === activeRole) || ROLES[0];
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-white font-sans text-slate-800">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-white dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 relative transition-colors duration-150">
+      {/* Top right theme toggle button */}
+      <div className="absolute top-4 right-4 z-30">
+        <button
+          type="button"
+          onClick={() => {
+            toggleTheme();
+            const next = resolvedTheme === 'dark' ? 'Light' : 'Dark';
+            toast.info(`Switched to ${next} Mode`);
+          }}
+          title={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Toggle theme"
+          className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-xs transition-all cursor-pointer"
+        >
+          {resolvedTheme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-slate-600" />
+          )}
+        </button>
+      </div>
+
       {/* LEFT COLUMN: Product Showcase & Photography */}
-      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 border-r border-slate-200/80 p-6 sm:p-8 lg:p-12 xl:p-14 flex flex-col justify-between relative overflow-hidden h-full">
+      <div className="lg:w-1/2 xl:w-[52%] bg-slate-50 dark:bg-slate-900/50 border-r border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-8 lg:p-12 xl:p-14 flex flex-col justify-between relative overflow-hidden h-full">
         {/* Soft natural ambient lighting */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-100/40 dark:bg-emerald-950/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-100/40 dark:bg-teal-950/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Headline Section */}
         <div className="relative z-10 text-left pt-2 pb-2 shrink-0">
-          <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
             {currentRole.headline}
           </h1>
         </div>
 
         {/* Clean Photo Frame */}
-        <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-md my-2 flex-1 flex flex-col min-h-[320px]">
+        <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-md my-2 flex-1 flex flex-col min-h-[320px]">
           <img
             key={currentRole.id}
             src={currentRole.heroImage}
@@ -248,7 +273,7 @@ export const LoginPage: React.FC = () => {
       </div>
 
       {/* RIGHT COLUMN: Authentication Form */}
-      <div className="lg:w-1/2 xl:w-[48%] bg-white flex flex-col justify-center p-6 sm:p-10 lg:p-12 xl:p-14 overflow-y-auto h-full">
+      <div className="lg:w-1/2 xl:w-[48%] bg-white dark:bg-slate-950 flex flex-col justify-center p-6 sm:p-10 lg:p-12 xl:p-14 overflow-y-auto h-full">
         {/* Right Center: Balanced Sign In Form */}
         <div className="max-w-md w-full mx-auto space-y-5 text-left py-4">
           {/* Website Brand Header */}
@@ -257,10 +282,10 @@ export const LoginPage: React.FC = () => {
               <Leaf className="w-4 h-4" />
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xl font-bold tracking-tight text-slate-900">
+              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                 NexusDesk
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 uppercase tracking-wide">
                 Eco
               </span>
             </div>
@@ -268,23 +293,23 @@ export const LoginPage: React.FC = () => {
 
           {/* Header */}
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
               Sign In
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-slate-500">
+            <p className="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               Select your role to access your dedicated workspace
             </p>
           </div>
 
           {/* Segmented Role Selector */}
           <div>
-            <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
-              <span className="font-semibold uppercase tracking-wider text-[11px] text-slate-500">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+              <span className="font-semibold uppercase tracking-wider text-[11px] text-slate-500 dark:text-slate-400">
                 Workspace Role
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 border border-slate-200/80 rounded-xl">
+            <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl">
               {ROLES.map((role) => {
                 const Icon = role.icon;
                 const isActive = activeRole === role.id;
@@ -295,11 +320,11 @@ export const LoginPage: React.FC = () => {
                     onClick={() => handleRoleSelect(role)}
                     className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-white text-slate-900 font-bold shadow-xs border border-slate-200'
-                        : 'text-slate-600 hover:text-slate-900 border border-transparent hover:bg-slate-200/60 font-medium'
+                        ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold shadow-xs border border-slate-200 dark:border-slate-700'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-transparent hover:bg-slate-200/60 dark:hover:bg-slate-800/60 font-medium'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-700' : 'text-slate-400'}`} />
+                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`} />
                     <span>{role.label}</span>
                   </button>
                 );
@@ -309,8 +334,8 @@ export const LoginPage: React.FC = () => {
 
           {/* Inline Error Alert */}
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 text-xs flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
               <div className="flex-1 leading-relaxed">{errorMessage}</div>
             </div>
           )}
@@ -319,7 +344,7 @@ export const LoginPage: React.FC = () => {
           <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
             {/* Email Address */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                 Email Address
               </label>
               <div className="relative">
@@ -334,14 +359,14 @@ export const LoginPage: React.FC = () => {
                   placeholder="Enter your email address"
                   autoComplete="new-password"
                   disabled={loading}
-                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                  className="w-full bg-slate-50/70 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                 Password
               </label>
               <div className="relative">
@@ -356,13 +381,13 @@ export const LoginPage: React.FC = () => {
                   placeholder="Enter your password"
                   autoComplete="new-password"
                   disabled={loading}
-                  className="w-full bg-slate-50/70 border border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
+                  className="w-full bg-slate-50/70 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-10 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -371,12 +396,12 @@ export const LoginPage: React.FC = () => {
 
             {/* Options */}
             <div className="flex items-center justify-between pt-0.5">
-              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-600 font-medium">
+              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-600 dark:text-slate-400 font-medium">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 bg-white text-emerald-600 focus:ring-emerald-500/30"
+                  className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-emerald-600 focus:ring-emerald-500/30"
                 />
                 <span>Remember this device</span>
               </label>
@@ -384,7 +409,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleOpenForgotModal}
-                className="text-xs text-emerald-700 hover:text-emerald-800 font-medium transition-colors cursor-pointer"
+                className="text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium transition-colors cursor-pointer"
               >
                 Forgot password?
               </button>
@@ -411,61 +436,61 @@ export const LoginPage: React.FC = () => {
           </form>
 
           {/* Footer */}
-          <p className="text-center text-xs text-slate-500 pt-1">
+          <p className="text-center text-xs text-slate-500 dark:text-slate-400 pt-1">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-emerald-700 hover:text-emerald-800 underline">
+            <Link to="/register" className="font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 underline">
               Register as a Customer
             </Link>
           </p>
         </div>
 
         {/* Right Bottom Footer */}
-        <div className="w-full text-center text-xs text-slate-400 shrink-0 pt-2 font-normal">
+        <div className="w-full text-center text-xs text-slate-400 dark:text-slate-500 shrink-0 pt-2 font-normal">
           <span>© 2026 NexusDesk Technologies • Verified Eco-Certified Platform</span>
         </div>
       </div>
 
       {/* Reset Password Modal */}
       {forgotModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 max-w-md w-full shadow-2xl text-left relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-7 max-w-md w-full shadow-2xl text-left relative text-slate-900 dark:text-slate-100">
             <button
               type="button"
               onClick={() => setForgotModalOpen(false)}
-              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1 cursor-pointer"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-3">
               <Lock className="w-5 h-5" />
             </div>
 
-            <h3 className="text-lg font-bold text-slate-900">Reset Password</h3>
-            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Reset Password</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
               Enter your registered email address to set a new password.
             </p>
 
             {/* Error Message */}
             {resetError && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 text-xs flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
                 <div className="flex-1 leading-relaxed">{resetError}</div>
               </div>
             )}
 
             {/* Success Message */}
             {resetSuccess && (
-              <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="mb-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 text-xs flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <div className="flex-1 leading-relaxed">{resetSuccess}</div>
               </div>
             )}
 
             <form onSubmit={handleResetPassword} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Registered Email Address
                 </label>
                 <div className="relative">
@@ -477,13 +502,13 @@ export const LoginPage: React.FC = () => {
                     placeholder="Enter your email address"
                     required
                     disabled={resetLoading}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   New Password
                 </label>
                 <div className="relative">
@@ -495,12 +520,12 @@ export const LoginPage: React.FC = () => {
                     placeholder="Enter new password (min 6 characters)"
                     required
                     disabled={resetLoading}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-10 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-10 py-2 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                   />
                   <button
                     type="button"
                     onClick={() => setShowResetPassword(!showResetPassword)}
-                    className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"
                   >
                     {showResetPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -508,7 +533,7 @@ export const LoginPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Confirm New Password
                 </label>
                 <div className="relative">
@@ -520,17 +545,17 @@ export const LoginPage: React.FC = () => {
                     placeholder="Re-enter new password"
                     required
                     disabled={resetLoading}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setForgotModalOpen(false)}
                   disabled={resetLoading}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>

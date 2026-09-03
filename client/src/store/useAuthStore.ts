@@ -47,22 +47,31 @@ export const useAuthStore = create<AuthState>((set) => {
     fetchMe: async () => {
       const token = localStorage.getItem('omni_token');
       if (!token) {
-        set({ token: null, user: null, isAuthenticated: false });
+        set({ token: null, user: null, isAuthenticated: false, isLoading: false });
         return;
       }
 
-      try {
+      // If user is already cached in localStorage, do not block the page with full-screen spinner
+      const isAlreadyCached = !!localStorage.getItem('omni_user');
+      if (!isAlreadyCached) {
         set({ isLoading: true });
+      }
+
+      try {
         const res = await apiClient.get('/auth/me');
         if (res.data.success) {
           const user = res.data.data.user;
           localStorage.setItem('omni_user', JSON.stringify(user));
           set({ user, isAuthenticated: true, isLoading: false });
         }
-      } catch {
-        localStorage.removeItem('omni_token');
-        localStorage.removeItem('omni_user');
-        set({ token: null, user: null, isAuthenticated: false, isLoading: false });
+      } catch (err: any) {
+        if (err.response?.status === 401) {
+          localStorage.removeItem('omni_token');
+          localStorage.removeItem('omni_user');
+          set({ token: null, user: null, isAuthenticated: false, isLoading: false });
+        } else {
+          set({ isLoading: false });
+        }
       }
     },
   };

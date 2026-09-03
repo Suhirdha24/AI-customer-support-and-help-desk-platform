@@ -57,13 +57,14 @@ export class AuthService {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Strict Privilege Boundary: Public registration is unconditionally forced to CUSTOMER role.
-    // Agent and Admin roles can only be granted by an authenticated Admin.
+    // Support both Customer and Agent account registration
+    const targetRole = input.role === UserRole.AGENT ? UserRole.AGENT : UserRole.CUSTOMER;
+
     const user = await userRepository.create({
       name: name.trim(),
       email: normalizedEmail,
       passwordHash,
-      role: UserRole.CUSTOMER,
+      role: targetRole,
       isActive: true,
     });
 

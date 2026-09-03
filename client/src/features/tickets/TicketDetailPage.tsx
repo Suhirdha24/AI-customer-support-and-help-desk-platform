@@ -863,51 +863,72 @@ export const TicketDetailPage: React.FC = () => {
             {ticket.aiAnalysisId ? (
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Confidence</span>
-                    <p className="text-base font-extrabold text-indigo-600 mt-0.5">
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">Confidence</span>
+                    <p className="text-base font-extrabold text-indigo-600 dark:text-indigo-400 mt-0.5">
                       {Math.round(ticket.aiAnalysisId.confidence * 100)}%
                     </p>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Sentiment</span>
-                    <p
-                      className={`text-xs font-extrabold mt-1 ${
-                        ticket.aiAnalysisId.sentiment === 'NEGATIVE'
-                          ? 'text-rose-600'
-                          : ticket.aiAnalysisId.sentiment === 'POSITIVE'
-                          ? 'text-emerald-600'
-                          : 'text-slate-600'
-                      }`}
-                    >
-                      {ticket.aiAnalysisId.sentiment}
-                    </p>
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">Sentiment Tone</span>
+                    <div className="mt-1">
+                      <span
+                        className={`inline-flex items-center gap-1 text-xs font-extrabold px-2 py-0.5 rounded-lg border ${
+                          ticket.aiAnalysisId.sentiment === 'NEGATIVE'
+                            ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900/60'
+                            : ticket.aiAnalysisId.sentiment === 'POSITIVE'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60'
+                            : 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
+                        }`}
+                      >
+                        <span>
+                          {ticket.aiAnalysisId.sentiment === 'NEGATIVE'
+                            ? '😡'
+                            : ticket.aiAnalysisId.sentiment === 'POSITIVE'
+                            ? '😃'
+                            : '😐'}
+                        </span>
+                        <span>{ticket.aiAnalysisId.sentiment}</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Predicted Category</span>
-                  <p className="text-xs font-bold text-slate-800 mt-0.5">{ticket.aiAnalysisId.category}</p>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">Predicted Category</span>
+                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">{ticket.aiAnalysisId.category}</p>
                 </div>
 
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400">AI Reasoning</span>
-                  <p className="text-xs text-slate-600 leading-relaxed mt-0.5 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">AI Reasoning & Sentiment Valence</span>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-0.5 bg-slate-50 dark:bg-slate-800/70 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60">
                     {ticket.aiAnalysisId.reason}
                   </p>
                 </div>
+
+                {user?.role !== 'CUSTOMER' && (
+                  <button
+                    onClick={handleTriggerAI}
+                    disabled={aiAnalyzing}
+                    className="w-full mt-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                    <span>{aiAnalyzing ? 'Re-evaluating...' : 'Re-analyze Sentiment & Priority'}</span>
+                  </button>
+                )}
               </div>
             ) : (
-              <div className="text-center py-4 text-xs text-slate-400">
+              <div className="text-center py-4 text-xs text-slate-400 dark:text-slate-500">
                 <p>AI classification queued or in progress.</p>
                 {user?.role !== 'CUSTOMER' && (
                   <button
                     onClick={handleTriggerAI}
                     disabled={aiAnalyzing}
-                    className="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-700"
+                    className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700"
                   >
-                    Run AI Analysis Now
+                    <Sparkles className="w-3 h-3" />
+                    <span>Run AI Analysis Now</span>
                   </button>
                 )}
               </div>

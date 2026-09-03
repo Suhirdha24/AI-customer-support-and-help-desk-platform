@@ -29,22 +29,67 @@ export class KBRepository {
   }
 
   async searchPublished(query: string, categoryId?: string, limit = 10): Promise<IKnowledgeBaseArticle[]> {
-    const filter: Record<string, any> = { status: KBStatus.PUBLISHED };
-
+    const baseFilter: Record<string, any> = { status: KBStatus.PUBLISHED };
     if (categoryId) {
-      filter.categoryId = categoryId;
+      baseFilter.categoryId = categoryId;
     }
 
-    if (query && query.trim().length > 0) {
-      filter.$text = { $search: query.trim() };
-      return KnowledgeBaseArticle.find(filter, { score: { $meta: 'textScore' } })
+    const cleanQuery = query?.trim();
+    if (!cleanQuery) {
+      return KnowledgeBaseArticle.find(baseFilter)
         .populate('categoryId', 'name')
-        .sort({ score: { $meta: 'textScore' } })
+        .sort({ createdAt: -1 })
         .limit(limit)
         .exec();
     }
 
-    return KnowledgeBaseArticle.find(filter)
+    // 1. Try MongoDB full-text search first
+    try {
+      const textFilter = { ...baseFilter, $text: { $search: cleanQuery } };
+      const textResults = await KnowledgeBaseArticle.find(textFilter, { score: { $meta: 'textScore' } })
+        .populate('categoryId', 'name')
+        .sort({ score: { $meta: 'textScore' } })
+        .limit(limit)
+        .exec();
+
+      if (textResults && textResults.length > 0) {
+        return textResults;
+      }
+    } catch {
+      // If text index not built or query syntax issues, fall through to regex search
+    }
+
+    // 2. Multi-token Regex Fallback (matches key nouns, tags, and terms)
+    const stopWords = new Set(['the', 'and', 'for', 'with', 'this', 'that', 'have', 'from', 'they', 'what', 'when', 'your', 'about']);
+    const tokens = cleanQuery
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter((t) => t.length >= 3 && !stopWords.has(t))
+      .slice(0, 5);
+
+    if (tokens.length > 0) {
+      const regexOr = tokens.flatMap((token) => [
+        { title: { $regex: token, $options: 'i' } },
+        { tags: { $in: [new RegExp(`^${token}`, 'i')] } },
+        { content: { $regex: token, $options: 'i' } },
+      ]);
+
+      const regexResults = await KnowledgeBaseArticle.find({
+        ...baseFilter,
+        $or: regexOr,
+      })
+        .populate('categoryId', 'name')
+        .limit(limit)
+        .exec();
+
+      if (regexResults && regexResults.length > 0) {
+        return regexResults;
+      }
+    }
+
+    // 3. Fallback to latest published articles
+    return KnowledgeBaseArticle.find(baseFilter)
       .populate('categoryId', 'name')
       .sort({ createdAt: -1 })
       .limit(limit)

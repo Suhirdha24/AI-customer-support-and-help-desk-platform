@@ -19,6 +19,7 @@ import {
 } from '../constants/ticket.constants.js';
 import { AuditEventType, NotificationType } from '../constants/events.js';
 import { NotFoundError, ValidationError, AuthorizationError } from '../errors/AppError.js';
+import { dashboardService } from './dashboard.service.js';
 
 export interface CreateTicketDTO {
   subject: string;
@@ -49,16 +50,19 @@ export class TicketService {
       throw new ValidationError('Subject, description, and category are required.');
     }
 
+    const isHumanSpecialist = user.role === UserRole.AGENT || user.role === UserRole.ADMIN;
     const ticket = await ticketRepository.create({
       customerId: new mongoose.Types.ObjectId(user.id),
       subject: subject.trim(),
       description: description.trim(),
       categoryId: new mongoose.Types.ObjectId(categoryId),
       priority: priority || TicketPriority.MEDIUM,
-      prioritySource: priority ? PrioritySource.HUMAN : PrioritySource.SYSTEM,
+      prioritySource: isHumanSpecialist && priority ? PrioritySource.HUMAN : PrioritySource.SYSTEM,
       status: TicketStatus.OPEN,
       lastCustomerMessageAt: new Date(),
     });
+
+    dashboardService.invalidateCache();
 
     // Create initial message entry in TicketMessages
     await messageRepository.create({
@@ -259,6 +263,7 @@ export class TicketService {
       });
     }
 
+    dashboardService.invalidateCache();
     return updated!;
   }
 
@@ -292,6 +297,7 @@ export class TicketService {
       },
     });
 
+    dashboardService.invalidateCache();
     return updated!;
   }
 
@@ -326,6 +332,7 @@ export class TicketService {
       ticketId: ticket._id,
     });
 
+    dashboardService.invalidateCache();
     return updated!;
   }
 
@@ -352,6 +359,7 @@ export class TicketService {
       },
     });
 
+    dashboardService.invalidateCache();
     return updated!;
   }
 

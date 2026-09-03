@@ -14,6 +14,7 @@ import {
   Leaf,
   Sun,
   Moon,
+  Headphones,
 } from 'lucide-react';
 import { useThemeStore } from '../../store/useThemeStore.js';
 
@@ -21,6 +22,7 @@ export const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState<'CUSTOMER' | 'AGENT'>('CUSTOMER');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,7 +36,7 @@ export const RegisterPage: React.FC = () => {
     setEmail('');
     setPassword('');
     setErrorMessage('');
-  }, []);
+  }, [selectedRole]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,14 +52,18 @@ export const RegisterPage: React.FC = () => {
         name: name.trim(),
         email: email.trim(),
         password,
-        role: 'CUSTOMER',
+        role: selectedRole,
       });
 
       if (res.data.success) {
         const { token, user } = res.data.data;
         login(token, user);
         toast.success(`Welcome to NexusDesk, ${user.name}!`);
-        navigate('/customer/dashboard');
+        if (user.role === 'AGENT') {
+          navigate('/agent/dashboard');
+        } else {
+          navigate('/customer/dashboard');
+        }
       }
     } catch (err: any) {
       const msg = err.response?.data?.error?.message || err.message || 'Registration failed. Please try again.';
@@ -100,15 +106,22 @@ export const RegisterPage: React.FC = () => {
         {/* Headline Section */}
         <div className="relative z-10 text-left pt-2 pb-2 shrink-0">
           <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-            Instant Care with Friendly Human & AI Support
+            {selectedRole === 'AGENT'
+              ? 'Empower Support Ops with Intelligent AI Triage'
+              : 'Instant Care with Friendly Human & AI Support'}
           </h1>
+          <p className="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            {selectedRole === 'AGENT'
+              ? 'Join our specialist team to resolve tickets faster with real-time AI sentiment analysis and contextual copilot guidance.'
+              : 'Submit inquiries, track resolution velocity, and receive empathetic assistance 24/7.'}
+          </p>
         </div>
 
         {/* Clean Photo Frame */}
         <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-md my-2 flex-1 flex flex-col min-h-[320px]">
           <img
-            src="/images/natural_customer.jpg"
-            alt="Customer Support Experience"
+            src={selectedRole === 'AGENT' ? '/images/natural_agent.jpg' : '/images/natural_customer.jpg'}
+            alt={selectedRole === 'AGENT' ? 'Support Agent Workbench' : 'Customer Support Experience'}
             className="w-full h-full object-cover rounded-2xl transition-all duration-500"
           />
         </div>
@@ -136,11 +149,41 @@ export const RegisterPage: React.FC = () => {
           {/* Header */}
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-              Create an Account
+              {selectedRole === 'AGENT' ? 'Create Agent Account' : 'Create Customer Account'}
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              Get immediate, sustainable customer support
+              {selectedRole === 'AGENT'
+                ? 'Register as a support specialist to access the agent queue'
+                : 'Get immediate, sustainable customer support'}
             </p>
+          </div>
+
+          {/* Role Switcher Pill */}
+          <div className="flex p-1 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={() => setSelectedRole('CUSTOMER')}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                selectedRole === 'CUSTOMER'
+                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              }`}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Customer Account</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedRole('AGENT')}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                selectedRole === 'AGENT'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              }`}
+            >
+              <Headphones className="w-3.5 h-3.5" />
+              <span>Support Agent Account</span>
+            </button>
           </div>
 
           {/* Inline Error Alert */}
@@ -239,7 +282,11 @@ export const RegisterPage: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <span>Create Account</span>
+                  <span>
+                    {selectedRole === 'AGENT'
+                      ? 'Create Support Agent Account'
+                      : 'Create Customer Account'}
+                  </span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

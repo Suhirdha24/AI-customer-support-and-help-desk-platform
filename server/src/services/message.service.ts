@@ -10,6 +10,7 @@ import { UserRole } from '../constants/roles.js';
 import { MessageType, MessageTypeType, TicketStatus } from '../constants/ticket.constants.js';
 import { AuditEventType, NotificationType } from '../constants/events.js';
 import { NotFoundError, ValidationError } from '../errors/AppError.js';
+import { dashboardService } from './dashboard.service.js';
 
 export interface CreateMessageDTO {
   type: MessageTypeType;
@@ -115,6 +116,7 @@ export class MessageService {
       }
     }
 
+    dashboardService.invalidateCache();
     return newMessage;
   }
 

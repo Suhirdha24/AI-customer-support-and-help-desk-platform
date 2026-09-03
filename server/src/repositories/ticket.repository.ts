@@ -55,6 +55,7 @@ export class TicketRepository {
       .populate('assignedAgentId', 'name email avatar')
       .populate('categoryId', 'name')
       .populate('teamId', 'name')
+      .populate('aiAnalysisId')
       .sort(sort)
       .skip(skip)
       .limit(limit)

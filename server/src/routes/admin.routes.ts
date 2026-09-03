@@ -18,6 +18,7 @@ router.put('/teams/:id', authenticate, requireRole(UserRole.ADMIN), adminControl
 
 // Users and Agents
 router.get('/users', authenticate, requireRole(UserRole.ADMIN), adminController.listUsers);
+router.post('/users', authenticate, requireRole(UserRole.ADMIN), adminController.createUser);
 router.patch('/users/:id/status', authenticate, requireRole(UserRole.ADMIN), adminController.toggleUserStatus);
 router.patch('/users/:id/role', authenticate, requireRole(UserRole.ADMIN), adminController.updateUserRole);
 router.get('/agents', authenticate, requireRole(UserRole.ADMIN, UserRole.AGENT), adminController.listAgents);

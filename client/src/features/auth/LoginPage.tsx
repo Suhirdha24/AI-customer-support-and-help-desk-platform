@@ -439,7 +439,7 @@ export const LoginPage: React.FC = () => {
           <p className="text-center text-xs text-slate-500 dark:text-slate-400 pt-1">
             Don't have an account?{' '}
             <Link to="/register" className="font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 underline">
-              Register as a Customer
+              Register as Customer or Agent
             </Link>
           </p>
         </div>

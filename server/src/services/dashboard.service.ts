@@ -6,8 +6,37 @@ import { aiRepository } from '../repositories/ai.repository.js';
 import { TicketStatus, TicketPriority } from '../constants/ticket.constants.js';
 import { UserRole } from '../constants/roles.js';
 
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
 export class DashboardService {
+  private cache = new Map<string, CacheEntry<any>>();
+  private readonly TTL_MS = 15000; // 15 seconds TTL
+
+  private getCached<T>(key: string): T | null {
+    const entry = this.cache.get(key);
+    if (entry && Date.now() - entry.timestamp < this.TTL_MS) {
+      return entry.data as T;
+    }
+    return null;
+  }
+
+  private setCached<T>(key: string, data: T): T {
+    this.cache.set(key, { data, timestamp: Date.now() });
+    return data;
+  }
+
+  public invalidateCache(): void {
+    this.cache.clear();
+  }
+
   async getCustomerDashboard(userId: string) {
+    const cacheKey = `customer_${userId}`;
+    const cached = this.getCached<any>(cacheKey);
+    if (cached) return cached;
+
     const customerObjectId = new mongoose.Types.ObjectId(userId);
 
     const [statusCounts, recentTickets] = await Promise.all([
@@ -46,7 +75,7 @@ export class DashboardService {
       else if (item._id === TicketStatus.CLOSED) counts.closed += item.count;
     });
 
-    return {
+    const result = {
       metrics: counts,
       totalTickets: counts.total,
       openTickets: counts.open,
@@ -56,9 +85,15 @@ export class DashboardService {
       closedTickets: counts.closed,
       recentTickets,
     };
+
+    return this.setCached(cacheKey, result);
   }
 
   async getAgentDashboard(agentId: string) {
+    const cacheKey = `agent_${agentId}`;
+    const cached = this.getCached<any>(cacheKey);
+    if (cached) return cached;
+
     const agentObjectId = new mongoose.Types.ObjectId(agentId);
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
@@ -93,7 +128,7 @@ export class DashboardService {
         }),
       ]);
 
-    return {
+    const result = {
       metrics: {
         myTickets: myTicketsCount,
         openUnassigned: openUnassignedCount,
@@ -109,9 +144,15 @@ export class DashboardService {
       myRecentTickets,
       recentTickets: myRecentTickets,
     };
+
+    return this.setCached(cacheKey, result);
   }
 
   async getAdminDashboard() {
+    const cacheKey = 'admin_overview';
+    const cached = this.getCached<any>(cacheKey);
+    if (cached) return cached;
+
     const [
       totalCustomers,
       totalAgents,
@@ -201,7 +242,7 @@ export class DashboardService {
     const openTicketsCount = statusBreakdown.find((s) => s._id === 'OPEN')?.count || 0;
     const resolvedTicketsCount = statusBreakdown.find((s) => s._id === 'RESOLVED')?.count || 0;
 
-    return {
+    const result = {
       overview: {
         totalCustomers,
         totalAgents,
@@ -223,6 +264,8 @@ export class DashboardService {
       satisfaction: csatStats,
       aiMetrics: aiStats,
     };
+
+    return this.setCached(cacheKey, result);
   }
 }
 

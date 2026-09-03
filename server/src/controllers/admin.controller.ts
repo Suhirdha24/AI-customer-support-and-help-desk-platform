@@ -1,14 +1,85 @@
 import { Request, Response, NextFunction } from 'express';
+import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 import { userRepository } from '../repositories/user.repository.js';
 import { teamRepository } from '../repositories/team.repository.js';
 import { categoryRepository } from '../repositories/category.repository.js';
 import { aiRepository } from '../repositories/ai.repository.js';
 import { auditRepository } from '../repositories/audit.repository.js';
 import { ticketRepository } from '../repositories/ticket.repository.js';
+import { Team } from '../models/Team.js';
 import { NotFoundError, ValidationError, ConflictError } from '../errors/AppError.js';
 import { UserRole } from '../constants/roles.js';
+import { AuditEventType } from '../constants/events.js';
 
 export class AdminController {
+  async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { name, email, password, role = UserRole.AGENT, teamId } = req.body;
+
+      if (!name || !email || !password) {
+        throw new ValidationError('Name, email, and password are required.');
+      }
+
+      if (password.length < 6) {
+        throw new ValidationError('Password must be at least 6 characters long.');
+      }
+
+      const normalizedEmail = email.toLowerCase().trim();
+      const existing = await userRepository.findByEmail(normalizedEmail);
+      if (existing) {
+        throw new ConflictError('A user with this email address already exists.');
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(password, salt);
+
+      const teamIds: mongoose.Types.ObjectId[] = [];
+      if (teamId && mongoose.Types.ObjectId.isValid(teamId)) {
+        teamIds.push(new mongoose.Types.ObjectId(teamId));
+      }
+
+      const assignedRole = [UserRole.AGENT, UserRole.ADMIN, UserRole.CUSTOMER].includes(role) ? role : UserRole.AGENT;
+
+      const newUser = await userRepository.create({
+        name: name.trim(),
+        email: normalizedEmail,
+        passwordHash,
+        role: assignedRole,
+        isActive: true,
+        teamIds,
+      });
+
+      // If assigned to a team, also add to team.memberIds
+      if (teamId && mongoose.Types.ObjectId.isValid(teamId)) {
+        await Team.findByIdAndUpdate(teamId, { $addToSet: { memberIds: newUser._id } }).catch(() => {});
+      }
+
+      // Record audit log
+      if (req.user) {
+        await auditRepository.create({
+          actorId: new mongoose.Types.ObjectId(req.user.id),
+          actorRole: req.user.role,
+          eventType: AuditEventType.USER_ROLE_CHANGED,
+          metadata: {
+            targetUserId: newUser._id.toString(),
+            targetEmail: newUser.email,
+            assignedRole: newUser.role,
+            teamId: teamId || null,
+            action: 'PROVISION_USER',
+          },
+        });
+      }
+
+      res.status(201).json({
+        success: true,
+        data: newUser,
+        message: `Account for ${newUser.name} provisioned successfully with role ${newUser.role}.`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   async listUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const page = Math.max(1, Number(req.query.page) || 1);

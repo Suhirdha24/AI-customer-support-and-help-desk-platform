@@ -15,6 +15,8 @@ export const AuditEventType = {
   AI_REPLY_SENT: 'AI_REPLY_SENT',
   TICKET_UPDATED: 'TICKET_UPDATED',
   TICKET_DELETED: 'TICKET_DELETED',
+  USER_CREATED: 'USER_CREATED',
+  USER_ROLE_CHANGED: 'USER_ROLE_CHANGED',
 } as const;
 
 export type AuditEventTypeType = (typeof AuditEventType)[keyof typeof AuditEventType];
